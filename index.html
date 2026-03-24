@@ -2,220 +2,421 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Booyah Zone | Entrance</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booyah Zone | Esports Hub</title>
     <style>
-        :root {
-            --neon: #00f2fe;
-            --bg: #02050a;
-            --card-bg: rgba(255, 255, 255, 0.03);
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg);
+            background-color: #ffffff;
+            overflow: hidden; /* Screen ke bahar kuch na jaye */
             height: 100vh;
+            width: 100vw;
+            position: relative;
+            transition: background-color 1s ease;
+        }
+
+        /* --- SERVICE BUTTON --- */
+        .service-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffaa00;
+            border: 2px solid #333;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            color: white;
-            overflow: hidden;
+            gap: 10px;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .service-btn:active {
+            transform: scale(0.95);
+        }
+        .service-btn img {
+            width: 25px;
+            height: 25px;
         }
 
-        /* --- LOGO AREA --- */
-        .logo-section {
-            width: 160px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.6));
-            animation: bounceIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .logo-section img {
-            width: 100%;
-            border-radius: 25px;
-        }
-
-        @keyframes bounceIn {
-            from { transform: scale(0.3); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- AUTH CARD --- */
-        .auth-card {
-            width: 88%;
-            max-width: 380px;
-            background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 35px;
-            padding: 40px 30px;
+        /* --- LOGO SECTION --- */
+        #logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            transition: 0.5s all ease;
+            z-index: 50;
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth movement */
+            cursor: pointer;
         }
 
-        h2 {
-            font-family: 'Orbitron', sans-serif;
+        #main-logo {
+            width: 350px;
+            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.3));
+            transition: all 1s ease;
+        }
+
+        #tap-text {
+            margin-top: 15px;
             font-size: 22px;
-            color: var(--neon);
-            margin-bottom: 30px;
-            letter-spacing: 3px;
+            font-weight: 900;
+            color: #333;
+            letter-spacing: 2px;
+            animation: blink 1.5s infinite;
             text-transform: uppercase;
         }
 
-        /* --- INPUTS --- */
-        .input-wrapper {
-            margin-bottom: 18px;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        input {
+        /* --- ARENA MODE (AFTER CLICK) --- */
+        body.arena-active {
+            background-color: #f4f4f4; /* Halka sa change for battlefield feel */
+        }
+
+        body.arena-active #logo-container {
+            top: 20px;
+            left: 20px;
+            transform: translate(0, 0) scale(0.4); /* Logo top-left me chala jayega aur chota ho jayega */
+            transform-origin: top left;
+        }
+
+        body.arena-active #tap-text {
+            display: none; /* Text hide ho jayega */
+        }
+
+        /* --- BATTLEFIELD ELEMENTS --- */
+        #battlefield {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
+            height: 100%;
+            z-index: 10;
         }
 
-        input:focus {
-            border-color: var(--neon);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        body.arena-active #battlefield {
+            display: block;
         }
 
-        /* --- MAIN BUTTON --- */
-        .primary-btn {
-            width: 100%;
-            padding: 18px;
-            background: #ffffff;
-            color: #000;
-            border: none;
-            border-radius: 15px;
-            font-family: 'Orbitron', sans-serif;
+        /* Enemies */
+        .enemy {
+            position: absolute;
+            bottom: 20%;
+            font-size: 100px; /* Placeholder ki jagah aap image use kar sakte hain */
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+        }
+        #enemy-left {
+            left: 50px;
+        }
+        #enemy-right {
+            right: 50px;
+            transform: scaleX(-1); /* Face left */
+        }
+
+        /* Action Buttons (Register/Login) */
+        .action-buttons {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 50px;
+            z-index: 20;
+        }
+
+        .game-btn {
+            position: relative;
+            padding: 20px 40px;
+            font-size: 24px;
             font-weight: 900;
-            font-size: 16px;
+            color: white;
+            border: none;
             cursor: pointer;
-            margin-top: 15px;
+            text-transform: uppercase;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: 0.3s;
+            transition: transform 0.3s;
+        }
+        .game-btn:hover {
+            transform: translateY(-5px) scale(1.05);
         }
 
-        .primary-btn:active { transform: scale(0.96); }
-
-        .toggle-text {
-            margin-top: 25px;
-            font-size: 14px;
-            color: #b0b0b0;
+        .btn-register {
+            background: linear-gradient(45deg, #cc0000, #ff3333); /* Gun theme (Red/Aggressive) */
+            border-radius: 5px 30px 5px 5px;
+            border-bottom: 5px solid #880000;
+        }
+        .btn-register::before {
+            content: "🔫 ";
+            font-size: 28px;
         }
 
-        .toggle-text span {
-            color: var(--neon);
+        .btn-login {
+            background: linear-gradient(45deg, #0044cc, #3377ff); /* Sword theme (Blue/Cool) */
+            border-radius: 30px 5px 5px 5px;
+            border-bottom: 5px solid #002277;
+        }
+        .btn-login::before {
+            content: "⚔️ ";
+            font-size: 28px;
+        }
+
+        /* Bullet Animations */
+        .bullet {
+            position: absolute;
+            width: 25px;
+            height: 8px;
+            background: #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ffaa00, 0 0 20px #ff3300;
+            top: 72%; /* Gun ke level par */
+            left: 150px;
+            z-index: 15;
+            transition: left 0.4s linear;
+        }
+
+        .bullet.deflected {
+            transition: all 0.3s linear;
+        }
+
+        /* --- MODALS (FORMS) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            width: 400px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.5);
+            border: 4px solid #333;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
             font-weight: bold;
             cursor: pointer;
-            text-decoration: underline;
+            color: #cc0000;
         }
 
-        /* --- SWITCH ANIMATION --- */
-        .fade-anim { animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #ffaa00;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ffaa00;
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .submit-btn:hover {
+            background: #ff8800;
+        }
 
     </style>
 </head>
 <body>
 
-    <div class="logo-section">
-        <img src="https://i.ibb.co/20tgpdNs/1774105059734.png" alt="Booyah Zone">
+    <div class="service-btn" onclick="playServiceSound()">
+        👨‍🔧 Service
     </div>
 
-    <div class="auth-card" id="authContainer">
-        <div id="authContent" class="fade-anim">
-            <h2 id="formTitle">LOGIN</h2>
-            
-            <div id="inputGroup">
-                <div class="input-wrapper">
-                    <input type="number" id="gameUid" placeholder="Enter Game UID">
-                </div>
+    <div id="logo-container" onclick="enterArena()">
+        <img id="main-logo" src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" alt="Booyah Zone">
+        <p id="tap-text">Tap the logo to enter</p>
+    </div>
+
+    <div id="battlefield">
+        <div id="enemy-left" class="enemy">🥷🏽</div> <div id="enemy-right" class="enemy">🛡️</div> <div class="action-buttons">
+            <button class="game-btn btn-register" onclick="openModal('registerModal')">Register</button>
+            <button class="game-btn btn-login" onclick="openModal('loginModal')">Login</button>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Register</h2>
+            <div class="form-group">
+                <input type="text" placeholder="Full Name" required>
             </div>
+            <div class="form-group">
+                <input type="text" placeholder="In-Game UID" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Phone Number" required>
+            </div>
+            <button class="submit-btn">Create Account</button>
+        </div>
+    </div>
 
-            <button class="primary-btn" onclick="validateAuth()">ACCESS ARENA</button>
-
-            <p class="toggle-text" id="footerLink">
-                New Player? <span onclick="switchMode('register')">Register Now</span>
-            </p>
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <div class="form-group">
+                <input type="text" placeholder="In-Game UID" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <button class="submit-btn">Enter Zone</button>
         </div>
     </div>
 
     <script>
-        let currentMode = 'login';
+        let firingInterval;
 
-        function switchMode(target) {
-            const content = document.getElementById('authContent');
-            const title = document.getElementById('formTitle');
-            const inputs = document.getElementById('inputGroup');
-            const footer = document.getElementById('footerLink');
-
-            // Animation effect
-            content.style.opacity = '0';
+        // 1. Service Button Sound Logic
+        function playServiceSound() {
+            // Yahan par apni "madat_karo.mp3" file ka link dalein
+            // Filhal demo ke liye alert aur console log hai
+            console.log("Playing sound: Madat Karo!");
             
+            try {
+                let audio = new Audio('madat_karo.mp3'); 
+                audio.play().catch(() => {
+                    alert("Madat karo! (Code me 'madat_karo.mp3' file add karein)");
+                });
+            } catch(e) {
+                console.log("Audio not found");
+            }
+        }
+
+        // 2. Enter Arena Logic (When Logo is clicked)
+        function enterArena() {
+            // Body me class add karo jisse CSS animations trigger hon
+            document.body.classList.add('arena-active');
+            
+            // Wait for logo to move, then start shooting
             setTimeout(() => {
-                if(target === 'register') {
-                    currentMode = 'register';
-                    title.innerText = "REGISTER";
-                    inputs.innerHTML = `
-                        <div class="input-wrapper"><input type="number" id="gameUid" placeholder="Game UID"></div>
-                        <div class="input-wrapper"><input type="number" id="whatsapp" placeholder="WhatsApp Number"></div>
-                        <div class="input-wrapper"><input type="email" id="email" placeholder="Email Address"></div>
-                    `;
-                    footer.innerHTML = `Old Player? <span onclick="switchMode('login')">Login Here</span>`;
-                } else {
-                    currentMode = 'login';
-                    title.innerText = "LOGIN";
-                    inputs.innerHTML = `
-                        <div class="input-wrapper"><input type="number" id="gameUid" placeholder="Enter Game UID"></div>
-                    `;
-                    footer.innerHTML = `New Player? <span onclick="switchMode('register')">Register Now</span>`;
+                if(!firingInterval) {
+                    firingInterval = setInterval(shootBullet, 600); // Har 0.6 second me goli chalegi
                 }
-                content.style.opacity = '1';
+            }, 1000); // 1 second ka delay jisme logo upar jayega
+        }
+
+        // 3. Bullet Firing & Deflection Logic
+        function shootBullet() {
+            let battlefield = document.getElementById('battlefield');
+            
+            // Goli create karna
+            let bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            battlefield.appendChild(bullet);
+
+            // Goli ko right side (talwar wale ke paas) bhejna
+            setTimeout(() => {
+                // Screen ke right end se thoda pehle (jahan talwar wala hai)
+                bullet.style.left = 'calc(100% - 150px)'; 
+            }, 50);
+
+            // Jab goli talwar se takraye (0.4s baad), toh deflect karna
+            setTimeout(() => {
+                bullet.remove(); // Purani goli delete
+                createDeflectedBullet(); // Nayi deflect hui goli banana
+            }, 450);
+        }
+
+        function createDeflectedBullet() {
+            let battlefield = document.getElementById('battlefield');
+            let deflected = document.createElement('div');
+            deflected.className = 'bullet deflected';
+            
+            // Talwar ki position par set karna
+            deflected.style.left = 'calc(100% - 150px)';
+            deflected.style.top = '72%';
+            battlefield.appendChild(deflected);
+
+            // Goli ko bounce hoke wapas upar/peeche bhejna
+            setTimeout(() => {
+                deflected.style.top = '10%'; // Upar jayegi
+                deflected.style.left = 'calc(100% - 400px)'; // Thoda peeche giregi
+                deflected.style.transform = 'rotate(-45deg)'; // Tedi ho jayegi
+                deflected.style.opacity = '0'; // Gayab ho jayegi
+            }, 50);
+
+            // Animation khatam hone par element delete karna
+            setTimeout(() => {
+                deflected.remove();
             }, 300);
         }
 
-        function validateAuth() {
-            const uid = document.getElementById('gameUid').value;
-            if(!uid || uid.length < 5) return alert("Bhai, valid Game UID daal!");
+        // 4. Modal (Popup Forms) Logic
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
 
-            // LocalStorage Check (Logic jo tune bola)
-            let database = JSON.parse(localStorage.getItem('booyah_db')) || [];
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
 
-            if(currentMode === 'register') {
-                const wa = document.getElementById('whatsapp').value;
-                if(!wa) return alert("Number bhi daal bhai!");
-
-                // Check if UID exists
-                if(database.some(p => p.uid === uid)) {
-                    alert("Oye! Ye UID pehle se registered hai. Seedha Login kar.");
-                    switchMode('login');
-                } else {
-                    database.push({uid: uid, phone: wa});
-                    localStorage.setItem('booyah_db', JSON.stringify(database));
-                    alert("Registration Successful! Welcome to the Squad.");
-                    // window.location.href = "home.html"; // Jab home banega tab ye khulega
-                }
-            } else {
-                // Login Logic
-                if(database.some(p => p.uid === uid)) {
-                    alert("Login Success! Entering Arena...");
-                    // window.location.href = "home.html";
-                } else {
-                    alert("UID record mein nahi hai! Pehle Register karo.");
-                    switchMode('register');
-                }
+        // Agar user form ke bahar click kare toh form band ho jaye
+        window.onclick = function(event) {
+            let regModal = document.getElementById('registerModal');
+            let logModal = document.getElementById('loginModal');
+            if (event.target == regModal) {
+                regModal.style.display = "none";
+            }
+            if (event.target == logModal) {
+                logModal.style.display = "none";
             }
         }
     </script>
