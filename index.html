@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booyah Zone | Pro Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #050b18;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #101d35 0%, #050b18 100%);
+        }
+
+        /* Glowing Background Elements */
+        .bg-glow {
+            position: absolute; width: 300px; height: 300px;
+            background: rgba(0, 242, 254, 0.1);
+            filter: blur(100px); border-radius: 50%; z-index: -1;
+        }
+
+        .container {
+            width: 360px;
+            height: 580px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            position: relative;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-box {
+            position: absolute;
+            width: 85%;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        #loginForm { transform: translateX(0); opacity: 1; }
+        #registerForm { transform: translateX(120%); opacity: 0; visibility: hidden; }
+
+        /* Animation Classes */
+        .slide-left { transform: translateX(-120%) !important; opacity: 0 !important; visibility: hidden !important; }
+        .slide-right { transform: translateX(0) !important; opacity: 1 !important; visibility: visible !important; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00f2fe;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 35px;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .input-group { position: relative; margin-bottom: 20px; }
+
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #00f2fe;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .main-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .switch-area {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .switch-area span {
+            color: #00f2fe;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* Alert Box */
+        #customAlert {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 15px 25px; border-radius: 10px; background: #00f2fe; color: #000;
+            font-weight: bold; display: none; z-index: 100; animation: fadeInDown 0.5s;
+        }
+        @keyframes fadeInDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div id="customAlert"></div>
+
+    <div class="container">
+        <div class="form-box" id="loginForm">
+            <h2>LOGIN</h2>
+            <div class="input-group">
+                <input type="number" id="lMobile" placeholder="Enter Mobile Number">
+            </div>
+            <button class="main-btn" onclick="processAuth('login')">Access Gear</button>
+            <p class="switch-area">New Pilot? <span onclick="showForm('reg')">Create Profile</span></p>
+        </div>
+
+        <div class="form-box" id="registerForm">
+            <h2>REGISTER</h2>
+            <div class="input-group">
+                <input type="text" id="rName" placeholder="In-Game Name">
+            </div>
+            <div class="input-group">
+                <input type="number" id="rMobile" placeholder="Mobile Number">
+            </div>
+            <div class="input-group">
+                <input type="email" id="rEmail" placeholder="Email Address">
+            </div>
+            <button class="main-btn" onclick="processAuth('register')">Join Squad</button>
+            <p class="switch-area">Part of Squad? <span onclick="showForm('login')">Login Here</span></p>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(msg) {
+            const alertBox = document.getElementById('customAlert');
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+        }
+
+        function showForm(type) {
+            const login = document.getElementById('loginForm');
+            const reg = document.getElementById('registerForm');
+            if(type === 'reg') {
+                login.classList.add('slide-left');
+                reg.classList.add('slide-right');
+            } else {
+                login.classList.remove('slide-left');
+                reg.classList.remove('slide-right');
+            }
+        }
+
+        function processAuth(mode) {
+            // Fake Database using LocalStorage (For Testing)
+            let users = JSON.parse(localStorage.getItem('booyah_users')) || [];
+
+            if(mode === 'register') {
+                const name = document.getElementById('rName').value;
+                const mobile = document.getElementById('rMobile').value;
+                const email = document.getElementById('rEmail').value;
+
+                if(!name || !mobile || !email) return showAlert("Fill all details, soldier!");
+
+                // Check if already exists
+                let exists = users.find(u => u.mobile === mobile);
+                if(exists) {
+                    showAlert("Already Registered! Redirecting to Login...");
+                    setTimeout(() => showForm('login'), 1500);
+                    return;
+                }
+
+                // Save User
+                users.push({name, mobile, email});
+                localStorage.setItem('booyah_users', JSON.stringify(users));
+                showAlert("Registration Successful! Welcome.");
+                setTimeout(() => window.location.href = "home.html", 2000);
+
+            } else {
+                const mobile = document.getElementById('lMobile').value;
+                if(!mobile) return showAlert("Enter your number!");
+
+                let user = users.find(u => u.mobile === mobile);
+                if(user) {
+                    showAlert("Welcome Back, " + user.name + "!");
+                    setTimeout(() => window.location.href = "home.html", 2000);
+                } else {
+                    showAlert("No account found! Please Register first.");
+                    setTimeout(() => showForm('reg'), 1500);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
