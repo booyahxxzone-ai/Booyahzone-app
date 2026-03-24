@@ -3,116 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booyah Zone | Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
-    
+    <title>BOOYAH ZONE - Enter the Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* CSS resets for uniform look across browsers */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body, html {
             height: 100%;
             width: 100%;
-            /* White and Orange Mix Background */
-            background: radial-gradient(circle, #ffffff 40%, #ff9900 150%);
+            /* Professional Radial Gradient Background (White-Orange Mix) */
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,160,0,1) 120%);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically */
+            overflow: hidden; /* No scrollbars */
+            color: #222; /* Text color */
+        }
+
+        /* --- Header Section --- */
+        header {
+            width: 100%;
+            height: 120px;
+            position: absolute;
+            top: 30px;
+            display: flex;
             justify-content: center;
-            overflow: hidden;
-            font-family: 'Rajdhani', sans-serif;
+            align-items: center;
+            padding: 0 40px;
         }
 
-        /* Top Title */
-        .top-title {
-            position: absolute;
-            top: 50px;
+        /* BOOYAH ZONE Title - Modern Stacked Style */
+        #page-title {
+            text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: #333;
-            text-shadow: 2px 2px #ff9900;
+            line-height: 1;
             letter-spacing: 5px;
+            text-transform: uppercase;
         }
 
-        /* Customer Service Button */
+        #page-title span {
+            color: #333; /* For 'BOOYAH' */
+            text-shadow: 2px 2px #ff9900;
+        }
+
+        #page-title span.sub {
+            color: #000; /* For 'ZONE' */
+            text-shadow: 1px 1px #ffaa33;
+        }
+
+        /* Customer Service Button - Professionally Aligned with Title */
         .service-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             text-decoration: none;
             text-align: center;
-            transition: transform 0.3s ease;
-            z-index: 100;
-        }
-
-        .service-link:hover {
-            transform: scale(1.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100px; /* Fixed size */
+            height: 100px;
         }
 
         .service-img {
-            width: 80px; /* Mechanic image */
-            height: 80px;
+            width: 100%; height: 100%;
             border-radius: 50%;
-            border: 3px solid #ff9900;
+            border: 4px solid #ff9900;
             object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Soft professional shadow */
         }
 
+        /* "Customer Service" text below the image */
         .service-text {
             display: block;
+            margin-top: 8px;
+            font-family: 'Rajdhani', sans-serif;
             font-size: 14px;
-            font-weight: 900;
-            color: #333;
-            margin-top: 5px;
+            font-weight: 700;
+            color: #222;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Center Logo Container */
+        /* --- Logo Container --- */
         .logo-container {
             text-align: center;
             cursor: pointer;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            z-index: 10;
         }
 
         .logo-container:hover {
-            transform: scale(1.05);
+            transform: scale(1.05); /* Gentle zoom on hover */
         }
 
+        /* Main Logo */
         #main-logo {
-            width: 350px; /* Size as per your logo */
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            width: 380px; /* Logo size */
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); /* Very soft professional shadow */
         }
 
+        /* Tap instruction text */
         .tap-to-open {
-            margin-top: 20px;
+            margin-top: 30px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            color: #444;
-            letter-spacing: 3px;
+            font-size: 1.3rem;
+            color: #333;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            animation: blink 1.5s infinite;
+            animation: breathe 2s infinite; /* Subtle breathing animation */
         }
 
-        @keyframes blink {
+        @keyframes breathe {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Media queries for smaller screens (like mobile) */
+        @media (max-width: 600px) {
+            #page-title { font-size: 2.2rem; }
+            #main-logo { width: 300px; }
+            .tap-to-open { font-size: 1.1rem; margin-top: 20px; }
+            .service-img { width: 70px; height: 70px; }
         }
     </style>
 </head>
 <body>
 
-    <h1 class="top-title">BOOYAH ZONE</h1>
-
-    <a href="https://t.me/akashkohli0" target="_blank" class="service-link">
-        <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Service" class="service-img">
+    <header>
+        <div id="page-title">
+            <span>BOOYAH</span><br>
+            <span class="sub">ZONE</span>
+        </div>
+    </header>
+    
+    <a href="https://t.me/akashkohli0" target="_blank" class="service-link" style="position:absolute; top:30px; right:40px;">
+        <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Customer Service" class="service-img">
         <span class="service-text">Customer Service</span>
     </a>
 
     <div class="logo-container" onclick="location.href='index2.html'">
-        <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" id="main-logo" alt="Booyah Zone Logo">
+        <img src="https://i.ibb.co/ZRNx7ptw/1774105059734.png" id="main-logo" alt="Booyah Zone Arena Logo">
         <p class="tap-to-open">Tap the logo to open</p>
     </div>
 
