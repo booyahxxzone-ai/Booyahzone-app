@@ -2,218 +2,235 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booyah Zone | Pro Auth</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Booyah Zone | Pro Gaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        :root {
+            --neon: #00f2fe;
+            --accent: #4facfe;
+            --bg: #050811;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #050b18;
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background: radial-gradient(circle at center, #101d35 0%, #050b18 100%);
+            color: #fff;
         }
 
-        /* Glowing Background Elements */
-        .bg-glow {
-            position: absolute; width: 300px; height: 300px;
-            background: rgba(0, 242, 254, 0.1);
-            filter: blur(100px); border-radius: 50%; z-index: -1;
-        }
-
-        .container {
-            width: 360px;
-            height: 580px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            position: relative;
-            padding: 40px 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        /* --- GAMING LOGO --- */
+        .app-logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            border: 3px solid var(--neon);
+            border-radius: 20px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
+            align-items: center;
+            position: relative;
+            transform: rotate(45deg);
+            box-shadow: 0 0 20px var(--neon), inset 0 0 10px var(--neon);
+            animation: float 3s ease-in-out infinite;
         }
 
-        .form-box {
-            position: absolute;
-            width: 85%;
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        .app-logo span {
+            transform: rotate(-45deg);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon);
         }
 
-        #loginForm { transform: translateX(0); opacity: 1; }
-        #registerForm { transform: translateX(120%); opacity: 0; visibility: hidden; }
+        @keyframes float {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(-10px); }
+        }
 
-        /* Animation Classes */
-        .slide-left { transform: translateX(-120%) !important; opacity: 0 !important; visibility: hidden !important; }
-        .slide-right { transform: translateX(0) !important; opacity: 1 !important; visibility: visible !important; }
+        /* --- CONTAINER --- */
+        .app-shell {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .auth-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
         h2 {
             font-family: 'Orbitron', sans-serif;
-            color: #00f2fe;
-            font-size: 28px;
             text-align: center;
-            margin-bottom: 35px;
-            text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+            font-size: 22px;
             letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: var(--neon);
         }
 
-        .input-group { position: relative; margin-bottom: 20px; }
+        /* --- INPUTS --- */
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
         input {
             width: 100%;
-            padding: 14px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
             color: #fff;
+            font-size: 16px;
+            font-weight: 500;
             outline: none;
-            font-size: 14px;
             transition: 0.3s;
         }
 
         input:focus {
-            border-color: #00f2fe;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            border-color: var(--neon);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
 
-        .main-btn {
+        /* --- BUTTONS --- */
+        .action-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            padding: 16px;
+            background: linear-gradient(90deg, var(--neon), var(--accent));
             border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 700;
+            border-radius: 15px;
+            color: #000;
             font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
+            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.3);
             transition: 0.3s;
-            text-transform: uppercase;
         }
 
-        .main-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
-        }
+        .action-btn:active { transform: scale(0.96); }
 
-        .switch-area {
+        .footer-link {
             text-align: center;
             margin-top: 25px;
-            color: #888;
-            font-size: 13px;
+            font-size: 14px;
+            color: #aaa;
         }
 
-        .switch-area span {
-            color: #00f2fe;
+        .footer-link span {
+            color: var(--neon);
+            font-weight: 700;
             cursor: pointer;
-            font-weight: 600;
-            text-decoration: underline;
         }
 
-        /* Alert Box */
-        #customAlert {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            padding: 15px 25px; border-radius: 10px; background: #00f2fe; color: #000;
-            font-weight: bold; display: none; z-index: 100; animation: fadeInDown 0.5s;
-        }
-        @keyframes fadeInDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
+        /* --- ANIMATIONS --- */
+        .fade-out { opacity: 0; transform: translateY(20px); }
+        .fade-in { opacity: 1; transform: translateY(0); }
+
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
-    <div id="customAlert"></div>
+    <div class="app-shell">
+        <div class="app-logo"><span>B</span></div>
+        
+        <div class="auth-card" id="authBox">
+            <h2 id="formTitle">LOGIN</h2>
+            
+            <div id="dynamicInputs">
+                <div class="input-box">
+                    <input type="number" id="lUid" placeholder="Game UID">
+                </div>
+            </div>
 
-    <div class="container">
-        <div class="form-box" id="loginForm">
-            <h2>LOGIN</h2>
-            <div class="input-group">
-                <input type="number" id="lMobile" placeholder="Enter Mobile Number">
-            </div>
-            <button class="main-btn" onclick="processAuth('login')">Access Gear</button>
-            <p class="switch-area">New Pilot? <span onclick="showForm('reg')">Create Profile</span></p>
-        </div>
+            <button class="action-btn" onclick="handleSubmit()">START PLAYING</button>
 
-        <div class="form-box" id="registerForm">
-            <h2>REGISTER</h2>
-            <div class="input-group">
-                <input type="text" id="rName" placeholder="In-Game Name">
-            </div>
-            <div class="input-group">
-                <input type="number" id="rMobile" placeholder="Mobile Number">
-            </div>
-            <div class="input-group">
-                <input type="email" id="rEmail" placeholder="Email Address">
-            </div>
-            <button class="main-btn" onclick="processAuth('register')">Join Squad</button>
-            <p class="switch-area">Part of Squad? <span onclick="showForm('login')">Login Here</span></p>
+            <p class="footer-link" id="switchArea">
+                Don't have an account? <span onclick="toggleAuth()">Register</span>
+            </p>
         </div>
     </div>
 
     <script>
-        function showAlert(msg) {
-            const alertBox = document.getElementById('customAlert');
-            alertBox.innerText = msg;
-            alertBox.style.display = 'block';
-            setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+        let isLoginMode = true;
+
+        function toggleAuth() {
+            const authBox = document.getElementById('authBox');
+            const title = document.getElementById('formTitle');
+            const inputs = document.getElementById('dynamicInputs');
+            const footer = document.getElementById('switchArea');
+
+            authBox.classList.add('fade-out');
+
+            setTimeout(() => {
+                isLoginMode = !isLoginMode;
+                if (!isLoginMode) {
+                    title.innerText = "REGISTER";
+                    inputs.innerHTML = `
+                        <div class="input-box"><input type="number" id="rUid" placeholder="Game UID"></div>
+                        <div class="input-box"><input type="number" id="rMobile" placeholder="Mobile Number"></div>
+                        <div class="input-box"><input type="email" id="rEmail" placeholder="Email Address"></div>
+                    `;
+                    footer.innerHTML = `Already a member? <span onclick="toggleAuth()">Login</span>`;
+                } else {
+                    title.innerText = "LOGIN";
+                    inputs.innerHTML = `
+                        <div class="input-box"><input type="number" id="lUid" placeholder="Game UID"></div>
+                    `;
+                    footer.innerHTML = `Don't have an account? <span onclick="toggleAuth()">Register</span>`;
+                }
+                authBox.classList.remove('fade-out');
+                authBox.classList.add('fade-in');
+            }, 400);
         }
 
-        function showForm(type) {
-            const login = document.getElementById('loginForm');
-            const reg = document.getElementById('registerForm');
-            if(type === 'reg') {
-                login.classList.add('slide-left');
-                reg.classList.add('slide-right');
-            } else {
-                login.classList.remove('slide-left');
-                reg.classList.remove('slide-right');
-            }
-        }
-
-        function processAuth(mode) {
-            // Fake Database using LocalStorage (For Testing)
-            let users = JSON.parse(localStorage.getItem('booyah_users')) || [];
-
-            if(mode === 'register') {
-                const name = document.getElementById('rName').value;
-                const mobile = document.getElementById('rMobile').value;
-                const email = document.getElementById('rEmail').value;
-
-                if(!name || !mobile || !email) return showAlert("Fill all details, soldier!");
-
-                // Check if already exists
-                let exists = users.find(u => u.mobile === mobile);
-                if(exists) {
-                    showAlert("Already Registered! Redirecting to Login...");
-                    setTimeout(() => showForm('login'), 1500);
+        function handleSubmit() {
+            // Hum abhi localStorage use karenge real feeling ke liye
+            let users = JSON.parse(localStorage.getItem('players')) || [];
+            
+            if(!isLoginMode) {
+                const uid = document.getElementById('rUid').value;
+                const mob = document.getElementById('rMobile').value;
+                if(uid.length < 5) return alert("Bhai, sahi UID daal!");
+                
+                if(users.some(u => u.uid === uid)) {
+                    alert("Ye UID pehle se registered hai! Login kar.");
+                    toggleAuth();
                     return;
                 }
 
-                // Save User
-                users.push({name, mobile, email});
-                localStorage.setItem('booyah_users', JSON.stringify(users));
-                showAlert("Registration Successful! Welcome.");
-                setTimeout(() => window.location.href = "home.html", 2000);
-
+                users.push({uid, mob});
+                localStorage.setItem('players', JSON.stringify(users));
+                alert("Welcome to Booyah Zone!");
+                window.location.href = "home.html";
             } else {
-                const mobile = document.getElementById('lMobile').value;
-                if(!mobile) return showAlert("Enter your number!");
-
-                let user = users.find(u => u.mobile === mobile);
-                if(user) {
-                    showAlert("Welcome Back, " + user.name + "!");
-                    setTimeout(() => window.location.href = "home.html", 2000);
+                const uid = document.getElementById('lUid').value;
+                if(users.some(u => u.uid === uid)) {
+                    window.location.href = "home.html";
                 } else {
-                    showAlert("No account found! Please Register first.");
-                    setTimeout(() => showForm('reg'), 1500);
+                    alert("UID nahi mili! Pehle register kar.");
+                    toggleAuth();
                 }
             }
         }
