@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booyah Zone | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            /* White and Orange Mix Background */
+            background: radial-gradient(circle, #ffffff 40%, #ff9900 150%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        /* Top Title */
+        .top-title {
+            position: absolute;
+            top: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #333;
+            text-shadow: 2px 2px #ff9900;
+            letter-spacing: 5px;
+        }
+
+        /* Customer Service Button */
+        .service-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .service-link:hover {
+            transform: scale(1.1);
+        }
+
+        .service-img {
+            width: 80px; /* Mechanic image */
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #ff9900;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .service-text {
+            display: block;
+            font-size: 14px;
+            font-weight: 900;
+            color: #333;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Center Logo Container */
+        .logo-container {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        #main-logo {
+            width: 350px; /* Size as per your logo */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+
+        .tap-to-open {
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #444;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="top-title">BOOYAH ZONE</h1>
+
+    <a href="https://t.me/akashkohli0" target="_blank" class="service-link">
+        <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Service" class="service-img">
+        <span class="service-text">Customer Service</span>
+    </a>
+
+    <div class="logo-container" onclick="location.href='index2.html'">
+        <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" id="main-logo" alt="Booyah Zone Logo">
+        <p class="tap-to-open">Tap the logo to open</p>
+    </div>
+
+</body>
+</html>
