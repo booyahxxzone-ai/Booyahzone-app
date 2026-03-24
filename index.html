@@ -3,234 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Booyah Zone | Pro Gaming</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>Booyah Zone | Entrance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon: #00f2fe;
-            --accent: #4facfe;
-            --bg: #050811;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg: #02050a;
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
+            background: var(--bg);
             height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            color: white;
             overflow: hidden;
-            color: #fff;
         }
 
-        /* --- GAMING LOGO --- */
-        .app-logo {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px;
-            border: 3px solid var(--neon);
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            transform: rotate(45deg);
-            box-shadow: 0 0 20px var(--neon), inset 0 0 10px var(--neon);
-            animation: float 3s ease-in-out infinite;
+        /* --- LOGO AREA --- */
+        .logo-section {
+            width: 160px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.6));
+            animation: bounceIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .app-logo span {
-            transform: rotate(-45deg);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: rotate(45deg) translateY(0); }
-            50% { transform: rotate(45deg) translateY(-10px); }
-        }
-
-        /* --- CONTAINER --- */
-        .app-shell {
+        .logo-section img {
             width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            position: relative;
+            border-radius: 25px;
         }
 
+        @keyframes bounceIn {
+            from { transform: scale(0.3); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- AUTH CARD --- */
         .auth-card {
-            background: var(--glass);
+            width: 88%;
+            max-width: 380px;
+            background: var(--card-bg);
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 35px;
             padding: 40px 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            transition: 0.5s all ease;
         }
 
         h2 {
             font-family: 'Orbitron', sans-serif;
-            text-align: center;
             font-size: 22px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
             color: var(--neon);
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
         /* --- INPUTS --- */
-        .input-box {
-            position: relative;
-            margin-bottom: 20px;
+        .input-wrapper {
+            margin-bottom: 18px;
         }
 
         input {
             width: 100%;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            color: #fff;
+            color: white;
             font-size: 16px;
-            font-weight: 500;
             outline: none;
             transition: 0.3s;
         }
 
         input:focus {
             border-color: var(--neon);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
 
-        /* --- BUTTONS --- */
-        .action-btn {
+        /* --- MAIN BUTTON --- */
+        .primary-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, var(--neon), var(--accent));
+            padding: 18px;
+            background: #ffffff;
+            color: #000;
             border: none;
             border-radius: 15px;
-            color: #000;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.3);
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             transition: 0.3s;
         }
 
-        .action-btn:active { transform: scale(0.96); }
+        .primary-btn:active { transform: scale(0.96); }
 
-        .footer-link {
-            text-align: center;
+        .toggle-text {
             margin-top: 25px;
             font-size: 14px;
-            color: #aaa;
+            color: #b0b0b0;
         }
 
-        .footer-link span {
+        .toggle-text span {
             color: var(--neon);
-            font-weight: 700;
+            font-weight: bold;
             cursor: pointer;
+            text-decoration: underline;
         }
 
-        /* --- ANIMATIONS --- */
-        .fade-out { opacity: 0; transform: translateY(20px); }
-        .fade-in { opacity: 1; transform: translateY(0); }
+        /* --- SWITCH ANIMATION --- */
+        .fade-anim { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
-        <div class="app-logo"><span>B</span></div>
-        
-        <div class="auth-card" id="authBox">
+    <div class="logo-section">
+        <img src="https://i.ibb.co/20tgpdNs/1774105059734.png" alt="Booyah Zone">
+    </div>
+
+    <div class="auth-card" id="authContainer">
+        <div id="authContent" class="fade-anim">
             <h2 id="formTitle">LOGIN</h2>
             
-            <div id="dynamicInputs">
-                <div class="input-box">
-                    <input type="number" id="lUid" placeholder="Game UID">
+            <div id="inputGroup">
+                <div class="input-wrapper">
+                    <input type="number" id="gameUid" placeholder="Enter Game UID">
                 </div>
             </div>
 
-            <button class="action-btn" onclick="handleSubmit()">START PLAYING</button>
+            <button class="primary-btn" onclick="validateAuth()">ACCESS ARENA</button>
 
-            <p class="footer-link" id="switchArea">
-                Don't have an account? <span onclick="toggleAuth()">Register</span>
+            <p class="toggle-text" id="footerLink">
+                New Player? <span onclick="switchMode('register')">Register Now</span>
             </p>
         </div>
     </div>
 
     <script>
-        let isLoginMode = true;
+        let currentMode = 'login';
 
-        function toggleAuth() {
-            const authBox = document.getElementById('authBox');
+        function switchMode(target) {
+            const content = document.getElementById('authContent');
             const title = document.getElementById('formTitle');
-            const inputs = document.getElementById('dynamicInputs');
-            const footer = document.getElementById('switchArea');
+            const inputs = document.getElementById('inputGroup');
+            const footer = document.getElementById('footerLink');
 
-            authBox.classList.add('fade-out');
-
+            // Animation effect
+            content.style.opacity = '0';
+            
             setTimeout(() => {
-                isLoginMode = !isLoginMode;
-                if (!isLoginMode) {
+                if(target === 'register') {
+                    currentMode = 'register';
                     title.innerText = "REGISTER";
                     inputs.innerHTML = `
-                        <div class="input-box"><input type="number" id="rUid" placeholder="Game UID"></div>
-                        <div class="input-box"><input type="number" id="rMobile" placeholder="Mobile Number"></div>
-                        <div class="input-box"><input type="email" id="rEmail" placeholder="Email Address"></div>
+                        <div class="input-wrapper"><input type="number" id="gameUid" placeholder="Game UID"></div>
+                        <div class="input-wrapper"><input type="number" id="whatsapp" placeholder="WhatsApp Number"></div>
+                        <div class="input-wrapper"><input type="email" id="email" placeholder="Email Address"></div>
                     `;
-                    footer.innerHTML = `Already a member? <span onclick="toggleAuth()">Login</span>`;
+                    footer.innerHTML = `Old Player? <span onclick="switchMode('login')">Login Here</span>`;
                 } else {
+                    currentMode = 'login';
                     title.innerText = "LOGIN";
                     inputs.innerHTML = `
-                        <div class="input-box"><input type="number" id="lUid" placeholder="Game UID"></div>
+                        <div class="input-wrapper"><input type="number" id="gameUid" placeholder="Enter Game UID"></div>
                     `;
-                    footer.innerHTML = `Don't have an account? <span onclick="toggleAuth()">Register</span>`;
+                    footer.innerHTML = `New Player? <span onclick="switchMode('register')">Register Now</span>`;
                 }
-                authBox.classList.remove('fade-out');
-                authBox.classList.add('fade-in');
-            }, 400);
+                content.style.opacity = '1';
+            }, 300);
         }
 
-        function handleSubmit() {
-            // Hum abhi localStorage use karenge real feeling ke liye
-            let users = JSON.parse(localStorage.getItem('players')) || [];
-            
-            if(!isLoginMode) {
-                const uid = document.getElementById('rUid').value;
-                const mob = document.getElementById('rMobile').value;
-                if(uid.length < 5) return alert("Bhai, sahi UID daal!");
-                
-                if(users.some(u => u.uid === uid)) {
-                    alert("Ye UID pehle se registered hai! Login kar.");
-                    toggleAuth();
-                    return;
-                }
+        function validateAuth() {
+            const uid = document.getElementById('gameUid').value;
+            if(!uid || uid.length < 5) return alert("Bhai, valid Game UID daal!");
 
-                users.push({uid, mob});
-                localStorage.setItem('players', JSON.stringify(users));
-                alert("Welcome to Booyah Zone!");
-                window.location.href = "home.html";
-            } else {
-                const uid = document.getElementById('lUid').value;
-                if(users.some(u => u.uid === uid)) {
-                    window.location.href = "home.html";
+            // LocalStorage Check (Logic jo tune bola)
+            let database = JSON.parse(localStorage.getItem('booyah_db')) || [];
+
+            if(currentMode === 'register') {
+                const wa = document.getElementById('whatsapp').value;
+                if(!wa) return alert("Number bhi daal bhai!");
+
+                // Check if UID exists
+                if(database.some(p => p.uid === uid)) {
+                    alert("Oye! Ye UID pehle se registered hai. Seedha Login kar.");
+                    switchMode('login');
                 } else {
-                    alert("UID nahi mili! Pehle register kar.");
-                    toggleAuth();
+                    database.push({uid: uid, phone: wa});
+                    localStorage.setItem('booyah_db', JSON.stringify(database));
+                    alert("Registration Successful! Welcome to the Squad.");
+                    // window.location.href = "home.html"; // Jab home banega tab ye khulega
+                }
+            } else {
+                // Login Logic
+                if(database.some(p => p.uid === uid)) {
+                    alert("Login Success! Entering Arena...");
+                    // window.location.href = "home.html";
+                } else {
+                    alert("UID record mein nahi hai! Pehle Register karo.");
+                    switchMode('register');
                 }
             }
         }
