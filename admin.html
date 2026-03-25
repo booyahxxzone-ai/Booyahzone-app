@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOYAH ZONE | MASTER ADMIN PANEL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff9900;
+            --secondary: #2d3436;
+            --dark-bg: #0f1113;
+            --card-bg: #1a1d21;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --accent: #00d2ff;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: 260px;
+            background: var(--card-bg);
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            transition: 0.3s;
+        }
+
+        .side-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .side-header h1 {
+            font-family: 'Orbitron';
+            font-size: 18px;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            padding: 20px 0;
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary);
+            background: rgba(255, 153, 0, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .logout-btn {
+            padding: 20px;
+            border-top: 1px solid #333;
+            color: var(--danger);
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card-bg);
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid #333;
+        }
+
+        .admin-profile img {
+            width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary);
+        }
+
+        /* --- Dashboard Stats --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            border-bottom: 4px solid var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .stat-card h3 { font-size: 14px; color: var(--text-gray); margin-bottom: 10px; }
+        .stat-card p { font-size: 28px; font-weight: 800; font-family: 'Orbitron'; }
+
+        /* --- Management Sections --- */
+        .section-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron';
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: #000;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* --- Table Styling --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-gray);
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+            font-size: 15px;
+        }
+
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pill-active { background: rgba(46, 204, 113, 0.2); color: var(--success); }
+        .pill-pending { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+
+        .action-btns i {
+            margin-right: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-btns i:hover { color: var(--primary); }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .sidebar span, .side-header h1 { display: none; }
+            .main-content { margin-left: 70px; padding: 15px; }
+            .nav-item { justify-content: center; padding: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="side-header">
+            <h1>BOOYAH ADMIN</h1>
+        </div>
+        <div class="nav-links">
+            <div class="nav-item active" onclick="showTab('dashboard')">
+                <i class="fas fa-th-large"></i> <span>Dashboard</span>
+            </div>
+            <div class="nav-item" onclick="showTab('matches')">
+                <i class="fas fa-gamepad"></i> <span>Manage Matches</span>
+            </div>
+            <div class="nav-item" onclick="showTab('users')">
+                <i class="fas fa-users"></i> <span>Users List</span>
+            </div>
+            <div class="nav-item" onclick="showTab('withdraw')">
+                <i class="fas fa-hand-holding-usd"></i> <span>Withdrawals</span>
+            </div>
+            <div class="nav-item" onclick="showTab('settings')">
+                <i class="fas fa-cog"></i> <span>App Settings</span>
+            </div>
+        </div>
+        <div class="logout-btn" onclick="location.href='index.html'">
+            <i class="fas fa-power-off"></i> <span>LOGOUT</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2 id="tabTitle">DASHBOARD OVERVIEW</h2>
+            <div class="admin-profile">
+                <span style="font-size: 14px; font-weight: bold;">AKASH ADMIN</span>
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Admin">
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>TOTAL USERS</h3>
+                <p id="totalUsers">1,245</p>
+            </div>
+            <div class="stat-card">
+                <h3>TOTAL EARNING</h3>
+                <p id="totalEarn">₹45,200</p>
+            </div>
+            <div class="stat-card">
+                <h3>LIVE MATCHES</h3>
+                <p id="liveMatch">08</p>
+            </div>
+            <div class="stat-card">
+                <h3>WITHDRAW REQUESTS</h3>
+                <p id="pendingWithdraw" style="color: var(--danger);">12</p>
+            </div>
+        </div>
+
+        <div id="dashboard" class="tab-content">
+            <div class="section-box">
+                <div class="section-title">
+                    RECENT TRANSACTIONS
+                    <button class="btn-add">View All</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#667788</td>
+                            <td>₹200.00</td>
+                            <td>Deposit</td>
+                            <td><span class="status-pill pill-active">Success</span></td>
+                            <td>2 mins ago</td>
+                        </tr>
+                        <tr>
+                            <td>#992233</td>
+                            <td>₹500.00</td>
+                            <td>Withdraw</td>
+                            <td><span class="status-pill pill-pending">Pending</span></td>
+                            <td>15 mins ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="matches" class="tab-content" style="display: none;">
+            <div class="section-box">
+                <div class="section-title">
+                    ACTIVE TOURNAMENTS
+                    <button class="btn-add" onclick="addNewMatch()">+ ADD NEW MATCH</button>
+                </div>
+                <table id="matchTable">
+                    <thead>
+                        <tr>
+                            <th>Match Title</th>
+                            <th>Type</th>
+                            <th>Entry</th>
+                            <th>Prize</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Solo Clash Squad</td>
+                            <td>1v1</td>
+                            <td>₹20</td>
+                            <td>₹40</td>
+                            <td class="action-btns">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash" style="color:var(--danger)"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="users" class="tab-content" style="display: none;">
+            <div class="section-box">
+                <div class="section-title">REGISTERED PLAYERS</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>UID</th>
+                            <th>Username</th>
+                            <th>Wallet</th>
+                            <th>Total Wins</th>
+                            <th>Block</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>667788</td>
+                            <td>Akash Kohli</td>
+                            <td>₹500</td>
+                            <td>12</td>
+                            <td><button style="color:var(--danger); background:none; border:none; cursor:pointer;">BAN</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            // Remove active class from nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show current tab
+            document.getElementById(tabId).style.display = 'block';
+            document.getElementById('tabTitle').innerText = tabId.toUpperCase() + " OVERVIEW";
+            
+            // Add active class to clicked nav
+            event.currentTarget.classList.add('active');
+        }
+
+        function addNewMatch() {
+            let title = prompt("Enter Match Title:");
+            if(title) {
+                let table = document.getElementById('matchTable').getElementsByTagName('tbody')[0];
+                let row = table.insertRow();
+                row.innerHTML = `<td>${title}</td><td>Solo</td><td>₹10</td><td>₹20</td><td class="action-btns"><i class="fas fa-edit"></i><i class="fas fa-trash" style="color:var(--danger)"></i></td>`;
+            }
+        }
+    </script>
+</body>
+</html>
