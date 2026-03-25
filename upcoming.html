@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UPCOMING MATCHES | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff9900;
+            --secondary: #121212;
+            --bg: #f0f3f7;
+            --white: #ffffff;
+            --text: #2d3436;
+            --blue: #0984e3;
+            --green: #27ae60;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 20px;
+        }
+
+        /* --- Custom Header --- */
+        .nav-header {
+            background: var(--white);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .nav-header h1 {
+            font-family: 'Orbitron';
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Filter Tabs --- */
+        .filter-tabs {
+            display: flex;
+            background: #fff;
+            padding: 10px 15px;
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            background: #f1f1f1;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #666;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 153, 0, 0.3);
+        }
+
+        /* --- Match Card Design --- */
+        .match-list {
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .match-card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            position: relative;
+        }
+
+        .match-banner {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://i.ibb.co/ Rp4VJdQX/1774105059734.png'); /* Temporary Fallback Banner */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+            color: #fff;
+        }
+
+        /* Specifying card for Free Fire */
+        .ff-banner { background-image: linear-gradient(to right, rgba(0,0,0,0.8), transparent), url('https://img.freepik.com/premium-photo/gaming-background_924629-23653.jpg'); }
+
+        .match-title {
+            font-family: 'Orbitron';
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .match-time {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
+            color: #ffcc00;
+        }
+
+        /* Stats Row */
+        .match-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #fafafa;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .stat-item { text-align: center; flex: 1; }
+        .stat-label { font-size: 10px; color: #888; font-weight: 700; text-transform: uppercase; }
+        .stat-value { font-size: 15px; font-weight: 700; color: var(--secondary); display: block; }
+
+        /* Progress Bar Section */
+        .match-join-info {
+            padding: 15px;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 65%; /* Dummy Value */
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Footer Action */
+        .card-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-join {
+            flex: 2;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron';
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,153,0,0.3);
+        }
+
+        .btn-details {
+            flex: 1;
+            padding: 12px;
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* --- Animation --- */
+        .match-card {
+            animation: fadeInUp 0.5s ease backwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <i class="fas fa-arrow-left back-btn" onclick="location.href='home.html'"></i>
+        <h1>Upcoming Matches</h1>
+    </header>
+
+    <div class="filter-tabs">
+        <div class="filter-btn active">ALL MATCHES</div>
+        <div class="filter-btn">1 V 1</div>
+        <div class="filter-btn">2 V 2</div>
+        <div class="filter-btn">4 V 4</div>
+    </div>
+
+    <div class="match-list">
+
+        <div class="match-card" style="animation-delay: 0.1s;">
+            <div class="match-banner ff-banner">
+                <div class="match-title">FF SOLO WAR #001</div>
+                <div class="match-time"><i class="far fa-clock"></i> 25 MARCH | 04:30 PM</div>
+            </div>
+            
+            <div class="match-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Prize Pool</span>
+                    <span class="stat-value">₹500</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Per Kill</span>
+                    <span class="stat-value">₹10</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Entry Fee</span>
+                    <span class="stat-value" style="color:var(--green)">₹30</span>
+                </div>
+            </div>
+
+            <div class="match-join-info">
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Filling Fast...</span>
+                        <span>32/48 Joined</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 66%;"></div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn-details">DETAILS</button>
+                    <button class="btn-join">JOIN NOW</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="match-card" style="animation-delay: 0.2s;">
+            <div class="match-banner ff-banner" style="filter: hue-rotate(45deg);">
+                <div class="match-title">FF DUO BATTLE #042</div>
+                <div class="match-time"><i class="far fa-clock"></i> 26 MARCH | 08:00 PM</div>
+            </div>
+            
+            <div class="match-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Prize Pool</span>
+                    <span class="stat-value">₹800</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Per Kill</span>
+                    <span class="stat-value">₹15</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Entry Fee</span>
+                    <span class="stat-value" style="color:var(--green)">₹50</span>
+                </div>
+            </div>
+
+            <div class="match-join-info">
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Spot left: 8</span>
+                        <span>16/24 Joined</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 50%; background: #0984e3;"></div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn-details">DETAILS</button>
+                    <button class="btn-join">JOIN NOW</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="match-card" style="animation-delay: 0.3s;">
+            <div class="match-banner ff-banner" style="filter: grayscale(0.5) contrast(1.2);">
+                <div class="match-title">FF SQUAD WARFARE</div>
+                <div class="match-time"><i class="far fa-clock"></i> 27 MARCH | 10:00 AM</div>
+            </div>
+            
+            <div class="match-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Prize Pool</span>
+                    <span class="stat-value">₹2000</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Per Kill</span>
+                    <span class="stat-value">₹20</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Entry Fee</span>
+                    <span class="stat-value" style="color:var(--green)">₹100</span>
+                </div>
+            </div>
+
+            <div class="match-join-info">
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Register Soon!</span>
+                        <span>40/48 Joined</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%; background: #d63031;"></div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn-details">DETAILS</button>
+                    <button class="btn-join">JOIN NOW</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    </script>
+
+</body>
+</html>
