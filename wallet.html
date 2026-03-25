@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html>
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,222 +12,174 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #f5f7fa; --dark: #121212; --white: #ffffff; --green: #27ae60; --gray: #95a5a6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
+        :root { --primary: #ff9900; --bg: #0f0f0f; --card: #1a1a1a; --white: #ffffff; --green: #27ae60; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
         
-        body { background: var(--bg); color: var(--dark); padding-bottom: 100px; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--white); padding-bottom: 100px; }
 
         /* Wallet Header */
         .wallet-header {
-            background: linear-gradient(135deg, var(--dark), #2d3436);
-            padding: 40px 20px; text-align: center; color: #fff;
-            border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #1e1e1e, #2d3436);
+            padding: 50px 20px; text-align: center;
+            border-radius: 0 0 40px 40px; border-bottom: 2px solid var(--primary);
         }
-        .balance-label { font-size: 14px; opacity: 0.8; font-family: 'Orbitron'; letter-spacing: 1px; }
-        .main-balance { font-size: 48px; font-family: 'Orbitron'; font-weight: 900; color: var(--primary); margin: 10px 0; text-shadow: 0 0 15px rgba(255,153,0,0.3); }
+        .main-balance { font-size: 50px; font-family: 'Orbitron'; font-weight: 900; color: var(--primary); margin: 10px 0; }
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* Action Buttons */
+        /* Buttons */
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: -30px; }
         .btn-wallet {
-            background: var(--white); padding: 20px; border-radius: 22px;
-            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-            cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(0,0,0,0.02);
+            background: var(--card); padding: 20px; border-radius: 20px;
+            text-align: center; border: 1px solid #333; cursor: pointer;
         }
-        .btn-wallet:active { transform: scale(0.92); }
-        .btn-wallet i { font-size: 26px; color: var(--primary); margin-bottom: 10px; }
-        .btn-wallet span { display: block; font-weight: 800; font-family: 'Orbitron'; font-size: 11px; color: var(--dark); }
+        .btn-wallet i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
+        .btn-wallet span { display: block; font-weight: 700; font-family: 'Orbitron'; font-size: 12px; }
 
-        /* Form Sections */
-        .section-box { background: var(--white); border-radius: 25px; padding: 25px; margin-top: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); display: none; animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Sections */
+        .section-box { background: var(--card); border-radius: 20px; padding: 20px; margin-top: 25px; display: none; border: 1px solid #333; }
+        .section-title { font-family: 'Orbitron'; font-size: 16px; margin-bottom: 20px; color: var(--primary); }
 
-        .section-title { font-family: 'Orbitron'; font-size: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--dark); }
-        .section-title i { color: var(--primary); }
-
-        /* QR & Payment UI */
-        .qr-box { text-align: center; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 15px; border: 1.5px dashed #ddd; }
-        .qr-box img { width: 160px; height: 160px; border-radius: 10px; }
-        
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--gray); margin-bottom: 8px; text-transform: uppercase; }
-        .input-group input { width: 100%; padding: 14px; border-radius: 15px; border: 1.5px solid #eee; outline: none; font-weight: 700; font-size: 15px; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); background: #fffcf5; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #222; color: #fff; font-size: 16px; }
         
         .submit-btn {
-            width: 100%; padding: 16px; background: var(--dark); color: #fff;
-            border: none; border-radius: 16px; font-family: 'Orbitron'; font-weight: 900;
-            cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 14px;
+            width: 100%; padding: 15px; background: var(--primary); color: #000;
+            border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900;
+            cursor: pointer; font-size: 14px; margin-top: 10px;
         }
-        .submit-btn:active { transform: scale(0.96); }
-        .upi-btn { background: #6c5ce7; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .qr-img { width: 150px; height: 150px; margin: 10px auto; display: block; border-radius: 10px; border: 2px solid #fff; }
 
-        /* Bottom Nav */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; height: 85px;
-            background: var(--white); display: flex; justify-content: space-around;
-            align-items: center; box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
-            border-radius: 30px 30px 0 0; z-index: 2000;
-        }
-        .nav-item { text-align: center; text-decoration: none; color: #b2bec3; flex: 1; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .nav-item span { font-size: 10px; font-weight: 800; font-family: 'Orbitron'; }
+        /* Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #1a1a1a; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; }
+        .nav-item { text-align: center; text-decoration: none; color: #666; font-size: 12px; }
         .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 20px; display: block; }
     </style>
 </head>
 <body>
 
     <div class="wallet-header">
-        <span class="balance-label">AVAILABLE BALANCE</span>
-        <div class="main-balance" id="w-balance">₹0</div>
+        <p style="font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px;">YOUR BALANCE</p>
+        <div class="main-balance" id="display-balance">₹0</div>
     </div>
 
     <div class="container">
         <div class="action-grid">
-            <div class="btn-wallet" onclick="showUI('add')">
+            <div class="btn-wallet" onclick="toggleUI('add')">
                 <i class="fas fa-plus-circle"></i>
                 <span>ADD CASH</span>
             </div>
-            <div class="btn-wallet" onclick="showUI('withdraw')">
-                <i class="fas fa-arrow-up-from-bracket"></i>
+            <div class="btn-wallet" onclick="toggleUI('withdraw')">
+                <i class="fas fa-wallet"></i>
                 <span>WITHDRAW</span>
             </div>
         </div>
 
-        <div id="add-money-ui" class="section-box">
-            <div class="section-title"><i class="fas fa-qrcode"></i> DEPOSIT CASH</div>
+        <div id="add-ui" class="section-box">
+            <div class="section-title">DEPOSIT MONEY</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" class="qr-img">
             
-            <div class="qr-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" alt="QR Code">
-                <p style="font-size: 11px; margin-top: 8px; font-weight: 700;">Scan QR to pay or use button below</p>
-            </div>
-
             <div class="input-group">
-                <label>Step 1: Enter Amount</label>
-                <input type="number" id="add-amount" placeholder="Min ₹10">
+                <label>Amount (₹)</label>
+                <input type="number" id="amt" placeholder="Enter Amount">
             </div>
-
-            <button class="submit-btn upi-btn" onclick="payWithUPI()">
-                <i class="fas fa-mobile-alt"></i> PAY WITH UPI APP
-            </button>
-
-            <div style="text-align:center; margin: 15px 0; color: #ccc; font-size: 12px; font-weight: 900;">OR</div>
-
             <div class="input-group">
-                <label>Step 2: Enter Transaction ID (UTR)</label>
-                <input type="text" id="txn-id" placeholder="12-digit Ref No.">
+                <label>Transaction ID / UTR (Any for Testing)</label>
+                <input type="text" id="txn" placeholder="Enter TXN ID">
             </div>
-            
-            <button class="submit-btn" onclick="submitDeposit()">VERIFY & ADD MONEY</button>
+            <button class="submit-btn" onclick="sendDeposit()">SEND REQUEST</button>
         </div>
 
-        <div id="withdraw-ui" class="section-box">
-            <div class="section-title"><i class="fas fa-wallet"></i> WITHDRAWAL</div>
+        <div id="draw-ui" class="section-box">
+            <div class="section-title">WITHDRAW MONEY</div>
             <div class="input-group">
-                <label>Amount to Withdraw</label>
-                <input type="number" id="win-amount" placeholder="Min ₹30">
+                <label>Withdraw Amount (₹)</label>
+                <input type="number" id="w-amt" placeholder="Enter Amount">
             </div>
             <div class="input-group">
-                <label>UPI ID (GPay / PhonePe / Paytm)</label>
-                <input type="text" id="upi-id" placeholder="example@okaxis">
+                <label>UPI ID (GPay/PhonePe)</label>
+                <input type="text" id="w-upi" placeholder="example@upi">
             </div>
-            <button class="submit-btn" style="background: var(--green);" onclick="submitWithdraw()">SUBMIT REQUEST</button>
+            <button class="submit-btn" style="background:#27ae60;" onclick="sendWithdraw()">REQUEST WITHDRAWAL</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="home.html" class="nav-item"><i class="fas fa-house"></i><span>Home</span></a>
-        <a href="history.html" class="nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user-ninja"></i><span>Profile</span></a>
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
         <a href="wallet.html" class="nav-item active"><i class="fas fa-wallet"></i><span>Wallet</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
     </nav>
 
     <script>
-        // --- Firebase Setup ---
+        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const userUID = localStorage.getItem('gameID');
+        const db = firebase.database();
 
-        // Fetch Real-time Balance
-        if(userUID) {
-            database.ref('users/' + userUID + '/balance').on('value', (snap) => {
-                document.getElementById('w-balance').innerText = "₹" + (snap.val() || 0);
-            });
-        } else {
-            window.location.href = 'index.html'; // Redirect to login if no UID
+        const userUID = localStorage.getItem('gameID') || "TEST_USER";
+        const userName = localStorage.getItem('userName') || "Unknown";
+
+        // Real-time Balance Fetch
+        db.ref('users/' + userUID + '/balance').on('value', (snap) => {
+            document.getElementById('display-balance').innerText = "₹" + (snap.val() || 0);
+        });
+
+        function toggleUI(type) {
+            document.getElementById('add-ui').style.display = type === 'add' ? 'block' : 'none';
+            document.getElementById('draw-ui').style.display = type === 'withdraw' ? 'block' : 'none';
         }
 
-        function showUI(type) {
-            document.getElementById('add-money-ui').style.display = type === 'add' ? 'block' : 'none';
-            document.getElementById('withdraw-ui').style.display = type === 'withdraw' ? 'block' : 'none';
-        }
+        // --- DEPOSIT SYSTEM ---
+        function sendDeposit() {
+            const amount = document.getElementById('amt').value;
+            const transactionID = document.getElementById('txn').value;
 
-        // --- Payment Logic ---
-        function payWithUPI() {
-            const amt = document.getElementById('add-amount').value;
-            if(amt < 10) return alert("Bhai, kam se kam ₹10 dalo!");
+            if(!amount || !transactionID) return alert("Bhai, amount aur TXN ID dono dalo!");
 
-            const upiID = "8968146117@okbizaxis";
-            const name = "BOOYAH ZONE";
-            const upiUrl = `upi://pay?pa=${upiID}&pn=${name}&am=${amt}&cu=INR`;
+            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
+            const chatID = "7852788120";
+            const scriptURL = "https://script.google.com/macros/s/AKfycbzbPKl689H5qIr6kaVHSaLuFmhCg9a4YMJ2gy_ksWcpKLhrZ06K3dUYca6gFabl9YVQtg/exec";
 
-            window.location.href = upiUrl;
-        }
+            const magicLink = `${scriptURL}?uid=${userUID}&amt=${amount}&action=approve`;
 
-        function submitDeposit() {
-            const amt = document.getElementById('add-amount').value;
-            const txn = document.getElementById('txn-id').value;
-            const name = localStorage.getItem('userName') || "Unknown User";
-
-            if(!amt || amt < 10 || !txn || txn.length < 6) {
-                return alert("Sahi details dalo bhai!");
-            }
-
-            // --- Telegram Details ---
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM"; 
-            const chatID = "7852788120"; 
-            const scriptURL = "https://script.google.com/macros/s/AKfycbyZCWo1eZg3LheYi10vlIbWSp9XAHsKqY-S-mOKTLXNAbb3VVdx0Wlo5DEPKRSpuuKihg/exec"; 
-
-            const approveLink = `${scriptURL}?uid=${userUID}&amt=${amt}&action=approve`;
-
-            const message = `💰 *NEW DEPOSIT*%0A👤 *User:* ${name}%0A🆔 *UID:* ${userUID}%0A💵 *Amount:* ₹${amt}%0A🔢 *TXN ID:* ${txn}`;
+            const message = `💰 *NEW DEPOSIT REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${amount}%0A🔢 TXN: ${transactionID}`;
 
             const keyboard = {
                 inline_keyboard: [[
-                    { text: "✅ APPROVE (Add ₹" + amt + ")", url: approveLink },
-                    { text: "❌ REJECT", url: "https://t.me/" }
+                    { text: "✅ APPROVE (Add ₹" + amount + ")", url: magicLink },
+                    { text: "❌ REJECT", url: "https://t.me/your_bot" }
                 ]]
             };
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${message}&parse_mode=Markdown&reply_markup=${JSON.stringify(keyboard)}`)
             .then(res => {
                 if(res.ok) {
-                    alert("Request sent! Admin verify karke balance add kar denge.");
+                    alert("Request Sent! Admin Telegram se approve karte hi balance add ho jayega.");
                     location.reload();
                 } else {
-                    alert("Telegram Error! Details check karo.");
+                    alert("Telegram Error! Token ya ID check karo.");
                 }
             });
         }
 
-        function submitWithdraw() {
-            const amt = document.getElementById('win-amount').value;
-            const upi = document.getElementById('upi-id').value;
-            const name = localStorage.getItem('userName') || "Unknown User";
+        // --- WITHDRAW SYSTEM ---
+        function sendWithdraw() {
+            const wAmount = document.getElementById('w-amt').value;
+            const wUPI = document.getElementById('w-upi').value;
 
-            if(amt < 30 || upi === "") return alert("Min Withdrawal ₹30 and valid UPI ID required!");
+            if(!wAmount || !wUPI) return alert("Pura details bharo!");
 
-            // Sending Withdrawal request to Telegram (No Magic Link here, just info)
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM"; 
-            const chatID = "7852788120"; 
+            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
+            const chatID = "7852788120";
 
-            const message = `📤 *WITHDRAWAL REQUEST*%0A👤 *User:* ${name}%0A🆔 *UID:* ${userUID}%0A💵 *Amount:* ₹${amt}%0A🏦 *UPI ID:* ${upi}`;
+            const msg = `📤 *WITHDRAWAL REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${wAmount}%0A🏦 UPI: ${wUPI}`;
 
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${message}&parse_mode=Markdown`)
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${msg}&parse_mode=Markdown`)
             .then(() => {
-                alert("Withdrawal request sent! Aapko payment 24 hours mein mil jayegi.");
+                alert("Withdrawal request bhej di gayi hai!");
                 location.reload();
             });
         }
