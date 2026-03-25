@@ -13,7 +13,7 @@
             --primary: #ff9900;
             --primary-light: #fff3e0;
             --dark: #121212;
-            --bg: #ffffff; /* Clean White Background */
+            --bg: #ffffff;
             --orange-mix: #fff8f0;
             --white: #ffffff;
         }
@@ -59,24 +59,26 @@
         .welcome-section h2 { font-size: 16px; color: #777; font-weight: 600; }
         .user-name { font-family: 'Orbitron'; font-size: 26px; font-weight: 900; color: var(--dark); text-transform: uppercase; }
 
-        /* --- Normal Image Card --- */
+        /* --- Normal Image Card Fixed --- */
         .banner-container {
             width: 100%;
-            height: 160px;
+            height: 200px; /* Thoda bada kiya taaki clear dikhe */
             border-radius: 20px;
             overflow: hidden;
             margin-bottom: 30px;
             border: 2px solid var(--primary-light);
             box-shadow: 0 5px 15px rgba(255, 153, 0, 0.1);
+            background: #f9f9f9;
         }
 
         .banner-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Photo ekdum clear aur fit dikhegi */
+            object-fit: cover;
+            display: block;
         }
 
-        /* --- Status Buttons (Mixed White/Orange) --- */
+        /* --- Status Buttons --- */
         .status-wrapper {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -95,7 +97,6 @@
             transition: 0.2s;
         }
         .status-box:active { transform: scale(0.95); background: var(--primary-light); }
-
         .status-box i { font-size: 22px; }
         .status-box span { font-family: 'Orbitron'; font-size: 8px; font-weight: 900; color: var(--dark); line-height: 1.2; }
         
@@ -120,7 +121,6 @@
             border: 1px solid #f0f0f0;
             cursor: pointer;
         }
-        .mode-card:active { border-color: var(--primary); }
 
         .mode-info h4 { font-family: 'Orbitron'; font-size: 20px; color: var(--primary); }
         .mode-info p { font-size: 12px; font-weight: 700; color: #95a5a6; }
@@ -145,7 +145,7 @@
             box-shadow: 0 8px 15px rgba(255, 153, 0, 0.2);
         }
 
-        /* --- Sidebar --- */
+        /* --- Sidebar & Overlay --- */
         .sidebar {
             position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
             background: var(--dark); z-index: 3000; transition: 0.4s; padding: 40px 25px;
@@ -176,14 +176,13 @@
     </header>
 
     <div class="content">
-        
         <div class="welcome-section">
             <h2>Welcome Back,</h2>
             <div class="user-name" id="userTitle">AKASH KOHLI</div>
         </div>
 
         <div class="banner-container">
-            <img src="https://wsrv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Hero">
+            <img src="https://images.weserv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Hero" onerror="this.src='https://i.ibb.co/Np4VJdQX/fallback.jpg'">
         </div>
 
         <div class="status-wrapper">
@@ -208,7 +207,6 @@
             <div class="mode-info"><h4>4 V 4</h4><p>SQUAD WARFARE</p></div>
             <div class="mode-circle"><i class="fas fa-users"></i></div>
         </div>
-
     </div>
 
     <nav class="nav-bar">
