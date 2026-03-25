@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ONGOING MATCHES | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff3b30; /* Live Red */
+            --accent: #ff9900;
+            --secondary: #121212;
+            --bg: #f0f3f7;
+            --white: #ffffff;
+            --text: #2d3436;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 30px;
+        }
+
+        /* --- Header --- */
+        .nav-header {
+            background: var(--white);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .nav-header h1 {
+            font-family: 'Orbitron';
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Live Badge Animation --- */
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 59, 48, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        .dot {
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .live-text {
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 900;
+            font-family: 'Orbitron';
+        }
+
+        /* --- Match List --- */
+        .match-list {
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .match-card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            position: relative;
+            border-left: 5px solid var(--primary);
+        }
+
+        .card-top {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(45deg, #1a1a1a, #333);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .card-top img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+        }
+
+        .match-info h2 {
+            font-family: 'Orbitron';
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        .match-info p {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        /* Stats Section */
+        .match-details {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #fafafa;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .detail-item { text-align: center; }
+        .detail-label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 800; }
+        .detail-val { font-size: 16px; font-weight: 700; color: var(--secondary); display: block; }
+
+        /* Action Buttons */
+        .card-actions {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-watch {
+            flex: 2;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron';
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-results {
+            flex: 1;
+            padding: 14px;
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* --- Empty State --- */
+        .no-matches {
+            text-align: center;
+            padding: 50px 20px;
+            color: #aaa;
+        }
+        .no-matches i { font-size: 50px; margin-bottom: 15px; }
+
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <i class="fas fa-arrow-left back-btn" onclick="location.href='home.html'"></i>
+        <h1>Ongoing Matches</h1>
+        <div class="live-indicator">
+            <div class="dot"></div>
+            <span class="live-text">LIVE</span>
+        </div>
+    </header>
+
+    <div class="match-list">
+
+        <div class="match-card">
+            <div class="card-top">
+                <div class="match-info">
+                    <h2>SQUAD WAR #99</h2>
+                    <p><i class="fas fa-map-marker-alt"></i> BERMUDA REMASTERED</p>
+                </div>
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
+            </div>
+            
+            <div class="match-details">
+                <div class="detail-item">
+                    <span class="detail-label">Prize</span>
+                    <span class="detail-val">₹1200</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Type</span>
+                    <span class="detail-val">4 V 4</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Entry</span>
+                    <span class="detail-val">Paid</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-results">ROOM ID</button>
+                <button class="btn-watch" onclick="alert('Redirecting to YouTube Live...')">WATCH LIVE</button>
+            </div>
+        </div>
+
+        <div class="match-card" style="border-left-color: #ff9900;">
+            <div class="card-top">
+                <div class="match-info">
+                    <h2>SOLO KING #05</h2>
+                    <p><i class="fas fa-map-marker-alt"></i> PURGATORY</p>
+                </div>
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
+            </div>
+            
+            <div class="match-details">
+                <div class="detail-item">
+                    <span class="detail-label">Prize</span>
+                    <span class="detail-val">₹400</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Type</span>
+                    <span class="detail-val">1 V 1</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-val" style="color:var(--primary)">IN-GAME</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-results">ROOM ID</button>
+                <button class="btn-watch">SPECTATE</button>
+            </div>
+        </div>
+
+        <div class="no-matches" style="display:none;">
+            <i class="fas fa-satellite-dish"></i>
+            <p>No matches are live right now.<br>Check upcoming matches to join!</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple touch effect
+        document.querySelectorAll('.btn-watch').forEach(btn => {
+            btn.addEventListener('touchstart', () => btn.style.transform = "scale(0.95)");
+            btn.addEventListener('touchend', () => btn.style.transform = "scale(1)");
+        });
+    </script>
+
+</body>
+</html>
