@@ -3,138 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOYAH ZONE | Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+    <title>BOOYAH ZONE | ELITE INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #ff9900;
+            --primary-glow: rgba(255, 153, 0, 0.5);
+            --bg-dark: #0a0a0c;
+            --bullet-gold: #ffd700;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
         body {
             height: 100vh;
             width: 100%;
-            /* Premium White-Orange Radial Gradient */
-            background: radial-gradient(circle at center, #ffffff 0%, #ffcc80 100%);
+            background: #fff; /* Initial White */
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+            transition: background 1s ease;
+        }
+
+        /* --- Dynamic Background (Orange Mix) --- */
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 70% 30%, #fff 0%, #ff9900 150%);
+            z-index: -1;
+        }
+
+        /* --- Customer Support (Elite Style) --- */
+        .support-anchor {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            text-decoration: none;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Rajdhani', sans-serif;
+            transition: 0.3s;
         }
-
-        /* --- Customer Service (Top Right & Compact) --- */
-        .service-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            text-align: center;
-            text-decoration: none;
-            z-index: 100;
-        }
-
-        .service-img-wrapper {
-            width: 60px; /* Chota aur clean */
-            height: 60px;
-            border: 3px solid #ff9900;
+        .support-anchor:hover { transform: translateY(-5px); }
+        
+        .support-img-circle {
+            width: 70px; height: 70px;
             border-radius: 50%;
-            overflow: hidden;
+            border: 3px solid var(--primary);
+            padding: 3px;
             background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        .support-img-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .support-label { color: #222; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; margin-top: 5px; letter-spacing: 1px; }
+
+        /* --- Main UI Wrapper --- */
+        .main-wrapper {
+            width: 400px;
+            text-align: center;
+            z-index: 10;
         }
 
-        .service-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* Circle Logo */
+        .logo-box {
+            width: 160px; height: 160px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 6px solid var(--primary);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            padding: 10px;
+            animation: float 3s ease-in-out infinite;
         }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .logo-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; }
 
-        .service-label {
-            display: block;
-            font-size: 10px;
-            font-weight: 900;
-            color: #333;
-            margin-top: 3px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- Header Title --- */
-        .brand-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            color: #1a1a1a;
+        .title-text {
+            font-family: 'Orbitron';
+            font-size: 2.8rem;
+            color: #111;
             margin-bottom: 30px;
-            letter-spacing: 4px;
-            text-shadow: 2px 2px 0px #ff9900;
-        }
-
-        /* --- Circular Logo Wrapper --- */
-        .logo-main-btn {
-            position: relative;
-            width: 280px; /* Size adjust as needed */
-            height: 280px;
-            border-radius: 50%; /* Pure Circle */
-            background: #fff;
-            padding: 5px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-main-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 20px 45px rgba(255, 153, 0, 0.3);
-        }
-
-        .logo-img-inner {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%; /* Ensuring the image also stays circular */
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- Footer Text --- */
-        .tap-hint {
-            margin-top: 40px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            color: #444;
-            letter-spacing: 3px;
             text-transform: uppercase;
-            animation: glow 2s infinite;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 0px var(--primary);
         }
 
-        @keyframes glow {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.98); }
+        /* --- Vertical Bullet Input Fields --- */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            position: relative;
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 480px) {
-            .brand-title { font-size: 2rem; }
-            .logo-main-btn { width: 220px; height: 220px; }
+        .tab-switcher {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
         }
+        .tab-btn {
+            background: none; border: none;
+            font-family: 'Orbitron'; color: #444;
+            font-size: 14px; font-weight: 900;
+            cursor: pointer; padding-bottom: 8px;
+            transition: 0.3s;
+        }
+        .tab-btn.active { color: #000; border-bottom: 4px solid var(--primary); transform: scale(1.1); }
+
+        /* The Bullet Style Input */
+        .bullet-field {
+            position: relative;
+            margin-bottom: 18px;
+            height: 55px;
+            background: #1a1a1a;
+            border-radius: 30px 10px 10px 30px; /* Bullet Head Shape */
+            border-right: 10px solid var(--primary);
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+        .bullet-field::before {
+            content: ''; position: absolute; left: 0; width: 25px; height: 100%;
+            background: linear-gradient(90deg, #444, #222); border-radius: 50% 0 0 50%;
+        }
+        .bullet-field:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px var(--primary-glow);
+            border-right-color: #fff;
+        }
+        .bullet-field input {
+            width: 100%; height: 100%;
+            background: transparent; border: none;
+            padding-left: 35px; color: #fff;
+            font-size: 16px; font-family: 'Rajdhani';
+            letter-spacing: 1px;
+        }
+
+        /* Battle Button */
+        .fire-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, var(--primary), #ff6600);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Orbitron';
+            font-size: 18px; font-weight: 900;
+            color: #fff; cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(255, 153, 0, 0.4);
+            transition: 0.3s;
+        }
+        .fire-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 153, 0, 0.6);
+        }
+
+        /* --- Bullet VFX --- */
+        .tracer {
+            position: absolute;
+            width: 50px; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--bullet-gold), #fff);
+            box-shadow: 0 0 15px var(--bullet-gold);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animation Classes */
+        .hidden { display: none; }
+        .muzzle-flash { animation: flash 0.2s ease-out; }
+        @keyframes flash {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(3) contrast(1.5); }
+            100% { filter: brightness(1); }
+        }
+
     </style>
 </head>
 <body>
 
-    <a href="https://t.me/akashkohli0" target="_blank" class="service-container">
-        <div class="service-img-wrapper">
+    <div class="bg-overlay"></div>
+
+    <a href="https://t.me/akashkohli0" target="_blank" class="support-anchor">
+        <div class="support-img-circle">
             <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Support">
         </div>
-        <span class="service-label">Customer Service</span>
+        <span class="support-label">Support @akashkohli0</span>
     </a>
 
-    <h1 class="brand-title">BOOYAH ZONE</h1>
+    <div class="main-wrapper" id="main-content">
+        <div class="logo-box">
+            <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" alt="Logo">
+        </div>
+        <h1 class="title-text">BOOYAH ZONE</h1>
 
-    <div class="logo-main-btn" onclick="location.href='index2.html'">
-        <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" class="logo-img-inner" alt="Booyah Zone">
+        <div class="auth-container">
+            <div class="tab-switcher">
+                <button class="tab-btn active" id="login-tab" onclick="toggleAuth('login')">LOGIN UNIT</button>
+                <button class="tab-btn" id="reg-tab" onclick="toggleAuth('reg')">REGISTER UNIT</button>
+            </div>
+
+            <div id="login-fields">
+                <div class="bullet-field"><input type="text" placeholder="ENTER GAME UID"></div>
+                <div class="bullet-field"><input type="password" placeholder="SECURITY PASSWORD"></div>
+                <button class="fire-btn">DEPLOY LOGIN</button>
+            </div>
+
+            <div id="reg-fields" class="hidden">
+                <div class="bullet-field"><input type="text" placeholder="FULL NAME"></div>
+                <div class="bullet-field"><input type="text" placeholder="GAME UID"></div>
+                <div class="bullet-field"><input type="email" placeholder="EMAIL ADDRESS"></div>
+                <div class="bullet-field"><input type="tel" placeholder="PHONE NUMBER"></div>
+                <button class="fire-btn">RECRUIT SOLDIER</button>
+            </div>
+        </div>
     </div>
 
-    <p class="tap-hint">TAP THE LOGO TO OPEN</p>
+    <script>
+        // Switch Logic with Flash Effect
+        function toggleAuth(type) {
+            const login = document.getElementById('login-fields');
+            const reg = document.getElementById('reg-fields');
+            const logTab = document.getElementById('login-tab');
+            const regTab = document.getElementById('reg-tab');
+            const wrapper = document.getElementById('main-content');
 
+            // Muzzle flash effect on switch
+            wrapper.classList.add('muzzle-flash');
+            setTimeout(() => wrapper.classList.remove('muzzle-flash'), 200);
+
+            if(type === 'login') {
+                login.classList.remove('hidden');
+                reg.classList.add('hidden');
+                logTab.classList.add('active');
+                regTab.classList.remove('active');
+            } else {
+                login.classList.add('hidden');
+                reg.classList.remove('hidden');
+                regTab.classList.add('active');
+                logTab.classList.remove('active');
+            }
+        }
+
+        // Random Bullet Physics
+        function spawnTracer() {
+            const tracer = document.createElement('div');
+            tracer.className = 'tracer';
+            
+            const startFromLeft = Math.random() > 0.5;
+            const yPos = Math.random() * 100;
+            
+            tracer.style.top = yPos + '%';
+            
+            if(startFromLeft) {
+                tracer.style.left = '-100px';
+                document.body.appendChild(tracer);
+                tracer.animate([
+                    { left: '-100px', opacity: 0 },
+                    { left: '50%', opacity: 1, offset: 0.1 },
+                    { left: '110%', opacity: 0 }
+                ], { duration: 800 + Math.random() * 1000, easing: 'linear' });
+            } else {
+                tracer.style.right = '-100px';
+                tracer.style.transform = 'rotate(180deg)';
+                document.body.appendChild(tracer);
+                tracer.animate([
+                    { right: '-100px', opacity: 0 },
+                    { right: '50%', opacity: 1, offset: 0.1 },
+                    { right: '110%', opacity: 0 }
+                ], { duration: 800 + Math.random() * 1000, easing: 'linear' });
+            }
+
+            setTimeout(() => tracer.remove(), 2000);
+        }
+
+        // Continuous Firing
+        setInterval(spawnTracer, 600);
+
+    </script>
 </body>
 </html>
