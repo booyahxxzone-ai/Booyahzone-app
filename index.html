@@ -169,7 +169,7 @@
         <div id="login-form" class="form-area">
             <div class="bullet-box"><input type="text" placeholder="GAME UID"></div>
             <div class="bullet-box"><input type="password" placeholder="PASSWORD"></div>
-            <button class="btn-start" onclick="location.href='index2.html'">START BATTLE</button>
+            <button class="btn-start" onclick="location.href='home.html'">START BATTLE</button>
         </div>
 
         <div id="reg-form" class="form-area hidden">
@@ -177,18 +177,16 @@
             <div class="bullet-box"><input type="text" placeholder="GAME UID"></div>
             <div class="bullet-box"><input type="email" placeholder="EMAIL"></div>
             <div class="bullet-box"><input type="tel" placeholder="PHONE"></div>
-            <button class="btn-start">CREATE ACCOUNT</button>
+            <button class="btn-start" onclick="location.href='home.html'">CREATE ACCOUNT</button>
         </div>
     </div>
 
     <script>
         function switchTab(type, element) {
-            // Forms hide/show
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('reg-form').classList.add('hidden');
             document.getElementById(type + '-form').classList.remove('hidden');
 
-            // Tabs active class
             document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
             element.classList.add('active');
         }
