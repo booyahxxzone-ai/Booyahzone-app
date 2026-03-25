@@ -18,7 +18,6 @@
             --red: #eb4d4b;
         }
 
-        /* --- Pura Style Wahi Rahega Jo Tune Diya Tha --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             height: 100vh;
@@ -91,7 +90,6 @@
         .btn-start:active { transform: scale(0.98); }
         .hidden { display: none; }
 
-        /* --- CUSTOM GAMING NOTICE (MODAL) --- */
         #custom-notice {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); display: none;
@@ -110,23 +108,9 @@
         @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .gun-icon { font-size: 40px; color: var(--orange); margin-bottom: 15px; }
-        
-        .notice-card h2 {
-            font-family: 'Orbitron'; font-size: 18px; color: #fff;
-            margin-bottom: 10px; letter-spacing: 1px;
-        }
-
+        .notice-card h2 { font-family: 'Orbitron'; font-size: 18px; color: #fff; margin-bottom: 10px; }
         .notice-card p { color: #ccc; font-size: 14px; margin-bottom: 20px; line-height: 1.4; }
-
-        .btn-ok {
-            width: 100%; padding: 12px; background: var(--orange);
-            color: #fff; border: none; border-radius: 8px;
-            font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
-        }
-
-        /* Bullet decoration */
-        .bullet-dec { position: absolute; opacity: 0.1; font-size: 80px; right: -10px; bottom: -10px; color: #fff; }
-
+        .btn-ok { width: 100%; padding: 12px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -137,7 +121,6 @@
             <h2 id="notice-title">SYSTEM NOTICE</h2>
             <p id="notice-msg">Message goes here...</p>
             <button class="btn-ok" onclick="closeNotice()">CONFIRM</button>
-            <i class="fas fa-bullet bullet-dec"></i>
         </div>
     </div>
 
@@ -174,7 +157,6 @@
     </div>
 
     <script>
-        // --- 1. FIREBASE & TELEGRAM ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -182,7 +164,6 @@
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
 
-        // --- 2. CUSTOM NOTICE LOGIC ---
         function showNotice(title, msg) {
             document.getElementById('notice-title').innerText = title.toUpperCase();
             document.getElementById('notice-msg').innerText = msg;
@@ -206,7 +187,6 @@
             fetch(url);
         }
 
-        // --- 3. UPDATED REGISTRATION ---
         async function handleRegister() {
             const name = document.getElementById('r-name').value.trim();
             const uid = document.getElementById('r-uid').value.trim();
@@ -214,7 +194,7 @@
             const phone = document.getElementById('r-phone').value.trim();
 
             if(!name || !uid || !pass || !phone) {
-                showNotice("Warning", "Recruit! Please fill all required fields before deploying.");
+                showNotice("Warning", "Recruit! Please fill all fields.");
                 return;
             }
 
@@ -222,43 +202,49 @@
             const snapshot = await userRef.once('value');
 
             if(snapshot.exists()) {
-                showNotice("Mission Denied", "This Game UID is already in our database. Please login to continue.");
+                showNotice("Mission Denied", "UID already exists.");
             } else {
                 await userRef.set({ name, uid, password: pass, phone, balance: 0, joinedOn: new Date().toLocaleString() });
-                sendTelegram(`<b>🆕 NEW RECRUIT</b>\n\n👤 <b>Name:</b> ${name}\n🆔 <b>UID:</b> ${uid}\n📞 <b>Phone:</b> ${phone}`);
-                
+                sendTelegram(`<b>🆕 NEW RECRUIT</b>\n👤 Name: ${name}\n🆔 UID: ${uid}`);
                 localStorage.setItem('userName', name);
                 localStorage.setItem('gameID', uid);
-                showNotice("Success", "Account created successfully! Welcome to the battlefield.");
+                showNotice("Success", "Welcome to the battlefield!");
                 setTimeout(() => { window.location.href = 'home.html'; }, 2000);
             }
         }
 
-        // --- 4. UPDATED LOGIN ---
         async function handleLogin() {
             const uid = document.getElementById('l-uid').value.trim();
             const pass = document.getElementById('l-pass').value.trim();
 
             if(!uid || !pass) {
-                showNotice("System Error", "UID and Password are required for authentication.");
+                showNotice("System Error", "UID and Password required.");
                 return;
             }
 
+            // --- ADMIN SECRET LOGIN ---
+            if(uid === "667788" && pass === "887766") {
+                showNotice("Welcome Admin", "Accessing Master Panel...");
+                setTimeout(() => { window.location.href = 'admin.html'; }, 1500);
+                return;
+            }
+
+            // --- USER LOGIN ---
             const userRef = database.ref('users/' + uid);
             const snapshot = await userRef.once('value');
 
             if(snapshot.exists()) {
                 const userData = snapshot.val();
                 if(userData.password === pass) {
-                    sendTelegram(`<b>🔑 LOGIN SUCCESS</b>\n👤 <b>User:</b> ${userData.name}\n🆔 <b>UID:</b> ${uid}`);
+                    sendTelegram(`<b>🔑 LOGIN SUCCESS</b>\n👤 User: ${userData.name}\n🆔 UID: ${uid}`);
                     localStorage.setItem('userName', userData.name);
                     localStorage.setItem('gameID', uid);
                     window.location.href = 'home.html';
                 } else {
-                    showNotice("Access Denied", "Invalid password! Try to remember your secret code.");
+                    showNotice("Access Denied", "Invalid password!");
                 }
             } else {
-                showNotice("No Record", "Account not found. You need to Register first!");
+                showNotice("No Record", "Register first!");
             }
         }
     </script>
