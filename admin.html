@@ -1,188 +1,249 @@
  <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WALLET | BOOYAH ZONE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOYAH MASTER | ADMIN CONTROL</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #0f0f0f; --card: #1a1a1a; --white: #ffffff; --green: #27ae60; }
+        :root {
+            --primary: #ff9900;
+            --bg: #f4f7f6;
+            --white: #ffffff;
+            --text: #2d3436;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --success: #27ae60;
+            --ongoing: #0984e3;
+            --danger: #d63031;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        
-        body { background: var(--bg); color: var(--white); padding-bottom: 100px; }
+        body { background: var(--bg); color: var(--text); display: flex; }
 
-        /* Wallet Header */
-        .wallet-header {
-            background: linear-gradient(135deg, #1e1e1e, #2d3436);
-            padding: 50px 20px; text-align: center;
-            border-radius: 0 0 40px 40px; border-bottom: 2px solid var(--primary);
+        /* --- Sidebar (White Theme) --- */
+        .sidebar {
+            width: 260px; background: var(--white); height: 100vh;
+            position: fixed; border-right: 1px solid #e0e0e0;
+            display: flex; flex-direction: column; z-index: 100;
         }
-        .main-balance { font-size: 50px; font-family: 'Orbitron'; font-weight: 900; color: var(--primary); margin: 10px 0; }
-
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
-
-        /* Buttons */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: -30px; }
-        .btn-wallet {
-            background: var(--card); padding: 20px; border-radius: 20px;
-            text-align: center; border: 1px solid #333; cursor: pointer;
-        }
-        .btn-wallet i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
-        .btn-wallet span { display: block; font-weight: 700; font-family: 'Orbitron'; font-size: 12px; }
-
-        /* Sections */
-        .section-box { background: var(--card); border-radius: 20px; padding: 20px; margin-top: 25px; display: none; border: 1px solid #333; }
-        .section-title { font-family: 'Orbitron'; font-size: 16px; margin-bottom: 20px; color: var(--primary); }
-
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #222; color: #fff; font-size: 16px; }
+        .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; }
+        .side-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
         
-        .submit-btn {
-            width: 100%; padding: 15px; background: var(--primary); color: #000;
-            border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900;
-            cursor: pointer; font-size: 14px; margin-top: 10px;
+        .nav-item {
+            padding: 15px 25px; display: flex; align-items: center; gap: 12px;
+            color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700;
+            transition: 0.3s; border-left: 4px solid transparent;
         }
-        
-        .qr-img { width: 150px; height: 150px; margin: 10px auto; display: block; border-radius: 10px; border: 2px solid #fff; }
+        .nav-item:hover, .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
 
-        /* Nav Bar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #1a1a1a; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; }
-        .nav-item { text-align: center; text-decoration: none; color: #666; font-size: 12px; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; display: block; }
+        /* --- Main Content --- */
+        .main { margin-left: 260px; flex: 1; padding: 30px; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Cards & Forms --- */
+        .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 30px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #b2bec3; font-size: 12px; }
+        input, select {
+            width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px;
+            outline: none; font-weight: 600; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); }
+
+        .btn {
+            padding: 12px 25px; border: none; border-radius: 12px; font-family: 'Orbitron';
+            font-weight: 900; cursor: pointer; transition: 0.3s;
+        }
+        .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+        .btn-status { font-size: 10px; padding: 5px 10px; margin: 2px; }
+
+        /* --- Tables --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; padding: 12px; color: #b2bec3; font-size: 13px; border-bottom: 2px solid #f9f9f9; }
+        td { padding: 15px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 14px; }
+
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; color: #fff; }
+        .bg-1v1 { background: #6c5ce7; } .bg-2v2 { background: #00cec9; } .bg-4v4 { background: #e17055; }
+        .status-tag { padding: 3px 8px; border-radius: 4px; font-size: 10px; text-transform: uppercase; }
+
+        /* --- Modal for Winner --- */
+        #winnerModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
     </style>
 </head>
 <body>
 
-    <div class="wallet-header">
-        <p style="font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px;">YOUR BALANCE</p>
-        <div class="main-balance" id="display-balance">₹0</div>
+    <div class="sidebar">
+        <div class="side-header"><h1>BOOYAH ZONE</h1></div>
+        <div class="nav-item active" onclick="showTab('add-match', this)"><i class="fas fa-plus-circle"></i> <span>Add Match</span></div>
+        <div class="nav-item" onclick="showTab('live-matches', this)"><i class="fas fa-gamepad"></i> <span>Live Matches</span></div>
+        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> <span>Users Database</span></div>
+        <div class="nav-item" onclick="showTab('withdrawals', this)"><i class="fas fa-wallet"></i> <span>Withdraw Requests</span></div>
     </div>
 
-    <div class="container">
-        <div class="action-grid">
-            <div class="btn-wallet" onclick="toggleUI('add')">
-                <i class="fas fa-plus-circle"></i>
-                <span>ADD CASH</span>
-            </div>
-            <div class="btn-wallet" onclick="toggleUI('withdraw')">
-                <i class="fas fa-wallet"></i>
-                <span>WITHDRAW</span>
+    <div class="main">
+        <div id="add-match" class="tab-content active">
+            <div class="card">
+                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">DEPLOY NEW TOURNAMENT</h2>
+                <div class="grid-2">
+                    <div class="input-group"><label>MATCH TITLE</label><input type="text" id="mTitle" placeholder="e.g. Sunday Night Solo"></div>
+                    <div class="input-group">
+                        <label>MATCH CATEGORY</label>
+                        <select id="mMode">
+                            <option value="1v1">1 V 1 (Solo)</option>
+                            <option value="2v2">2 V 2 (Duo)</option>
+                            <option value="4v4">4 V 4 (Squad)</option>
+                        </select>
+                    </div>
+                    <div class="input-group"><label>ENTRY FEE (₹)</label><input type="number" id="mEntry"></div>
+                    <div class="input-group"><label>PRIZE POOL (₹)</label><input type="number" id="mPrize"></div>
+                    <div class="input-group"><label>DATE & TIME</label><input type="datetime-local" id="mTime"></div>
+                    <div class="input-group"><label>MAP</label><input type="text" id="mMap" value="Bermuda"></div>
+                    <button class="btn btn-primary" style="grid-column: span 2;" onclick="uploadMatch()">CREATE MATCH</button>
+                </div>
             </div>
         </div>
 
-        <div id="add-ui" class="section-box">
-            <div class="section-title">DEPOSIT MONEY</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" class="qr-img">
-            
-            <div class="input-group">
-                <label>Amount (₹)</label>
-                <input type="number" id="amt" placeholder="Enter Amount">
+        <div id="live-matches" class="tab-content">
+            <div class="card">
+                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">MANAGE MATCH STATUS</h2>
+                <table>
+                    <thead>
+                        <tr><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="matchTableBody"></tbody>
+                </table>
             </div>
-            <div class="input-group">
-                <label>Transaction ID / UTR (Any for Testing)</label>
-                <input type="text" id="txn" placeholder="Enter TXN ID">
-            </div>
-            <button class="submit-btn" onclick="sendDeposit()">SEND REQUEST</button>
         </div>
 
-        <div id="draw-ui" class="section-box">
-            <div class="section-title">WITHDRAW MONEY</div>
-            <div class="input-group">
-                <label>Withdraw Amount (₹)</label>
-                <input type="number" id="w-amt" placeholder="Enter Amount">
+        <div id="user-list" class="tab-content">
+            <div class="card">
+                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">REGISTERED PLAYERS</h2>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>UID</th><th>Phone</th><th>Wallet</th><th>Joined</th></tr>
+                    </thead>
+                    <tbody id="userTableBody"></tbody>
+                </table>
             </div>
-            <div class="input-group">
-                <label>UPI ID (GPay/PhonePe)</label>
-                <input type="text" id="w-upi" placeholder="example@upi">
-            </div>
-            <button class="submit-btn" style="background:#27ae60;" onclick="sendWithdraw()">REQUEST WITHDRAWAL</button>
         </div>
     </div>
 
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
-        <a href="wallet.html" class="nav-item active"><i class="fas fa-wallet"></i><span>Wallet</span></a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-    </nav>
+    <div id="winnerModal">
+        <div class="card" style="width: 320px;">
+            <h3 style="font-family: 'Orbitron'; margin-bottom: 15px;">Declare Winner</h3>
+            <input type="text" id="winnerUID" placeholder="Enter Winner Game UID" style="margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="confirmFinish()">SUBMIT</button>
+                <button class="btn" style="background: #eee;" onclick="closeModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const database = firebase.database();
 
-        const userUID = localStorage.getItem('gameID') || "TEST_USER";
-        const userName = localStorage.getItem('userName') || "Unknown";
+        let currentActiveMatchId = null;
 
-        // Real-time Balance Fetch
-        db.ref('users/' + userUID + '/balance').on('value', (snap) => {
-            document.getElementById('display-balance').innerText = "₹" + (snap.val() || 0);
+        function showTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            el.classList.add('active');
+        }
+
+        // --- Add Match Logic ---
+        function uploadMatch() {
+            const title = document.getElementById('mTitle').value;
+            const mode = document.getElementById('mMode').value;
+            const entry = document.getElementById('mEntry').value;
+            const prize = document.getElementById('mPrize').value;
+            const time = document.getElementById('mTime').value;
+            const map = document.getElementById('mMap').value;
+
+            if(!title || !entry) return alert("Fill all fields!");
+
+            const mId = "MATCH_" + Date.now();
+            database.ref('matches/' + mId).set({
+                mId, title, mode, entry, prize, time, map, status: "upcoming", winner: "N/A"
+            }).then(() => { alert("Match Live!"); location.reload(); });
+        }
+
+        // --- Realtime Data for Matches ---
+        database.ref('matches').on('value', snap => {
+            const tbody = document.getElementById('matchTableBody');
+            tbody.innerHTML = "";
+            snap.forEach(child => {
+                const m = child.val();
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${m.title}</td>
+                        <td><span class="badge bg-${m.mode}">${m.mode}</span></td>
+                        <td><b style="color:${m.status=='upcoming'?'#ff9900':m.status=='ongoing'?'#0984e3':'#27ae60'}">${m.status}</b></td>
+                        <td>
+                            <button class="btn btn-status" style="background:#0984e3;color:#fff" onclick="updateStatus('${m.mId}', 'ongoing')">LIVE</button>
+                            <button class="btn btn-status" style="background:#27ae60;color:#fff" onclick="openWinnerModal('${m.mId}')">FINISH</button>
+                            <button class="btn btn-status" style="background:#d63031;color:#fff" onclick="deleteMatch('${m.mId}')">DEL</button>
+                        </td>
+                    </tr>`;
+            });
         });
 
-        function toggleUI(type) {
-            document.getElementById('add-ui').style.display = type === 'add' ? 'block' : 'none';
-            document.getElementById('draw-ui').style.display = type === 'withdraw' ? 'block' : 'none';
+        // --- Realtime Data for Users ---
+        database.ref('users').on('value', snap => {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = "";
+            snap.forEach(child => {
+                const u = child.val();
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.uid}</td>
+                        <td>${u.phone}</td>
+                        <td style="color:var(--success)">₹${u.balance || 0}</td>
+                        <td style="font-size:10px">${u.joinedOn || 'N/A'}</td>
+                    </tr>`;
+            });
+        });
+
+        function updateStatus(id, stat) {
+            database.ref('matches/' + id).update({ status: stat });
         }
 
-        // --- DEPOSIT SYSTEM ---
-        function sendDeposit() {
-            const amount = document.getElementById('amt').value;
-            const transactionID = document.getElementById('txn').value;
+        function openWinnerModal(id) {
+            currentActiveMatchId = id;
+            document.getElementById('winnerModal').style.display = 'flex';
+        }
 
-            if(!amount || !transactionID) return alert("Bhai, amount aur TXN ID dono dalo!");
+        function closeModal() { document.getElementById('winnerModal').style.display = 'none'; }
 
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
-            const chatID = "7852788120";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzbPKl689H5qIr6kaVHSaLuFmhCg9a4YMJ2gy_ksWcpKLhrZ06K3dUYca6gFabl9YVQtg/exec";
-
-            const magicLink = `${scriptURL}?uid=${userUID}&amt=${amount}&action=approve`;
-
-            const message = `💰 *NEW DEPOSIT REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${amount}%0A🔢 TXN: ${transactionID}`;
-
-            const keyboard = {
-                inline_keyboard: [[
-                    { text: "✅ APPROVE (Add ₹" + amount + ")", url: magicLink },
-                    { text: "❌ REJECT", url: "https://t.me/your_bot" }
-                ]]
-            };
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${message}&parse_mode=Markdown&reply_markup=${JSON.stringify(keyboard)}`)
-            .then(res => {
-                if(res.ok) {
-                    alert("Request Sent! Admin Telegram se approve karte hi balance add ho jayega.");
-                    location.reload();
-                } else {
-                    alert("Telegram Error! Token ya ID check karo.");
-                }
+        function confirmFinish() {
+            const winUID = document.getElementById('winnerUID').value;
+            if(!winUID) return alert("Enter Winner UID!");
+            database.ref('matches/' + currentActiveMatchId).update({
+                status: "finished",
+                winner: winUID
+            }).then(() => {
+                closeModal();
+                alert("Match Finished. Winner: " + winUID);
             });
         }
 
-        // --- WITHDRAW SYSTEM ---
-        function sendWithdraw() {
-            const wAmount = document.getElementById('w-amt').value;
-            const wUPI = document.getElementById('w-upi').value;
-
-            if(!wAmount || !wUPI) return alert("Pura details bharo!");
-
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
-            const chatID = "7852788120";
-
-            const msg = `📤 *WITHDRAWAL REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${wAmount}%0A🏦 UPI: ${wUPI}`;
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${msg}&parse_mode=Markdown`)
-            .then(() => {
-                alert("Withdrawal request bhej di gayi hai!");
-                location.reload();
-            });
-        }
+        function deleteMatch(id) { if(confirm("Delete Match?")) database.ref('matches/'+id).remove(); }
     </script>
 </body>
 </html>
