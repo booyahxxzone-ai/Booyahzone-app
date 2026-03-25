@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>1V1 ARENA | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff9900;
+            --bg: #f5f7fa;
+            --white: #ffffff;
+            --dark: #121212;
+            --gray: #95a5a6;
+            --success: #27ae60;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding-bottom: 20px; }
+
+        /* --- Header --- */
+        .top-nav {
+            background: var(--white); padding: 20px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
+        .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
+
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* --- Match Card --- */
+        .match-card {
+            background: var(--white); border-radius: 25px;
+            overflow: hidden; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-header {
+            background: #1a1a1a; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .match-title { color: #fff; font-family: 'Orbitron'; font-size: 13px; font-weight: 700; }
+        .match-tag { background: var(--primary); color: #000; padding: 2px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
+
+        .card-body { padding: 20px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .info-item { display: flex; align-items: center; gap: 10px; }
+        .info-item i { color: var(--primary); font-size: 18px; }
+        .info-item div p { font-size: 9px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
+        .info-item div h5 { font-size: 15px; font-weight: 700; }
+
+        .card-footer {
+            padding: 15px 20px; border-top: 1px dashed #eee;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .price-box h6 { font-size: 10px; color: var(--gray); }
+        .price-box h4 { font-family: 'Orbitron'; color: var(--success); font-size: 18px; }
+
+        .join-btn {
+            background: var(--primary); color: #fff; border: none;
+            padding: 12px 25px; border-radius: 12px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .join-btn:active { transform: scale(0.9); }
+
+        .loader { text-align: center; margin-top: 100px; color: var(--gray); }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
+        <h2>1 V 1 BATTLE GROUND</h2>
+    </div>
+
+    <div class="container" id="matchList">
+        <div class="loader">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top:10px">Finding Active Battles...</p>
+        </div>
+    </div>
+
+    <script>
+        // --- Firebase Config ---
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- Configuration ---
+        const targetMode = "1v1"; // Sirf 1v1 matches dikhane ke liye
+
+        // --- Fetch Matches ---
+        database.ref('matches').on('value', (snapshot) => {
+            const container = document.getElementById('matchList');
+            container.innerHTML = "";
+            let found = false;
+
+            snapshot.forEach((child) => {
+                const match = child.val();
+
+                // Logic: Match 1v1 hona chahiye aur Status 'upcoming'
+                if(match.mode === targetMode && match.status === "upcoming") {
+                    found = true;
+                    
+                    // Date & Time formatting
+                    const matchDate = match.time ? match.time.split('T')[0] : "TBA";
+                    const matchTime = match.time ? match.time.split('T')[1] : "TBA";
+
+                    container.innerHTML += `
+                        <div class="match-card">
+                            <div class="card-header">
+                                <span class="match-title">${match.title}</span>
+                                <span class="match-tag">SOLO CS</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <i class="fas fa-trophy"></i>
+                                        <div><p>Win Prize</p><h5>₹${match.prize}</h5></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <div><p>Map</p><h5>${match.map || 'Bermuda'}</h5></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-clock"></i>
+                                        <div><p>Time</p><h5>${matchTime}</h5></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-calendar-day"></i>
+                                        <div><p>Date</p><h5>${matchDate}</h5></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price-box">
+                                    <h6>ENTRY FEE</h6>
+                                    <h4>₹${match.entry}</h4>
+                                </div>
+                                <button class="join-btn" onclick="joinMatch('${match.mId}', '${match.entry}')">JOIN NOW</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if(!found) {
+                container.innerHTML = `
+                    <div style="text-align:center; margin-top:80px; color:#95a5a6;">
+                        <i class="fas fa-ghost fa-3x"></i>
+                        <p style="margin-top:15px; font-weight:700;">No 1v1 Matches Found!</p>
+                        <p style="font-size:12px;">Check back later for new tournaments.</p>
+                    </div>
+                `;
+            }
+        });
+
+        // --- Join Function ---
+        function joinMatch(mId, fee) {
+            const userUID = localStorage.getItem('gameID') || "Unknown";
+            const userName = localStorage.getItem('userName') || "Player";
+
+            if(confirm(`Do you want to join this match for ₹${fee}?`)) {
+                // Firebase mein 'joins' folder mein entry karna
+                database.ref('joins/' + mId + '/' + userUID).set({
+                    name: userName,
+                    uid: userUID,
+                    timestamp: new Date().getTime()
+                }).then(() => {
+                    alert("Successfully Joined! Waiting for match to start.");
+                }).catch((error) => {
+                    alert("Error joining: " + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
