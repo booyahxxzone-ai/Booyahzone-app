@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,62 +13,46 @@
 
     <style>
         :root {
-            --primary: #ff9900;
-            --bg: #f4f7f6;
-            --white: #ffffff;
-            --text: #2d3436;
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
-            --success: #27ae60;
-            --danger: #d63031;
-            --ongoing: #0984e3;
+            --primary: #ff9900; --bg: #f4f7f6; --white: #ffffff;
+            --text: #2d3436; --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --success: #27ae60; --danger: #d63031; --ongoing: #0984e3;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
 
-        /* --- Sidebar --- */
-        .sidebar {
-            width: 260px; background: var(--white); height: 100vh;
-            position: fixed; border-right: 1px solid #e0e0e0;
-            display: flex; flex-direction: column; z-index: 100;
-        }
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--white); height: 100vh; position: fixed; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; z-index: 100; }
         .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; }
         .side-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
-        
-        .nav-item {
-            padding: 15px 25px; display: flex; align-items: center; gap: 12px;
-            color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700;
-            transition: 0.3s; border-left: 4px solid transparent;
-        }
+        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
 
-        /* --- Main Content --- */
+        /* Main Content */
         .main { margin-left: 260px; flex: 1; padding: 30px; }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Cards & Tables --- */
         .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid #eee; }
+        .history-card { background: #fafafa; border: 1px solid #eee; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { text-align: left; padding: 12px; color: #b2bec3; font-size: 13px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 14px; }
 
-        /* --- UI Elements --- */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 8px; font-weight: 700; color: #b2bec3; font-size: 12px; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; outline: none; font-weight: 600; }
-        
-        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 11px; }
         .btn-primary { background: var(--primary); color: #fff; width: 100%; }
-        .btn-status { font-size: 10px; padding: 6px 12px; margin: 2px; color: #fff; }
+        .btn-status { font-size: 9px; padding: 6px 10px; margin: 2px; color: #fff; }
 
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; color: #fff; text-transform: uppercase; }
-        .bg-1v1 { background: #6c5ce7; } .bg-2v2 { background: #00cec9; } .bg-4v4 { background: #e17055; }
+        .badge-status { padding: 4px 8px; border-radius: 6px; font-size: 10px; color: white; }
+        .bg-approved { background: var(--success); }
+        .bg-rejected { background: var(--danger); }
+        .bg-pending { background: var(--primary); }
 
-        #winnerModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -85,67 +69,74 @@
     <div class="main">
         <div id="add-match" class="tab-content active">
             <div class="card">
-                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">DEPLOY NEW TOURNAMENT</h2>
+                <h2 style="font-family:'Orbitron'; margin-bottom:20px;">DEPLOY TOURNAMENT</h2>
                 <div class="grid-2">
-                    <div class="input-group"><label>MATCH TITLE</label><input type="text" id="mTitle" placeholder="Sunday Night Solo"></div>
-                    <div class="input-group"><label>CATEGORY</label><select id="mMode"><option value="1v1">1 V 1 (Solo)</option><option value="2v2">2 V 2 (Duo)</option><option value="4v4">4 V 4 (Squad)</option></select></div>
-                    <div class="input-group"><label>ENTRY FEE (₹)</label><input type="number" id="mEntry"></div>
-                    <div class="input-group"><label>PRIZE POOL (₹)</label><input type="number" id="mPrize"></div>
-                    <div class="input-group"><label>DATE & TIME</label><input type="datetime-local" id="mTime"></div>
-                    <div class="input-group"><label>MAP</label><input type="text" id="mMap" value="Bermuda"></div>
+                    <input type="text" id="mTitle" placeholder="Match Title">
+                    <select id="mMode">
+                        <option value="1v1">1 V 1 (Solo)</option>
+                        <option value="2v2">2 V 2 (Duo)</option>
+                        <option value="4v4">4 V 4 (Squad)</option>
+                    </select>
+                    <input type="number" id="mEntry" placeholder="Entry Fee">
+                    <input type="number" id="mPrize" placeholder="Prize Pool">
+                    <input type="datetime-local" id="mTime">
+                    <input type="text" id="mMap" value="Bermuda">
                     <button class="btn btn-primary" style="grid-column: span 2;" onclick="uploadMatch()">CREATE MATCH</button>
                 </div>
             </div>
         </div>
 
-        <div id="live-matches" class="tab-content">
-            <div class="card">
-                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">MANAGE MATCHES</h2>
-                <table>
-                    <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
-                    <tbody id="matchTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
         <div id="deposits" class="tab-content">
             <div class="card">
-                <h2 style="font-family: 'Orbitron'; color: var(--success); margin-bottom: 20px;">PENDING DEPOSITS</h2>
+                <h2 style="font-family:'Orbitron'; color:var(--success);">PENDING DEPOSITS</h2>
                 <table>
-                    <thead><tr><th>User / UID</th><th>Amount</th><th>TXN ID</th><th>Action</th></tr></thead>
+                    <thead><tr><th>User Info</th><th>Amount</th><th>TXN ID</th><th>Action</th></tr></thead>
                     <tbody id="depositTableBody"></tbody>
+                </table>
+            </div>
+            <div class="card history-card">
+                <h2 style="font-family:'Orbitron'; font-size:16px;">DEPOSIT HISTORY (Recent)</h2>
+                <table>
+                    <thead><tr><th>User</th><th>Amount</th><th>Status</th><th>TXN ID</th></tr></thead>
+                    <tbody id="depositHistoryBody"></tbody>
                 </table>
             </div>
         </div>
 
         <div id="withdrawals" class="tab-content">
             <div class="card">
-                <h2 style="font-family: 'Orbitron'; color: var(--danger); margin-bottom: 20px;">WITHDRAW REQUESTS</h2>
+                <h2 style="font-family:'Orbitron'; color:var(--danger);">PENDING WITHDRAWALS</h2>
                 <table>
-                    <thead><tr><th>User / UID</th><th>Amount</th><th>UPI ID</th><th>Action</th></tr></thead>
+                    <thead><tr><th>User Info</th><th>Amount</th><th>UPI ID</th><th>Action</th></tr></thead>
                     <tbody id="withdrawTableBody"></tbody>
+                </table>
+            </div>
+            <div class="card history-card">
+                <h2 style="font-family:'Orbitron'; font-size:16px;">WITHDRAWAL HISTORY (Recent)</h2>
+                <table>
+                    <thead><tr><th>User</th><th>Amount</th><th>Status</th><th>UPI ID</th></tr></thead>
+                    <tbody id="withdrawHistoryBody"></tbody>
                 </table>
             </div>
         </div>
 
         <div id="user-list" class="tab-content">
             <div class="card">
-                <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">REGISTERED PLAYERS</h2>
+                <h2 style="font-family:'Orbitron';">USER DATABASE</h2>
                 <table>
-                    <thead><tr><th>Name</th><th>UID</th><th>Balance</th><th>Joined</th></tr></thead>
+                    <thead><tr><th>Name</th><th>UID</th><th>Balance</th></tr></thead>
                     <tbody id="userTableBody"></tbody>
                 </table>
             </div>
         </div>
-    </div>
 
-    <div id="winnerModal">
-        <div class="card" style="width: 320px;">
-            <h3 style="font-family: 'Orbitron'; margin-bottom: 15px;">Declare Winner</h3>
-            <input type="text" id="winnerUID" placeholder="Enter Winner UID" style="margin-bottom: 15px;">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="confirmFinish()">SUBMIT</button>
-                <button class="btn" style="background: #eee;" onclick="closeModal()">CANCEL</button>
+        <div id="live-matches" class="tab-content">
+            <div class="card">
+                <h2 style="font-family:'Orbitron';">LIVE MATCHES</h2>
+                <table>
+                    <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="matchTableBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -155,106 +146,115 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let currentActiveMatchId = null;
-
-        function showTab(tabId, el) {
+        function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             el.classList.add('active');
         }
 
-        // --- MATCHES LOGIC ---
+        // DEPOSITS LOGIC WITH HISTORY
+        database.ref('admin_requests/deposits').on('value', snap => {
+            const pendingBody = document.getElementById('depositTableBody');
+            const historyBody = document.getElementById('depositHistoryBody');
+            pendingBody.innerHTML = ""; historyBody.innerHTML = "";
+
+            snap.forEach(child => {
+                const d = child.val();
+                if(d.status === "pending") {
+                    pendingBody.innerHTML += `<tr>
+                        <td>${d.name}<br><small>${d.uid}</small></td>
+                        <td style="color:var(--success)">₹${d.amount}</td>
+                        <td>${d.txnID}</td>
+                        <td>
+                            <button class="btn btn-status bg-approved" onclick="approveDeposit('${child.key}', '${d.uid}', ${d.amount})">APPROVE</button>
+                            <button class="btn btn-status bg-rejected" onclick="updateReqStatus('deposits', '${child.key}', 'rejected')">REJECT</button>
+                        </td>
+                    </tr>`;
+                } else {
+                    historyBody.innerHTML = `<tr>
+                        <td>${d.name}</td>
+                        <td>₹${d.amount}</td>
+                        <td><span class="badge-status bg-${d.status}">${d.status}</span></td>
+                        <td>${d.txnID}</td>
+                    </tr>` + historyBody.innerHTML; // Latest on top
+                }
+            });
+        });
+
+        function approveDeposit(reqId, uid, amt) {
+            if(!confirm("₹" + amt + " user ke wallet mein add karein?")) return;
+            database.ref('users/' + uid + '/balance').transaction(curr => (curr || 0) + amt, (err, comm) => {
+                if(comm) updateReqStatus('deposits', reqId, 'approved');
+            });
+        }
+
+        // WITHDRAWALS LOGIC WITH HISTORY
+        database.ref('admin_requests/withdrawals').on('value', snap => {
+            const pendingBody = document.getElementById('withdrawTableBody');
+            const historyBody = document.getElementById('withdrawHistoryBody');
+            pendingBody.innerHTML = ""; historyBody.innerHTML = "";
+
+            snap.forEach(child => {
+                const w = child.val();
+                if(w.status === "pending") {
+                    pendingBody.innerHTML += `<tr>
+                        <td>${w.name}<br><small>${w.uid}</small></td>
+                        <td style="color:var(--danger)">₹${w.amount}</td>
+                        <td>${w.upiID || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-status bg-approved" onclick="updateReqStatus('withdrawals', '${child.key}', 'approved')">PAID</button>
+                            <button class="btn btn-status bg-rejected" onclick="updateReqStatus('withdrawals', '${child.key}', 'rejected')">REJECT</button>
+                        </td>
+                    </tr>`;
+                } else {
+                    historyBody.innerHTML = `<tr>
+                        <td>${w.name}</td>
+                        <td>₹${w.amount}</td>
+                        <td><span class="badge-status bg-${w.status}">${w.status === 'approved' ? 'PAID' : 'REJECTED'}</span></td>
+                        <td>${w.upiID || 'N/A'}</td>
+                    </tr>` + historyBody.innerHTML;
+                }
+            });
+        });
+
+        // Common Status Updater
+        function updateReqStatus(path, id, newStatus) {
+            database.ref('admin_requests/' + path + '/' + id).update({ status: newStatus });
+        }
+
+        // Simple User Fetch
+        database.ref('users').on('value', snap => {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = "";
+            snap.forEach(child => {
+                const u = child.val();
+                tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.uid}</td><td>₹${u.balance || 0}</td></tr>`;
+            });
+        });
+
+        // Match Upload Logic
         function uploadMatch() {
             const title = document.getElementById('mTitle').value;
             const mode = document.getElementById('mMode').value;
             const entry = document.getElementById('mEntry').value;
             const prize = document.getElementById('mPrize').value;
             const time = document.getElementById('mTime').value;
-            const map = document.getElementById('mMap').value;
-
-            if(!title || !entry) return alert("Fill all fields!");
-            const mId = "MATCH_" + Date.now();
-            database.ref('matches/' + mId).set({ mId, title, mode, entry, prize, time, map, status: "upcoming", winner: "N/A" })
-            .then(() => { alert("Match Live!"); location.reload(); });
+            if(!title || !entry) return alert("Details bharo!");
+            const mId = "M_" + Date.now();
+            database.ref('matches/' + mId).set({ mId, title, mode, entry, prize, time, status: "upcoming" }).then(() => alert("Match Added!"));
         }
 
+        // Match Live Logic
         database.ref('matches').on('value', snap => {
             const tbody = document.getElementById('matchTableBody');
             tbody.innerHTML = "";
             snap.forEach(child => {
                 const m = child.val();
-                tbody.innerHTML += `<tr><td>${m.title}</td><td><span class="badge bg-${m.mode}">${m.mode}</span></td>
-                <td><b style="color:${m.status=='upcoming'?'#ff9900':m.status=='ongoing'?'#0984e3':'#27ae60'}">${m.status}</b></td>
-                <td><button class="btn btn-status" style="background:#0984e3" onclick="updateStatus('${m.mId}', 'ongoing')">LIVE</button>
-                <button class="btn btn-status" style="background:#27ae60" onclick="openWinnerModal('${m.mId}')">FINISH</button>
-                <button class="btn btn-status" style="background:#d63031" onclick="deleteMatch('${m.mId}')">DEL</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>${m.title}</td><td>${m.mode}</td><td>${m.status}</td>
+                <td><button class="btn btn-status bg-approved" onclick="database.ref('matches/${m.mId}').remove()">DEL</button></td></tr>`;
             });
         });
-
-        // --- DEPOSITS LOGIC ---
-        database.ref('admin_requests/deposits').on('value', snap => {
-            const tbody = document.getElementById('depositTableBody');
-            tbody.innerHTML = "";
-            snap.forEach(child => {
-                const d = child.val();
-                if(d.status === "pending") {
-                    tbody.innerHTML += `<tr><td>${d.name}<br><small>${d.uid}</small></td><td style="color:var(--success)">₹${d.amount}</td><td>${d.txnID}</td>
-                    <td><button class="btn btn-status" style="background:var(--success)" onclick="approveDeposit('${child.key}', '${d.uid}', ${d.amount})">APPROVE</button>
-                    <button class="btn btn-status" style="background:var(--danger)" onclick="rejectReq('deposits', '${child.key}')">REJECT</button></td></tr>`;
-                }
-            });
-        });
-
-        function approveDeposit(reqId, uid, amt) {
-            if(!confirm("Add ₹" + amt + "?")) return;
-            database.ref('users/' + uid + '/balance').transaction(curr => (curr || 0) + amt, (err, comm) => {
-                if(comm) database.ref('admin_requests/deposits/' + reqId).update({ status: "approved" });
-            });
-        }
-
-        // --- WITHDRAWALS LOGIC ---
-        database.ref('admin_requests/withdrawals').on('value', snap => {
-            const tbody = document.getElementById('withdrawTableBody');
-            tbody.innerHTML = "";
-            snap.forEach(child => {
-                const w = child.val();
-                if(w.status === "pending") {
-                    tbody.innerHTML += `<tr><td>${w.name}<br><small>${w.uid}</small></td><td style="color:var(--danger)">₹${w.amount}</td><td>${w.upiID || 'N/A'}</td>
-                    <td><button class="btn btn-status" style="background:var(--ongoing)" onclick="completeWithdraw('${child.key}')">PAID ✅</button>
-                    <button class="btn btn-status" style="background:var(--danger)" onclick="rejectReq('withdrawals', '${child.key}')">REJECT</button></td></tr>`;
-                }
-            });
-        });
-
-        function completeWithdraw(id) {
-            if(confirm("Mark as Paid?")) database.ref('admin_requests/withdrawals/' + id).update({ status: "completed" });
-        }
-
-        function rejectReq(path, id) {
-            if(confirm("Reject?")) database.ref('admin_requests/' + path + '/' + id).update({ status: "rejected" });
-        }
-
-        // --- USERS LIST ---
-        database.ref('users').on('value', snap => {
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = "";
-            snap.forEach(child => {
-                const u = child.val();
-                tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.uid}</td><td style="color:var(--success)">₹${u.balance || 0}</td><td>${u.joinedOn || 'N/A'}</td></tr>`;
-            });
-        });
-
-        // --- UTILS ---
-        function updateStatus(id, stat) { database.ref('matches/' + id).update({ status: stat }); }
-        function openWinnerModal(id) { currentActiveMatchId = id; document.getElementById('winnerModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('winnerModal').style.display = 'none'; }
-        function confirmFinish() {
-            const winUID = document.getElementById('winnerUID').value;
-            if(!winUID) return alert("Enter Winner UID!");
-            database.ref('matches/' + currentActiveMatchId).update({ status: "finished", winner: winUID }).then(() => closeModal());
-        }
-        function deleteMatch(id) { if(confirm("Delete Match?")) database.ref('matches/'+id).remove(); }
     </script>
 </body>
 </html>
