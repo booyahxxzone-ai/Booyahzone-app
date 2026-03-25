@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOOYAH ZONE | OFFICIAL DASHBOARD</title>
+    <title>BOOYAH ZONE | PRO DASHBOARD</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,41 +11,35 @@
     <style>
         :root {
             --primary: #ff9900;
-            --primary-dark: #cc7a00;
-            --secondary: #1a1a1a;
-            --bg-body: #f0f2f5;
-            --card-white: #ffffff;
-            --text-main: #1d1d1f;
-            --text-muted: #7d7d7d;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --info: #3498db;
+            --primary-light: #fff3e0;
+            --dark: #121212;
+            --bg: #f5f7fa;
+            --white: #ffffff;
+            --text: #2d3436;
+            --gray: #95a5a6;
+            --upcoming: #0984e3;
+            --ongoing: #d63031;
+            --finished: #27ae60;
         }
 
-        /* --- Global Reset --- */
+        /* --- Reset & Base --- */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             font-family: 'Rajdhani', sans-serif;
         }
 
         body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 110px;
             overflow-x: hidden;
-            padding-bottom: 100px; /* Space for Bottom Nav */
         }
 
-        /* --- Smooth Scroll --- */
-        html { scroll-behavior: smooth; }
-
-        /* --- Header / Navbar --- */
-        .app-header {
-            background: var(--card-white);
-            height: 70px;
+        /* --- Premium Navbar --- */
+        .app-bar {
+            background: var(--white);
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -53,284 +47,253 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
-        .header-left {
+        .brand-box {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         .app-logo {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: 2px solid var(--primary);
             padding: 2px;
             background: #fff;
             object-fit: cover;
-            box-shadow: 0 4px 8px rgba(255,153,0,0.2);
         }
 
-        .brand-text {
-            font-family: 'Orbitron', sans-serif;
+        .brand-name {
+            font-family: 'Orbitron';
             font-weight: 900;
-            font-size: 16px;
+            font-size: 18px;
             letter-spacing: 1px;
-            color: var(--secondary);
+            color: var(--dark);
         }
 
-        .header-right i {
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 22px;
-            color: var(--secondary);
             cursor: pointer;
-            transition: 0.3s;
+            color: var(--dark);
         }
 
-        /* --- Main Layout --- */
-        .container {
-            width: 100%;
+        /* --- Main Container --- */
+        .content {
+            padding: 20px;
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px;
         }
 
-        /* --- Welcome Area --- */
-        .welcome-section {
-            margin-bottom: 25px;
-            animation: fadeInDown 0.8s ease;
+        /* --- Welcome User --- */
+        .welcome-card {
+            margin-bottom: 30px;
+            animation: slideIn 0.6s ease;
         }
 
-        .welcome-section h2 {
-            font-size: 22px;
-            color: var(--text-muted);
-            font-weight: 500;
+        .welcome-card h2 {
+            font-size: 18px;
+            color: var(--gray);
+            font-weight: 600;
         }
 
-        .welcome-section .user-name {
-            font-family: 'Orbitron', sans-serif;
+        .welcome-card .user-name {
+            font-family: 'Orbitron';
             font-size: 28px;
             font-weight: 900;
-            color: var(--primary);
+            color: var(--dark);
             text-transform: uppercase;
-            display: block;
-            margin-top: 5px;
         }
 
-        /* --- Status Navigation (BIG BUTTONS) --- */
-        .status-grid {
+        /* --- Status Buttons (UPCOMING/ONGOING/FINISHED) --- */
+        .status-wrapper {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 35px;
         }
 
-        .status-btn {
-            background: var(--card-white);
-            border-radius: 20px;
-            padding: 22px 10px;
+        .status-box {
+            background: var(--white);
+            border-radius: 22px;
+            padding: 22px 5px;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.03);
             border: 1px solid rgba(0,0,0,0.02);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
         }
 
-        .status-btn:active { transform: scale(0.92); }
+        .status-box:active { transform: scale(0.92); }
 
-        .status-btn i { font-size: 26px; }
-        .status-btn span {
+        .status-box i { font-size: 26px; }
+        
+        .status-box span {
             font-family: 'Orbitron';
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 900;
-            color: var(--secondary);
+            color: var(--dark);
+            line-height: 1.3;
         }
 
-        .btn-upcoming { border-bottom: 4px solid var(--info); }
-        .btn-upcoming i { color: var(--info); }
-        
-        .btn-ongoing { border-bottom: 4px solid var(--danger); }
-        .btn-ongoing i { color: var(--danger); }
-        
-        .btn-finished { border-bottom: 4px solid var(--success); }
-        .btn-finished i { color: var(--success); }
+        .up-m i { color: var(--upcoming); }
+        .on-m i { color: var(--ongoing); }
+        .fi-m i { color: var(--finished); }
 
-        /* --- Match Categories Section --- */
-        .section-header {
+        /* --- Match Categories --- */
+        .section-label {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
-        .section-header .line {
-            width: 5px;
-            height: 22px;
+        .v-bar {
+            width: 6px;
+            height: 25px;
             background: var(--primary);
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.4);
         }
 
-        .section-header h3 {
+        .section-label h3 {
             font-family: 'Orbitron';
             font-size: 18px;
-            text-transform: uppercase;
-            color: var(--secondary);
+            color: var(--dark);
+            letter-spacing: 0.5px;
         }
 
-        .matches-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+        .mode-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
-        /* Individual Mode Card */
         .mode-card {
-            background: var(--card-white);
-            border-radius: 25px;
-            padding: 25px;
+            background: var(--white);
+            border-radius: 28px;
+            padding: 22px 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            border: 1px solid transparent;
             transition: 0.3s;
             cursor: pointer;
-            border: 1px solid rgba(255,153,0,0.1);
         }
 
-        .mode-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
+        .mode-card:active { border-color: var(--primary); transform: translateX(8px); }
 
         .mode-info h4 {
             font-family: 'Orbitron';
-            font-size: 24px;
+            font-size: 22px;
             color: var(--primary);
+            margin-bottom: 2px;
         }
 
         .mode-info p {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--gray);
             letter-spacing: 1px;
         }
 
-        .mode-icon {
-            font-size: 45px;
-            color: var(--secondary);
-            opacity: 0.9;
+        .mode-circle {
+            width: 55px; height: 55px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 24px;
         }
 
-        /* --- Bottom Navigation Bar --- */
-        .bottom-nav {
+        /* --- Bottom Navigation --- */
+        .nav-bar {
             position: fixed;
             bottom: 0;
-            left: 0;
             width: 100%;
-            height: 80px;
-            background: var(--card-white);
+            height: 85px;
+            background: var(--white);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
-            border-radius: 25px 25px 0 0;
-            padding: 0 10px;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
+            border-radius: 30px 30px 0 0;
             z-index: 2000;
         }
 
         .nav-item {
             text-align: center;
             text-decoration: none;
-            color: #b5b5b5;
-            flex: 1;
+            color: #b2bec3;
             transition: 0.3s;
+            flex: 1;
         }
 
-        .nav-item i {
-            font-size: 22px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .nav-item span {
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-        }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .nav-item.active { color: var(--primary); }
 
         /* Floating Center Profile */
-        .nav-profile-wrap {
+        .profile-fab {
             position: relative;
-            top: -30px;
+            top: -35px;
             z-index: 2001;
         }
 
-        .nav-profile-btn {
-            width: 65px;
-            height: 65px;
-            background: linear-gradient(135deg, var(--primary), #ff6600);
+        .fab-icon {
+            width: 68px; height: 68px;
+            background: linear-gradient(135deg, var(--primary), #ff6a00);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
             font-size: 28px;
-            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.4);
-            border: 6px solid var(--bg-body);
-            transition: 0.3s;
+            box-shadow: 0 12px 25px rgba(255, 153, 0, 0.35);
+            border: 6px solid var(--bg);
         }
 
-        .nav-profile-btn:active { transform: scale(0.9); }
-
-        /* --- Animations --- */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Sidebar Menu (Hidden by default) --- */
+        /* --- Sidebar & Overlay --- */
         .sidebar {
             position: fixed;
             top: 0; right: -280px;
             width: 280px; height: 100%;
-            background: var(--secondary);
+            background: var(--dark);
             z-index: 3000;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);
-            padding: 40px 20px;
-            color: #fff;
+            transition: 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
+            padding: 40px 25px;
         }
-
         .sidebar.active { right: 0; }
-
-        .sidebar-item {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-        }
         
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none; z-index: 2999;
+        .side-link {
+            color: #fff; padding: 18px 0; border-bottom: 1px solid #222;
+            display: flex; align-items: center; gap: 15px; font-size: 18px; cursor: pointer;
         }
-        .overlay.active { display: block; }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; z-index: 2999;
+        }
+
+        /* --- Animations --- */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
     </style>
 </head>
@@ -339,69 +302,69 @@
     <div class="overlay" id="overlay"></div>
 
     <div class="sidebar" id="sidebar">
-        <h2 style="font-family: 'Orbitron'; margin-bottom: 30px; color: var(--primary);">MENU</h2>
-        <div class="sidebar-item" onclick="location.href='profile.html'"><i class="fas fa-user"></i> My Profile</div>
-        <div class="sidebar-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> My Wallet</div>
-        <div class="sidebar-item" onclick="location.href='leaderboard.html'"><i class="fas fa-trophy"></i> Leaderboard</div>
-        <div class="sidebar-item" onclick="location.href='rules.html'"><i class="fas fa-book"></i> Game Rules</div>
-        <div class="sidebar-item" style="color: #ff4d4d; margin-top: 50px;" onclick="location.href='index.html'"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        <h2 style="color:var(--primary); font-family:'Orbitron'; margin-bottom:30px; letter-spacing:2px;">DASHBOARD</h2>
+        <div class="side-link" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> My Wallet</div>
+        <div class="side-link" onclick="location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile Settings</div>
+        <div class="side-link" onclick="location.href='leaderboard.html'"><i class="fas fa-trophy"></i> Leaderboard</div>
+        <div class="side-link" onclick="location.href='refer.html'"><i class="fas fa-gift"></i> Refer & Earn</div>
+        <div class="side-link" style="color: #ff4d4d; margin-top: 50px; border:none;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> Logout</div>
     </div>
 
-    <header class="app-header">
-        <div class="header-left">
-            <img src="44842.png" alt="Booyah Zone" class="app-logo">
-            <span class="brand-text">BOOYAH ZONE</span>
+    <header class="app-bar">
+        <div class="brand-box">
+            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo" class="app-logo">
+            <span class="brand-name">BOOYAH ZONE</span>
         </div>
-        <div class="header-right" id="menuBtn">
+        <div class="menu-btn" id="menuOpen">
             <i class="fas fa-bars-staggered"></i>
         </div>
     </header>
 
-    <div class="container">
+    <div class="content">
         
-        <section class="welcome-section">
+        <div class="welcome-card">
             <h2>Welcome Back,</h2>
-            <span class="user-name" id="userDisplayName">Akash Kohli</span>
-        </section>
-
-        <section class="status-grid">
-            <a href="upcoming.html" class="status-btn btn-upcoming">
-                <i class="fas fa-calendar-alt"></i>
-                <span>UPCOMING</span>
-            </a>
-            <a href="ongoing.html" class="status-btn btn-ongoing">
-                <i class="fas fa-broadcast-tower"></i>
-                <span>ONGOING</span>
-            </a>
-            <a href="finish.html" class="status-btn btn-finished">
-                <i class="fas fa-check-circle"></i>
-                <span>FINISHED</span>
-            </a>
-        </section>
-
-        <div class="section-header">
-            <div class="line"></div>
-            <h3>Free Fire Match</h3>
+            <div class="user-name" id="userTitle">AKASH KOHLI</div>
         </div>
 
-        <div class="matches-grid">
+        <div class="status-wrapper">
+            <a href="upcoming.html" class="status-box up-m">
+                <i class="fas fa-calendar-alt"></i>
+                <span>UPCOMING<br>MATCHES</span>
+            </a>
+            <a href="ongoing.html" class="status-box on-m">
+                <i class="fas fa-bolt"></i>
+                <span>ONGOING<br>MATCHES</span>
+            </a>
+            <a href="finish.html" class="status-box fi-m">
+                <i class="fas fa-check-double"></i>
+                <span>FINISHED<br>MATCHES</span>
+            </a>
+        </div>
+
+        <div class="section-label">
+            <div class="v-bar"></div>
+            <h3>TOURNAMENTS ARENA</h3>
+        </div>
+
+        <div class="mode-container">
             <div class="mode-card" onclick="location.href='upcoming.html?mode=1v1'">
                 <div class="mode-info">
                     <h4>1 V 1</h4>
-                    <p>SOLO CLASH ARENA</p>
+                    <p>SOLO CLASH SQUAD</p>
                 </div>
-                <div class="mode-icon">
-                    <i class="fas fa-crosshairs"></i>
+                <div class="mode-circle">
+                    <i class="fas fa-skull"></i>
                 </div>
             </div>
 
             <div class="mode-card" onclick="location.href='upcoming.html?mode=2v2'">
                 <div class="mode-info">
                     <h4>2 V 2</h4>
-                    <p>DUO BATTLE ZONE</p>
+                    <p>DUO DUEL BATTLE</p>
                 </div>
-                <div class="mode-icon">
-                    <i class="fas fa-user-group"></i>
+                <div class="mode-circle">
+                    <i class="fas fa-user-friends"></i>
                 </div>
             </div>
 
@@ -410,26 +373,26 @@
                     <h4>4 V 4</h4>
                     <p>SQUAD WARFARE</p>
                 </div>
-                <div class="mode-icon">
-                    <i class="fas fa-users-viewfinder"></i>
+                <div class="mode-circle">
+                    <i class="fas fa-users"></i>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <nav class="bottom-nav">
+    <nav class="nav-bar">
         <a href="home.html" class="nav-item active">
             <i class="fas fa-house"></i>
             <span>Home</span>
         </a>
         <a href="refer.html" class="nav-item">
-            <i class="fas fa-gift"></i>
+            <i class="fas fa-share-alt"></i>
             <span>Refer</span>
         </a>
         
-        <div class="nav-profile-wrap">
-            <a href="profile.html" class="nav-profile-btn">
+        <div class="profile-fab">
+            <a href="profile.html" class="fab-icon">
                 <i class="fas fa-user-ninja"></i>
             </a>
         </div>
@@ -440,39 +403,35 @@
         </a>
         <a href="contact.html" class="nav-item">
             <i class="fas fa-headset"></i>
-            <span>Contact</span>
+            <span>Support</span>
         </a>
     </nav>
 
     <script>
-        // Set User Name from LocalStorage
-        const savedName = localStorage.getItem('userName');
-        if(savedName) {
-            document.getElementById('userDisplayName').innerText = savedName;
-        }
+        // Fetch and display name
+        const name = localStorage.getItem('userName') || "AKASH KOHLI";
+        document.getElementById('userTitle').innerText = name.toUpperCase();
 
-        // Sidebar Toggle Logic
-        const menuBtn = document.getElementById('menuBtn');
+        // Sidebar Control
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
+        const menuBtn = document.getElementById('menuOpen');
 
-        menuBtn.addEventListener('click', () => {
+        menuBtn.onclick = () => {
             sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
+            overlay.style.display = 'block';
+        };
 
-        overlay.addEventListener('click', () => {
+        overlay.onclick = () => {
             sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+            overlay.style.display = 'none';
+        };
 
-        // Add Touch Feedback
-        document.querySelectorAll('.mode-card').forEach(card => {
-            card.addEventListener('touchstart', function() {
-                this.style.background = "#f9f9f9";
-            });
-            card.addEventListener('touchend', function() {
-                this.style.background = "#ffffff";
+        // Click Feedback Effect
+        document.querySelectorAll('.mode-card, .status-box').forEach(el => {
+            el.addEventListener('click', function() {
+                this.style.opacity = "0.7";
+                setTimeout(() => this.style.opacity = "1", 100);
             });
         });
     </script>
