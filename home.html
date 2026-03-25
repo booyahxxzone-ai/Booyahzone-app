@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BOOYAH ZONE | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff9900;
+            --primary-dark: #e68a00;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: #e0e5ec; /* Darker background for desktop */
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* --- Mobile App Container --- */
+        .app-container {
+            width: 100%;
+            max-width: 420px; /* Limits width on PC to look like a phone */
+            height: 100vh;
+            max-height: 900px;
+            background-color: var(--bg-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+        }
+
+        /* --- Top Navbar --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .nav-left img {
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .nav-center {
+            font-family: 'Orbitron';
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+        }
+
+        .nav-right i {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* --- Scrollable Main Content --- */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 20px 100px 20px; /* Bottom padding for footer */
+        }
+        .main-content::-webkit-scrollbar { display: none; } /* Hides scrollbar for app look */
+
+        /* --- Greeting Section --- */
+        .greeting {
+            margin-bottom: 25px;
+        }
+        .greeting h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        .greeting h2 span {
+            color: var(--primary);
+            font-family: 'Orbitron';
+        }
+
+        /* --- Match Status Tabs --- */
+        .status-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            background: #eef1f6;
+            padding: 5px;
+            border-radius: 12px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            font-family: 'Rajdhani';
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* --- Match Categories Section --- */
+        .section-title {
+            font-family: 'Orbitron';
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px; height: 18px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255, 153, 0, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .match-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.15);
+        }
+        .match-card i {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .match-card h3 {
+            font-family: 'Orbitron';
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        .match-card p {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        /* --- Bottom Footer Navigation --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            height: 70px;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            padding: 0 10px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            text-decoration: none;
+            width: 60px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 4px; }
+        .nav-item span { font-size: 0.75rem; font-weight: 700; }
+        
+        .nav-item.active { color: var(--primary); }
+
+        /* Floating Center Profile Button */
+        .center-fab-wrapper {
+            position: relative;
+            top: -20px;
+        }
+        .center-fab {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.4);
+            border: 5px solid var(--bg-color); /* Matches background to look cut-out */
+            transition: 0.3s;
+        }
+        .center-fab:hover { transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <header class="navbar">
+            <div class="nav-left">
+                <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" alt="Logo">
+            </div>
+            <div class="nav-center">BOOYAH ZONE</div>
+            <div class="nav-right">
+                <i class="fas fa-bars"></i>
+            </div>
+        </header>
+
+        <main class="main-content">
+            
+            <section class="greeting">
+                <h2>Welcome, <br><span id="userName">ProPlayer99</span></h2>
+            </section>
+
+            <section class="status-tabs">
+                <button class="tab-btn active" onclick="switchTab(this)">UPCOMING</button>
+                <button class="tab-btn" onclick="switchTab(this)">ONGOING</button>
+                <button class="tab-btn" onclick="switchTab(this)">FINISHED</button>
+            </section>
+
+            <h3 class="section-title">FREE FIRE MATCH</h3>
+            
+            <section class="match-grid">
+                <div class="match-card">
+                    <i class="fas fa-crosshairs"></i>
+                    <h3>1 V 1</h3>
+                    <p>SOLO CLASH</p>
+                </div>
+                
+                <div class="match-card">
+                    <i class="fas fa-user-friends"></i>
+                    <h3>2 V 2</h3>
+                    <p>DUO BATTLE</p>
+                </div>
+                
+                <div class="match-card">
+                    <i class="fas fa-users"></i>
+                    <h3>4 V 4</h3>
+                    <p>FULL SQUAD</p>
+                </div>
+            </section>
+
+            </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-share-nodes"></i>
+                <span>Refer</span>
+            </div>
+            
+            <div class="nav-item center-fab-wrapper">
+                <div class="center-fab">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-headset"></i>
+                <span>Contact</span>
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        // Simple script to switch active tabs
+        function switchTab(clickedTab) {
+            // Remove active class from all tabs
+            let tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to the clicked one
+            clickedTab.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
