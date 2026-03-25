@@ -1,293 +1,220 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOYAH ZONE | ELITE INTERFACE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    
+    <title>BOOYAH ZONE | ELITE ENTRY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff9900;
-            --primary-glow: rgba(255, 153, 0, 0.5);
-            --bg-dark: #0a0a0c;
-            --bullet-gold: #ffd700;
+            --accent: #ff9900;
+            --dark-metal: #121214;
+            --bullet-gradient: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
 
         body {
             height: 100vh;
-            width: 100%;
-            background: #fff; /* Initial White */
+            background: #fff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 153, 0, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 153, 0, 0.15) 0px, transparent 50%);
             font-family: 'Rajdhani', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            perspective: 1000px;
-            transition: background 1s ease;
         }
 
-        /* --- Dynamic Background (Orange Mix) --- */
-        .bg-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 70% 30%, #fff 0%, #ff9900 150%);
-            z-index: -1;
-        }
-
-        /* --- Customer Support (Elite Style) --- */
-        .support-anchor {
+        /* --- Elite Customer Support --- */
+        .elite-support {
             position: absolute;
             top: 25px;
             right: 30px;
-            text-decoration: none;
-            z-index: 100;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            transition: 0.3s;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 2px solid var(--accent);
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(255, 153, 0, 0.2);
+            transition: 0.4s;
+            z-index: 1000;
         }
-        .support-anchor:hover { transform: translateY(-5px); }
-        
-        .support-img-circle {
-            width: 70px; height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            padding: 3px;
-            background: #fff;
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-        .support-img-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .support-label { color: #222; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; margin-top: 5px; letter-spacing: 1px; }
+        .elite-support:hover { transform: scale(1.05); background: #fff; box-shadow: 0 15px 30px rgba(255, 153, 0, 0.4); }
+        .elite-support img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--accent); }
+        .support-info { text-align: left; }
+        .support-info b { display: block; font-family: 'Orbitron'; font-size: 12px; color: var(--accent); letter-spacing: 1px; }
+        .support-info span { font-size: 14px; color: #333; font-weight: 700; }
 
-        /* --- Main UI Wrapper --- */
-        .main-wrapper {
-            width: 400px;
+        /* --- Main Arena Card --- */
+        .arena-card {
+            width: 420px;
             text-align: center;
-            z-index: 10;
-        }
-
-        /* Circle Logo */
-        .logo-box {
-            width: 160px; height: 160px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            background: #fff;
-            border: 6px solid var(--primary);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            padding: 10px;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .logo-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; }
-
-        .title-text {
-            font-family: 'Orbitron';
-            font-size: 2.8rem;
-            color: #111;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 3px 3px 0px var(--primary);
-        }
-
-        /* --- Vertical Bullet Input Fields --- */
-        .auth-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.4);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+            border-bottom: 8px solid var(--accent);
             position: relative;
         }
 
-        .tab-switcher {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 25px;
+        .logo-circle {
+            width: 170px; height: 170px;
+            margin: -120px auto 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 5px solid var(--accent);
+            padding: 5px;
+            box-shadow: 0 15px 30px rgba(255, 153, 0, 0.3);
         }
-        .tab-btn {
-            background: none; border: none;
-            font-family: 'Orbitron'; color: #444;
-            font-size: 14px; font-weight: 900;
-            cursor: pointer; padding-bottom: 8px;
-            transition: 0.3s;
-        }
-        .tab-btn.active { color: #000; border-bottom: 4px solid var(--primary); transform: scale(1.1); }
+        .logo-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
-        /* The Bullet Style Input */
+        .brand-text {
+            font-family: 'Orbitron';
+            font-size: 2.5rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(255, 153, 0, 0.2);
+        }
+
+        /* --- Bullet-Style Inputs --- */
+        .chamber { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; }
+        
         .bullet-field {
             position: relative;
-            margin-bottom: 18px;
+            background: var(--dark-metal);
             height: 55px;
-            background: #1a1a1a;
-            border-radius: 30px 10px 10px 30px; /* Bullet Head Shape */
-            border-right: 10px solid var(--primary);
+            border-radius: 30px 10px 10px 30px;
+            overflow: hidden;
             display: flex;
             align-items: center;
+            border-right: 6px solid var(--accent);
             transition: 0.3s;
-            overflow: hidden;
         }
+        .bullet-field:focus-within { transform: scale(1.03); border-right-color: #fff; box-shadow: 0 0 20px rgba(255, 153, 0, 0.4); }
+        
+        /* The Brass Head of the Bullet */
         .bullet-field::before {
-            content: ''; position: absolute; left: 0; width: 25px; height: 100%;
-            background: linear-gradient(90deg, #444, #222); border-radius: 50% 0 0 50%;
+            content: ''; position: absolute; left: 0; width: 30px; height: 100%;
+            background: var(--bullet-gradient); border-radius: 50% 0 0 50%;
         }
-        .bullet-field:focus-within {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px var(--primary-glow);
-            border-right-color: #fff;
-        }
+
         .bullet-field input {
             width: 100%; height: 100%;
             background: transparent; border: none;
-            padding-left: 35px; color: #fff;
-            font-size: 16px; font-family: 'Rajdhani';
-            letter-spacing: 1px;
+            padding: 0 20px 0 45px;
+            color: #ffd700; font-family: 'Rajdhani'; font-size: 18px; font-weight: 600;
         }
 
-        /* Battle Button */
-        .fire-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(45deg, var(--primary), #ff6600);
-            border: none;
-            border-radius: 10px;
-            font-family: 'Orbitron';
-            font-size: 18px; font-weight: 900;
-            color: #fff; cursor: pointer;
-            text-transform: uppercase;
+        /* --- Toggle Switch --- */
+        .auth-switch {
+            display: flex; justify-content: center; gap: 20px; margin-bottom: 25px;
+        }
+        .sw-btn {
+            background: none; border: none; font-family: 'Orbitron'; font-size: 14px;
+            color: #999; font-weight: 900; transition: 0.3s;
+        }
+        .sw-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); transform: translateY(-3px); }
+
+        /* --- Action Button --- */
+        .deploy-btn {
+            width: 100%; padding: 18px;
+            background: var(--accent);
+            color: #fff; font-family: 'Orbitron'; font-size: 20px;
+            border: none; border-radius: 12px;
+            margin-top: 15px;
             box-shadow: 0 10px 20px rgba(255, 153, 0, 0.4);
             transition: 0.3s;
         }
-        .fire-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(255, 153, 0, 0.6);
-        }
+        .deploy-btn:hover { background: #e68a00; transform: translateY(-2px); box-shadow: 0 15px 25px rgba(255, 153, 0, 0.6); }
 
-        /* --- Bullet VFX --- */
+        /* --- Animated Tracer Bullets --- */
         .tracer {
-            position: absolute;
-            width: 50px; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--bullet-gold), #fff);
-            box-shadow: 0 0 15px var(--bullet-gold);
+            position: absolute; width: 40px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), #fff);
+            box-shadow: 0 0 10px var(--accent);
             pointer-events: none;
-            z-index: 1;
         }
 
-        /* Animation Classes */
         .hidden { display: none; }
-        .muzzle-flash { animation: flash 0.2s ease-out; }
-        @keyframes flash {
-            0% { filter: brightness(1); }
-            50% { filter: brightness(3) contrast(1.5); }
-            100% { filter: brightness(1); }
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="bg-overlay"></div>
-
-    <a href="https://t.me/akashkohli0" target="_blank" class="support-anchor">
-        <div class="support-img-circle">
-            <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Support">
+    <a href="https://t.me/akashkohli0" target="_blank" class="elite-support">
+        <img src="https://i.ibb.co/Nn2Ff6W5/360-F-1558898434-CWg-Xj-Yf-JVxg-PY4-FCYDFl-Ls-Ql2-Zhcfo-S6.jpg" alt="Support">
+        <div class="support-info">
+            <b>24/7 LIVE HELP</b>
+            <span>CUSTOMER SUPPORT</span>
         </div>
-        <span class="support-label">Support @akashkohli0</span>
     </a>
 
-    <div class="main-wrapper" id="main-content">
-        <div class="logo-box">
+    <div class="arena-card">
+        <div class="logo-circle">
             <img src="https://i.ibb.co/r2B9q00q/44842-removebg-preview.png" alt="Logo">
         </div>
-        <h1 class="title-text">BOOYAH ZONE</h1>
+        
+        <h1 class="brand-text">BOOYAH ZONE</h1>
+        
+        <div class="auth-switch">
+            <button class="sw-btn active" id="l-tab" onclick="moveChamber('login')">LOGIN</button>
+            <button class="sw-btn" id="r-tab" onclick="moveChamber('reg')">REGISTER</button>
+        </div>
 
-        <div class="auth-container">
-            <div class="tab-switcher">
-                <button class="tab-btn active" id="login-tab" onclick="toggleAuth('login')">LOGIN UNIT</button>
-                <button class="tab-btn" id="reg-tab" onclick="toggleAuth('reg')">REGISTER UNIT</button>
-            </div>
+        <div id="login-chamber" class="chamber">
+            <div class="bullet-field"><input type="text" placeholder="GAME UID"></div>
+            <div class="bullet-field"><input type="password" placeholder="PASSWORD"></div>
+            <button class="deploy-btn" onclick="location.href='index2.html'">START BATTLE</button>
+        </div>
 
-            <div id="login-fields">
-                <div class="bullet-field"><input type="text" placeholder="ENTER GAME UID"></div>
-                <div class="bullet-field"><input type="password" placeholder="SECURITY PASSWORD"></div>
-                <button class="fire-btn">DEPLOY LOGIN</button>
-            </div>
-
-            <div id="reg-fields" class="hidden">
-                <div class="bullet-field"><input type="text" placeholder="FULL NAME"></div>
-                <div class="bullet-field"><input type="text" placeholder="GAME UID"></div>
-                <div class="bullet-field"><input type="email" placeholder="EMAIL ADDRESS"></div>
-                <div class="bullet-field"><input type="tel" placeholder="PHONE NUMBER"></div>
-                <button class="fire-btn">RECRUIT SOLDIER</button>
-            </div>
+        <div id="reg-chamber" class="chamber hidden">
+            <div class="bullet-field"><input type="text" placeholder="FULL NAME"></div>
+            <div class="bullet-field"><input type="text" placeholder="GAME UID"></div>
+            <div class="bullet-field"><input type="email" placeholder="EMAIL"></div>
+            <div class="bullet-field"><input type="tel" placeholder="PHONE"></div>
+            <button class="deploy-btn">JOIN SQUAD</button>
         </div>
     </div>
 
     <script>
-        // Switch Logic with Flash Effect
-        function toggleAuth(type) {
-            const login = document.getElementById('login-fields');
-            const reg = document.getElementById('reg-fields');
-            const logTab = document.getElementById('login-tab');
-            const regTab = document.getElementById('reg-tab');
-            const wrapper = document.getElementById('main-content');
-
-            // Muzzle flash effect on switch
-            wrapper.classList.add('muzzle-flash');
-            setTimeout(() => wrapper.classList.remove('muzzle-flash'), 200);
+        function moveChamber(type) {
+            const login = document.getElementById('login-chamber');
+            const reg = document.getElementById('reg-chamber');
+            const lTab = document.getElementById('l-tab');
+            const rTab = document.getElementById('r-tab');
 
             if(type === 'login') {
-                login.classList.remove('hidden');
-                reg.classList.add('hidden');
-                logTab.classList.add('active');
-                regTab.classList.remove('active');
+                login.classList.remove('hidden'); reg.classList.add('hidden');
+                lTab.classList.add('active'); rTab.classList.remove('active');
             } else {
-                login.classList.add('hidden');
-                reg.classList.remove('hidden');
-                regTab.classList.add('active');
-                logTab.classList.remove('active');
+                login.classList.add('hidden'); reg.classList.remove('hidden');
+                rTab.classList.add('active'); lTab.classList.remove('active');
             }
         }
 
-        // Random Bullet Physics
-        function spawnTracer() {
-            const tracer = document.createElement('div');
-            tracer.className = 'tracer';
+        // Firing Tracers Logic
+        function fireTracer() {
+            const t = document.createElement('div');
+            t.className = 'tracer';
+            t.style.top = Math.random() * 100 + 'vh';
             
-            const startFromLeft = Math.random() > 0.5;
-            const yPos = Math.random() * 100;
-            
-            tracer.style.top = yPos + '%';
-            
-            if(startFromLeft) {
-                tracer.style.left = '-100px';
-                document.body.appendChild(tracer);
-                tracer.animate([
-                    { left: '-100px', opacity: 0 },
-                    { left: '50%', opacity: 1, offset: 0.1 },
-                    { left: '110%', opacity: 0 }
-                ], { duration: 800 + Math.random() * 1000, easing: 'linear' });
+            if(Math.random() > 0.5) {
+                t.style.left = '-50px';
+                document.body.appendChild(t);
+                t.animate([{left: '-50px'}, {left: '110%'}], {duration: 600 + Math.random()*1000});
             } else {
-                tracer.style.right = '-100px';
-                tracer.style.transform = 'rotate(180deg)';
-                document.body.appendChild(tracer);
-                tracer.animate([
-                    { right: '-100px', opacity: 0 },
-                    { right: '50%', opacity: 1, offset: 0.1 },
-                    { right: '110%', opacity: 0 }
-                ], { duration: 800 + Math.random() * 1000, easing: 'linear' });
+                t.style.right = '-50px';
+                t.style.transform = 'rotate(180deg)';
+                document.body.appendChild(t);
+                t.animate([{right: '-50px'}, {right: '110%'}], {duration: 600 + Math.random()*1000});
             }
-
-            setTimeout(() => tracer.remove(), 2000);
+            setTimeout(() => t.remove(), 2000);
         }
-
-        // Continuous Firing
-        setInterval(spawnTracer, 600);
-
+        setInterval(fireTracer, 400);
     </script>
 </body>
 </html>
