@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>4V4 SQUAD | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff9900;
+            --bg: #121212; /* Squad matches ke liye dark theme zyada pro lagti hai */
+            --card-bg: #1e1e1e;
+            --white: #ffffff;
+            --gray: #a0a0a0;
+            --success: #00d2d3;
+            --squad: #ff4757;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background: var(--bg); color: var(--white); padding-bottom: 20px; }
+
+        /* --- Header --- */
+        .top-nav {
+            background: #1a1a1a; padding: 20px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
+        .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; color: var(--white); }
+
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* --- Match Card --- */
+        .match-card {
+            background: var(--card-bg); border-radius: 25px;
+            overflow: hidden; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; scale: 0.95; } to { opacity: 1; scale: 1; } }
+
+        .card-header {
+            background: linear-gradient(90deg, #2f3542, #1e1e1e); padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .match-title { color: var(--white); font-family: 'Orbitron'; font-size: 13px; }
+        .match-tag { background: var(--squad); color: #fff; padding: 2px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
+
+        .card-body { padding: 20px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .info-item { display: flex; align-items: center; gap: 10px; }
+        .info-item i { color: var(--primary); font-size: 18px; }
+        .info-item div p { font-size: 9px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
+        .info-item div h5 { font-size: 14px; font-weight: 700; color: #fff; }
+
+        .card-footer {
+            padding: 15px 20px; border-top: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #252525;
+        }
+        .price-box h6 { font-size: 10px; color: var(--gray); }
+        .price-box h4 { font-family: 'Orbitron'; color: var(--success); font-size: 18px; }
+
+        .join-btn {
+            background: var(--primary); color: #000; border: none;
+            padding: 12px 25px; border-radius: 12px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 12px; cursor: pointer;
+        }
+        .join-btn:active { transform: scale(0.95); }
+
+        .loader { text-align: center; margin-top: 100px; color: var(--gray); }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
+        <h2>4 V 4 SQUAD WARFARE</h2>
+    </div>
+
+    <div class="container" id="matchList">
+        <div class="loader">
+            <i class="fas fa-users fa-spin fa-2x" style="color:var(--primary)"></i>
+            <p style="margin-top:10px">Deploying Squad Battles...</p>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const targetMode = "4v4"; 
+
+        database.ref('matches').on('value', (snapshot) => {
+            const container = document.getElementById('matchList');
+            container.innerHTML = "";
+            let found = false;
+
+            snapshot.forEach((child) => {
+                const match = child.val();
+
+                if(match.mode === targetMode && match.status === "upcoming") {
+                    found = true;
+                    const matchDate = match.time ? match.time.split('T')[0] : "TBA";
+                    const matchTime = match.time ? match.time.split('T')[1] : "TBA";
+
+                    container.innerHTML += `
+                        <div class="match-card">
+                            <div class="card-header">
+                                <span class="match-title">${match.title}</span>
+                                <span class="match-tag">SQUAD</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-grid">
+                                    <div class="info-item"><i class="fas fa-crown"></i><div><p>Squad Prize</p><h5>₹${match.prize}</h5></div></div>
+                                    <div class="info-item"><i class="fas fa-map"></i><div><p>Map</p><h5>${match.map || 'Bermuda'}</h5></div></div>
+                                    <div class="info-item"><i class="fas fa-clock"></i><div><p>Time</p><h5>${matchTime}</h5></div></div>
+                                    <div class="info-item"><i class="fas fa-calendar"></i><div><p>Date</p><h5>${matchDate}</h5></div></div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="price-box"><h6>ENTRY FEE</h6><h4>₹${match.entry}</h4></div>
+                                <button class="join-btn" onclick="joinMatch('${match.mId}', '${match.entry}')">JOIN SQUAD</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if(!found) {
+                container.innerHTML = `
+                    <div style="text-align:center; margin-top:80px; color:#555;">
+                        <i class="fas fa-skull-crossbones fa-3x"></i>
+                        <p style="margin-top:15px; font-weight:700;">No Squad Matches Scheduled!</p>
+                        <button onclick="location.href='home.html'" style="margin-top:15px; border:1px solid var(--primary); background:none; color:var(--primary); padding:8px 15px; border-radius:10px;">Go Back</button>
+                    </div>
+                `;
+            }
+        });
+
+        function joinMatch(mId, fee) {
+            const userUID = localStorage.getItem('gameID') || "Unknown";
+            const userName = localStorage.getItem('userName') || "Player";
+
+            if(confirm(`Join this Squad Battle for ₹${fee}?`)) {
+                database.ref('joins/' + mId + '/' + userUID).set({
+                    name: userName,
+                    uid: userUID,
+                    type: "SQUAD",
+                    timestamp: new Date().getTime()
+                }).then(() => {
+                    alert("Squad Entry Registered! Victory Awaits!");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
