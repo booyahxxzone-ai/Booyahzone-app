@@ -3,88 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2V2 DUEL | BOOYAH ZONE</title>
+    <title>2V2 DUO | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #f5f7fa; --white: #ffffff; --dark: #121212; --gray: #95a5a6; --success: #27ae60; --duo: #6c5ce7; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding-bottom: 20px; }
+        :root { --primary: #ff9900; --bg: #ffffff; --card: #f9f9f9; --text: #1a1a1a; --gray: #7f8c8d; --success: #27ae60; --duo-accent: #6c5ce7; }
+        
+        /* Stop Blue Highlight & Professional Font */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            outline: none;
+        }
 
-        .top-nav { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
-        .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 30px; }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .header {
+            background: #fff; padding: 18px; display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100;
+        }
+        .header h2 { font-family: 'Orbitron'; font-size: 15px; color: var(--primary); letter-spacing: 1px; }
 
-        .match-card { background: var(--white); border-radius: 25px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .card-header { background: linear-gradient(90deg, #1a1a1a, #2d3436); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .match-title { color: #fff; font-family: 'Orbitron'; font-size: 13px; }
-        .timer-tag { color: var(--primary); font-size: 11px; font-weight: 900; font-family: 'Orbitron'; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
-        .card-body { padding: 20px; }
-        .slots-info { margin-bottom: 15px; }
-        .slot-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-top: 5px; overflow: hidden; }
-        .slot-fill { height: 100%; background: var(--duo); width: 0%; transition: 0.5s; }
-        .slot-text { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--gray); }
+        /* Match Card */
+        .m-card {
+            background: var(--card); border-radius: 20px; border: 1px solid #eee;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .m-head { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .m-head span { color: #fff; font-family: 'Orbitron'; font-size: 11px; }
+        .m-timer { color: var(--primary); font-weight: 700; font-size: 12px; }
 
-        .id-pass-box { background: #f3f0ff; border: 1px dashed var(--duo); border-radius: 12px; padding: 12px; margin-bottom: 15px; text-align: center; }
-        .id-pass-box p { font-size: 12px; font-weight: 700; color: #000; }
+        .m-body { padding: 20px; }
+        .slot-box { margin-bottom: 15px; }
+        .slot-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px; margin-top: 5px; }
+        .slot-fill { height: 100%; background: var(--duo-accent); width: 0%; border-radius: 10px; transition: 1s ease; }
+        
+        /* Room ID Pass Box */
+        .room-info { 
+            background: #fff; border: 1px dashed var(--duo-accent); border-radius: 15px; 
+            padding: 15px; margin-bottom: 15px; display: none; 
+        }
+        .room-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .room-row:last-child { margin-bottom: 0; }
+        .room-row span { font-size: 13px; font-weight: 600; }
+        .copy-btn { background: var(--duo-accent); color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; }
 
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .info-item { display: flex; align-items: center; gap: 10px; }
-        .info-item i { color: var(--primary); font-size: 18px; }
-        .info-item div p { font-size: 9px; color: var(--gray); text-transform: uppercase; }
-        .info-item div h5 { font-size: 14px; font-weight: 700; }
+        .join-btn {
+            width: 100%; background: var(--primary); color: #fff; border: none;
+            padding: 12px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900;
+            font-size: 13px; cursor: pointer; transition: 0.2s;
+        }
+        .join-btn:disabled { background: #dcdde1; color: #7f8c8d; cursor: not-allowed; }
 
-        .card-footer { padding: 15px 20px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center; }
-        .price-box h4 { font-family: 'Orbitron'; color: var(--success); font-size: 18px; }
+        /* Professional Invoice Modal */
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content { background: #fff; width: 90%; max-width: 360px; border-radius: 24px; padding: 24px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        
+        .bill-area { margin: 15px 0; text-align: left; background: #fdfdfd; padding: 15px; border-radius: 15px; border: 1px solid #f1f1f1; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #555; }
+        .total-row { border-top: 2px dashed #eee; margin-top: 10px; padding-top: 10px; font-weight: 700; color: var(--primary); font-size: 16px; }
 
-        .join-btn { background: var(--primary); color: #fff; border: none; padding: 12px 25px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; }
+        .uid-input { 
+            width: 100%; padding: 12px; border: 2px solid #f1f1f1; border-radius: 12px; 
+            text-align: center; font-weight: 700; margin-bottom: 10px; background: #f9f9f9;
+        }
 
-        /* --- Modal --- */
-        #joinModal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:1000; }
-        .modal-content { background:white; padding:25px; border-radius:20px; width:90%; max-width:380px; text-align:center; }
-        .modal-content input { width:100%; padding:10px; margin:8px 0; border:2px solid #eee; border-radius:10px; font-weight:700; text-align:center; }
-        .confirm-btn { background:var(--duo); color:white; border:none; padding:12px 20px; border-radius:10px; font-weight:900; width:100%; cursor:pointer; margin-top:10px; }
+        .check-container { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; text-align: left; }
+        .check-container input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary); }
+        .check-container label { font-size: 11px; color: var(--gray); line-height: 1.4; }
+
+        /* Professional Toast */
+        #toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: #333; color: #fff; padding: 10px 20px; border-radius: 30px;
+            font-size: 12px; display: none; z-index: 2000;
+        }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
-        <h2>2 V 2 DUO BATTLES</h2>
+    <div class="header">
+        <i class="fas fa-chevron-left" onclick="history.back()"></i>
+        <h2>2V2 DUO BATTLES</h2>
     </div>
 
     <div class="container" id="matchList"></div>
 
-    <div id="joinModal">
+    <div class="modal" id="joinModal">
         <div class="modal-content">
-            <h3 style="font-family:'Orbitron'; font-size:16px; color:var(--duo);">DUO TEAM DETAILS</h3>
-            <p style="font-size:11px; color:var(--gray); margin-bottom:10px;">Wallet se Entry Fee kaat li jayegi</p>
+            <h3 style="font-family:'Orbitron'; font-size:16px;">DUO TEAM INVOICE</h3>
+            <p style="font-size:11px; color:var(--gray); margin-top:5px;">Enter both players' Free Fire UIDs</p>
             
-            <input type="text" id="p1UID" placeholder="Player 1 (Leader) UID">
-            <input type="text" id="p2UID" placeholder="Player 2 UID">
-            
-            <button class="confirm-btn" onclick="processDuoPayment()">PAY & JOIN DUO</button>
-            <button onclick="closeModal()" style="border:none; background:none; margin-top:15px; color:var(--gray); font-weight:700;">CANCEL</button>
+            <div class="bill-area">
+                <input type="text" id="p1UID" class="uid-input" placeholder="PLAYER 1 (LEADER) UID">
+                <input type="text" id="p2UID" class="uid-input" placeholder="PLAYER 2 UID">
+                
+                <div class="bill-row"><span>Team Entry Fee</span><span id="bill-entry">₹0</span></div>
+                <div class="bill-row"><span>Platform Charges</span><span>₹0</span></div>
+                <div class="bill-row total-row"><span>Total Payable</span><span id="bill-total">₹0</span></div>
+            </div>
+
+            <div class="check-container">
+                <input type="checkbox" id="termsCheck" onchange="togglePayButton()">
+                <label for="termsCheck">I voluntarily agree to register my Duo team for this match and confirm that I want to deduct the entry fee from my wallet.</label>
+            </div>
+
+            <button class="join-btn" id="confirmPayBtn" disabled onclick="handleDuoJoin()">CONFIRM & PAY</button>
+            <p onclick="closeModal()" style="margin-top:15px; font-size:12px; color:var(--gray); cursor:pointer; font-weight:600;">CANCEL</p>
         </div>
     </div>
+
+    <div id="toast">Copied to Clipboard!</div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let currentMatchId = null;
-        let currentEntryFee = 0;
+        const myUserUID = localStorage.getItem('gameID') || "GUEST_USER";
+        let activeMatchId = null;
+        let activeMatchFee = 0;
 
-        // 1. Fetch Matches
+        // Fetch Matches
         db.ref('matches').on('value', snap => {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
@@ -93,115 +145,135 @@
                 const m = child.val();
                 if(m.mode === "2v2" && m.status !== "finished") {
                     const mId = m.mId;
-                    const maxSlots = 4; // 2v2 means 4 players (2 teams)
+                    const maxPlayers = 4; // 2 Teams = 4 Players
 
                     container.innerHTML += `
-                        <div class="match-card">
-                            <div class="card-header">
-                                <span class="match-title">${m.title}</span>
-                                <span class="timer-tag" id="timer-${mId}">00:00:00</span>
+                        <div class="m-card">
+                            <div class="m-head">
+                                <span>${m.title}</span>
+                                <span class="m-timer" id="timer-${mId}">00:00:00</span>
                             </div>
-                            <div class="card-body">
-                                <div class="slots-info">
-                                    <div class="slot-text"><span>Total Players</span><span id="slot-count-${mId}">0/${maxSlots}</span></div>
+                            <div class="m-body">
+                                <div class="slot-box">
+                                    <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;">
+                                        <span>Capacity</span><span id="slot-count-${mId}">0/${maxPlayers}</span>
+                                    </div>
                                     <div class="slot-bar"><div class="slot-fill" id="slot-fill-${mId}"></div></div>
                                 </div>
 
-                                <div id="id-pass-box-${mId}" class="id-pass-box" style="display:none;">
-                                    <p>ROOM ID: <span style="color:var(--duo)">${m.roomId || 'WAITING'}</span></p>
-                                    <p>PASS: <span style="color:var(--duo)">${m.roomPass || 'WAITING'}</span></p>
+                                <div class="room-info" id="room-${mId}">
+                                    <div class="room-row">
+                                        <span>ROOM ID: <b id="rid-val-${mId}">${m.roomId || 'TBA'}</b></span>
+                                        <button class="copy-btn" onclick="copyValue('${m.roomId}', 'Room ID')">COPY</button>
+                                    </div>
+                                    <div class="room-row">
+                                        <span>PASSWORD: <b id="rps-val-${mId}">${m.roomPass || 'TBA'}</b></span>
+                                        <button class="copy-btn" onclick="copyValue('${m.roomPass}', 'Password')">COPY</button>
+                                    </div>
                                 </div>
 
-                                <div class="info-grid">
-                                    <div class="info-item"><i class="fas fa-gift"></i><div><p>Team Prize</p><h5>₹${m.prize}</h5></div></div>
-                                    <div class="info-item"><i class="fas fa-mountain"></i><div><p>Map</p><h5>${m.map || 'Purgatory'}</h5></div></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div><p style="font-size:10px; color:var(--gray);">DUO PRIZE</p><h3 style="color:var(--success)">₹${m.prize}</h3></div>
+                                    <button class="join-btn" style="width:130px;" id="btn-${mId}" onclick="openInvoice('${mId}', ${m.entry})">JOIN ₹${m.entry}</button>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="price-box"><h6>ENTRY</h6><h4>₹${m.entry}</h4></div>
-                                <button class="join-btn" id="btn-${mId}" onclick="openJoinModal('${mId}', ${m.entry})">JOIN TEAM</button>
                             </div>
                         </div>
                     `;
-                    startTimer(mId, m.time);
-                    syncSlots(mId, maxSlots);
+                    setupDuoSync(mId, m.time, maxPlayers);
                 }
             });
         });
 
-        function startTimer(id, targetTime) {
-            setInterval(() => {
-                const now = new Date().getTime();
-                const diff = new Date(targetTime).getTime() - now;
-                const timerEl = document.getElementById(`timer-${id}`);
-                const idPassBox = document.getElementById(`id-pass-box-${id}`);
+        function setupDuoSync(id, targetTime, max) {
+            db.ref(`matches/${id}/players`).on('value', snap => {
+                const players = snap.val() || {};
+                const count = Object.keys(players).length;
+                const isJoined = Object.values(players).some(p => p.leaderUID === myUserUID);
 
-                if (diff <= 0) {
-                    timerEl.innerText = "LIVE";
-                    idPassBox.style.display = "block";
+                document.getElementById(`slot-count-${id}`).innerText = `${count}/${max}`;
+                document.getElementById(`slot-fill-${id}`).style.width = (count/max)*100 + "%";
+
+                const btn = document.getElementById(`btn-${id}`);
+                if(isJoined) {
+                    btn.innerText = "ALREADY JOINED";
+                    btn.disabled = true;
+                    btn.style.background = "#27ae60";
+                } else if(count >= max) {
+                    btn.innerText = "FULL";
+                    btn.disabled = true;
+                }
+            });
+
+            setInterval(() => {
+                const diff = new Date(targetTime).getTime() - new Date().getTime();
+                const timerEl = document.getElementById(`timer-${id}`);
+                const roomBox = document.getElementById(`room-${id}`);
+
+                if(diff <= 0) {
+                    timerEl.innerText = "DUEL LIVE";
+                    roomBox.style.display = "block";
                     return;
                 }
 
-                const h = Math.floor(diff / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                timerEl.innerText = `${h}:${m}:${s}`;
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                timerEl.innerText = `${m}m ${s}s LEFT`;
 
-                if(diff < 900000) idPassBox.style.display = "block";
+                if(diff < 900000) roomBox.style.display = "block"; // 15 mins
             }, 1000);
         }
 
-        function syncSlots(id, max) {
-            db.ref(`matches/${id}/players`).on('value', snap => {
-                const count = snap.numChildren();
-                const percent = (count / max) * 100;
-                document.getElementById(`slot-count-${id}`).innerText = `${count}/${max}`;
-                document.getElementById(`slot-fill-${id}`).style.width = percent + "%";
-                const btn = document.getElementById(`btn-${id}`);
-                if(count >= max) { btn.innerText = "FULL"; btn.disabled = true; btn.style.background = "#999"; }
-            });
-        }
-
-        function openJoinModal(id, fee) {
-            currentMatchId = id;
-            currentEntryFee = fee;
+        function openInvoice(id, fee) {
+            activeMatchId = id; activeMatchFee = fee;
+            document.getElementById('bill-entry').innerText = "₹" + fee;
+            document.getElementById('bill-total').innerText = "₹" + fee;
             document.getElementById('joinModal').style.display = 'flex';
         }
 
-        function closeModal() { document.getElementById('joinModal').style.display = 'none'; }
+        function closeModal() {
+            document.getElementById('joinModal').style.display = 'none';
+            document.getElementById('termsCheck').checked = false;
+            document.getElementById('confirmPayBtn').disabled = true;
+        }
 
-        async function processDuoPayment() {
+        function togglePayButton() {
+            document.getElementById('confirmPayBtn').disabled = !document.getElementById('termsCheck').checked;
+        }
+
+        function copyValue(val, type) {
+            if(!val || val === 'TBA') return;
+            navigator.clipboard.writeText(val);
+            const t = document.getElementById('toast');
+            t.innerText = type + " Copied!";
+            t.style.display = "block";
+            setTimeout(() => t.style.display = "none", 2000);
+        }
+
+        async function handleDuoJoin() {
             const p1 = document.getElementById('p1UID').value;
             const p2 = document.getElementById('p2UID').value;
-            const userUID = localStorage.getItem('gameID');
+            if(!p1 || !p2) { alert("Please enter both Player UIDs!"); return; }
 
-            if(!p1 || !p2) return alert("Dono Players ki UID zaruri hai!");
-            if(!userUID) return alert("Login Karo!");
-
-            const userRef = db.ref('users/' + userUID);
-            const userSnap = await userRef.get();
+            const userRef = db.ref(`users/${myUserUID}`);
+            const userSnap = await userRef.once('value');
             const balance = userSnap.val().balance || 0;
 
-            if(balance < currentEntryFee) {
-                alert("Paise kam hain! Wallet recharge karo.");
+            if(balance < activeMatchFee) {
+                alert("Insufficient Balance!");
                 return;
             }
 
-            // Deduct & Join
-            await userRef.update({ balance: balance - currentEntryFee });
-            
-            // Duo Entry (2 entries in players list)
-            const matchPlayersRef = db.ref(`matches/${currentMatchId}/players`);
-            await matchPlayersRef.push({ leader: userUID, gameUID: p1, teamRole: "Leader" });
-            await matchPlayersRef.push({ leader: userUID, gameUID: p2, teamRole: "Partner" });
+            // Deduct & Add Team
+            await userRef.update({ balance: balance - activeMatchFee });
+            const mPlayersRef = db.ref(`matches/${activeMatchId}/players`);
+            await mPlayersRef.push({ leaderUID: myUserUID, gameUID: p1, role: "Leader" });
+            await mPlayersRef.push({ leaderUID: myUserUID, gameUID: p2, role: "Partner" });
 
             // History Log
             db.ref('admin_requests/withdrawals').push({
-                uid: userUID, name: localStorage.getItem('userName'),
-                amount: currentEntryFee, status: "2v2 Match Joined", date: new Date().toLocaleDateString()
+                uid: myUserUID, amount: activeMatchFee, status: "Joined 2v2 Duo", date: new Date().toLocaleTimeString()
             });
 
-            alert("Duo Team Registered! ₹" + currentEntryFee + " Deducted.");
             closeModal();
         }
     </script>
