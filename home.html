@@ -35,13 +35,13 @@
             overflow-x: hidden;
         }
 
-        /* --- Navbar (Menu Bars Removed) --- */
+        /* --- Navbar --- */
         .app-bar {
             background: var(--white);
             height: 75px;
             display: flex;
             align-items: center;
-            justify-content: center; /* Centered Logo */
+            justify-content: center;
             padding: 0 20px;
             position: sticky;
             top: 0;
@@ -97,16 +97,6 @@
             font-weight: 900;
             color: var(--dark);
             text-transform: uppercase;
-        }
-
-        / 8px 20px rgba(0,0,0,0.1);
-            background: #fff;
-        }
-
-        .main-banner img {
-            width: 100%;
-            height: auto;
-            display: block;
         }
 
         /* --- Status Buttons --- */
@@ -264,12 +254,10 @@
     </header>
 
     <div class="content">
-        
         <div class="welcome-card">
             <h2>Welcome Back,</h2>
-            <div class="user-name" id="userTitle">AKASH KOHLI</div>
+            <div class="user-name" id="userTitle">PLAYER</div>
         </div>
-
 
         <div class="status-wrapper">
             <a href="upcoming.html" class="status-box up-m">
@@ -292,7 +280,7 @@
         </div>
 
         <div class="mode-container">
-            <div class="mode-card" onclick="location.href='upcoming.html?mode=1v1'">
+            <div class="mode-card" onclick="openMode('1v1')">
                 <div class="mode-info">
                     <h4>1 V 1</h4>
                     <p>SOLO CLASH SQUAD</p>
@@ -300,7 +288,7 @@
                 <div class="mode-circle"><i class="fas fa-skull"></i></div>
             </div>
 
-            <div class="mode-card" onclick="location.href='upcoming.html?mode=2v2'">
+            <div class="mode-card" onclick="openMode('2v2')">
                 <div class="mode-info">
                     <h4>2 V 2</h4>
                     <p>DUO DUEL BATTLE</p>
@@ -308,7 +296,7 @@
                 <div class="mode-circle"><i class="fas fa-user-friends"></i></div>
             </div>
 
-            <div class="mode-card" onclick="location.href='upcoming.html?mode=4v4'">
+            <div class="mode-card" onclick="openMode('4v4')">
                 <div class="mode-info">
                     <h4>4 V 4</h4>
                     <p>SQUAD WARFARE</p>
@@ -329,10 +317,15 @@
     </nav>
 
     <script>
-        const name = localStorage.getItem('userName') || "AKASH KOHLI";
+        // 1. Setting User Name
+        const name = localStorage.getItem('userName') || "GUEST PLAYER";
         document.getElementById('userTitle').innerText = name.toUpperCase();
+
+        // 2. Navigation Function for Modes (1v1, 2v2, 4v4)
+        function openMode(modeType) {
+            // Ye function user ko upcoming.html pe bhejega aur sath me mode bhi bhejega
+            window.location.href = `upcoming.html?mode=${modeType}`;
+        }
     </script>
 </body>
 </html>
- 
-
