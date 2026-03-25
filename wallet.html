@@ -1,5 +1,5 @@
  <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,175 +12,184 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #0f0f0f; --card: #1a1a1a; --white: #ffffff; --green: #27ae60; }
+        :root { --primary: #ff9900; --bg: #0f0f0f; --card: #1a1a1a; --white: #ffffff; --green: #27ae60; --red: #d63031; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
         
-        body { background: var(--bg); color: var(--white); padding-bottom: 100px; }
+        body { background: var(--bg); color: var(--white); padding-bottom: 100px; overflow-x: hidden; }
 
-        /* Wallet Header */
+        /* Header Section */
         .wallet-header {
             background: linear-gradient(135deg, #1e1e1e, #2d3436);
-            padding: 50px 20px; text-align: center;
-            border-radius: 0 0 40px 40px; border-bottom: 2px solid var(--primary);
+            padding: 40px 20px; text-align: center;
+            border-radius: 0 0 35px 35px; border-bottom: 2px solid var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        .main-balance { font-size: 50px; font-family: 'Orbitron'; font-weight: 900; color: var(--primary); margin: 10px 0; }
+        .balance-label { font-family: 'Orbitron'; font-size: 11px; letter-spacing: 2px; color: #888; }
+        .main-balance { font-size: 45px; font-family: 'Orbitron'; font-weight: 900; color: var(--primary); margin: 5px 0; }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 20px; max-width: 450px; margin: 0 auto; }
 
-        /* Buttons */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: -30px; }
+        /* Action Buttons */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: -25px; }
         .btn-wallet {
-            background: var(--card); padding: 20px; border-radius: 20px;
-            text-align: center; border: 1px solid #333; cursor: pointer;
+            background: var(--card); padding: 18px; border-radius: 18px;
+            text-align: center; border: 1px solid #333; cursor: pointer; transition: 0.3s;
         }
-        .btn-wallet i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
-        .btn-wallet span { display: block; font-weight: 700; font-family: 'Orbitron'; font-size: 12px; }
+        .btn-wallet:active { transform: scale(0.95); background: #222; }
+        .btn-wallet i { font-size: 22px; color: var(--primary); margin-bottom: 8px; }
+        .btn-wallet span { display: block; font-weight: 700; font-family: 'Orbitron'; font-size: 11px; }
 
-        /* Sections */
-        .section-box { background: var(--card); border-radius: 20px; padding: 20px; margin-top: 25px; display: none; border: 1px solid #333; }
-        .section-title { font-family: 'Orbitron'; font-size: 16px; margin-bottom: 20px; color: var(--primary); }
+        /* Form Sections */
+        .section-box { background: var(--card); border-radius: 20px; padding: 20px; margin-top: 25px; display: none; border: 1px solid #333; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-title { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
 
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #222; color: #fff; font-size: 16px; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #222; color: #fff; font-size: 15px; outline: none; }
+        .input-group input:focus { border-color: var(--primary); }
         
         .submit-btn {
             width: 100%; padding: 15px; background: var(--primary); color: #000;
             border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900;
-            cursor: pointer; font-size: 14px; margin-top: 10px;
+            cursor: pointer; font-size: 13px; margin-top: 5px; transition: 0.3s;
         }
+        .submit-btn:hover { background: #e68a00; }
         
-        .qr-img { width: 150px; height: 150px; margin: 10px auto; display: block; border-radius: 10px; border: 2px solid #fff; }
+        .qr-container { text-align: center; margin-bottom: 15px; background: #fff; padding: 10px; border-radius: 15px; display: inline-block; width: 100%; }
+        .qr-img { width: 160px; height: 160px; }
 
-        /* Nav Bar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #1a1a1a; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; }
-        .nav-item { text-align: center; text-decoration: none; color: #666; font-size: 12px; }
+        /* Footer Nav */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #161616; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 100; }
+        .nav-item { text-align: center; text-decoration: none; color: #666; font-size: 11px; font-weight: 700; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; display: block; }
     </style>
 </head>
 <body>
 
     <div class="wallet-header">
-        <p style="font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px;">YOUR BALANCE</p>
+        <p class="balance-label">CURRENT BALANCE</p>
         <div class="main-balance" id="display-balance">₹0</div>
     </div>
 
     <div class="container">
         <div class="action-grid">
-            <div class="btn-wallet" onclick="toggleUI('add')">
-                <i class="fas fa-plus-circle"></i>
+            <div class="btn-wallet" onclick="openTab('deposit')">
+                <i class="fas fa-arrow-down"></i>
                 <span>ADD CASH</span>
             </div>
-            <div class="btn-wallet" onclick="toggleUI('withdraw')">
-                <i class="fas fa-wallet"></i>
+            <div class="btn-wallet" onclick="openTab('withdraw')">
+                <i class="fas fa-arrow-up"></i>
                 <span>WITHDRAW</span>
             </div>
         </div>
 
-        <div id="add-ui" class="section-box">
-            <div class="section-title">DEPOSIT MONEY</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" class="qr-img">
+        <div id="deposit-box" class="section-box">
+            <div class="section-title"><i class="fas fa-university"></i> DEPOSIT MONEY</div>
+            <div class="qr-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" class="qr-img">
+                <p style="color:#000; font-size: 12px; font-weight: bold; margin-top: 5px;">Scan & Pay via any UPI App</p>
+            </div>
             
             <div class="input-group">
-                <label>Amount (₹)</label>
-                <input type="number" id="amt" placeholder="Enter Amount">
+                <label>Deposit Amount (₹)</label>
+                <input type="number" id="d-amt" placeholder="Min ₹10">
             </div>
             <div class="input-group">
-                <label>Transaction ID / UTR (Any for Testing)</label>
-                <input type="text" id="txn" placeholder="Enter TXN ID">
+                <label>Transaction ID / UTR</label>
+                <input type="text" id="d-txn" placeholder="Enter 12 Digit UTR Number">
             </div>
-            <button class="submit-btn" onclick="sendDeposit()">SEND REQUEST</button>
+            <button class="submit-btn" onclick="requestDeposit()">SUBMIT REQUEST</button>
         </div>
 
-        <div id="draw-ui" class="section-box">
-            <div class="section-title">WITHDRAW MONEY</div>
+        <div id="withdraw-box" class="section-box">
+            <div class="section-title"><i class="fas fa-wallet"></i> WITHDRAWAL</div>
             <div class="input-group">
-                <label>Withdraw Amount (₹)</label>
+                <label>Amount to Withdraw (₹)</label>
                 <input type="number" id="w-amt" placeholder="Enter Amount">
             </div>
             <div class="input-group">
-                <label>UPI ID (GPay/PhonePe)</label>
+                <label>Your UPI ID (GPay/Paytm/PhonePe)</label>
                 <input type="text" id="w-upi" placeholder="example@upi">
             </div>
-            <button class="submit-btn" style="background:#27ae60;" onclick="sendWithdraw()">REQUEST WITHDRAWAL</button>
+            <p style="font-size: 11px; color: #888; margin-bottom: 10px;">*Payment will be processed within 24 hours.</p>
+            <button class="submit-btn" style="background:var(--green); color:#fff;" onclick="requestWithdraw()">WITHDRAW NOW</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="home.html" class="nav-item"><i class="fas fa-th-large"></i><span>Home</span></a>
         <a href="wallet.html" class="nav-item active"><i class="fas fa-wallet"></i><span>Wallet</span></a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i><span>Profile</span></a>
     </nav>
 
     <script>
-        // --- Firebase Config ---
+        // --- Firebase Initialization ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const database = firebase.database();
 
-        const userUID = localStorage.getItem('gameID') || "TEST_USER";
-        const userName = localStorage.getItem('userName') || "Unknown";
+        // Get User Data from LocalStorage
+        const myUID = localStorage.getItem('gameID') || "GUEST_USER";
+        const myName = localStorage.getItem('userName') || "Unknown Player";
 
-        // Real-time Balance Fetch
-        db.ref('users/' + userUID + '/balance').on('value', (snap) => {
-            document.getElementById('display-balance').innerText = "₹" + (snap.val() || 0);
+        // 1. Real-time Balance Display
+        database.ref('users/' + myUID + '/balance').on('value', (snapshot) => {
+            const bal = snapshot.val() || 0;
+            document.getElementById('display-balance').innerText = "₹" + bal;
         });
 
-        function toggleUI(type) {
-            document.getElementById('add-ui').style.display = type === 'add' ? 'block' : 'none';
-            document.getElementById('draw-ui').style.display = type === 'withdraw' ? 'block' : 'none';
+        // 2. Tab Switcher
+        function openTab(type) {
+            document.getElementById('deposit-box').style.display = type === 'deposit' ? 'block' : 'none';
+            document.getElementById('withdraw-box').style.display = type === 'withdraw' ? 'block' : 'none';
         }
 
-        // --- DEPOSIT SYSTEM ---
-        function sendDeposit() {
-            const amount = document.getElementById('amt').value;
-            const transactionID = document.getElementById('txn').value;
+        // 3. Request Deposit (Sent to Admin Panel)
+        function requestDeposit() {
+            const amt = document.getElementById('d-amt').value;
+            const txn = document.getElementById('d-txn').value;
 
-            if(!amount || !transactionID) return alert("Bhai, amount aur TXN ID dono dalo!");
+            if(!amt || !txn) return alert("Bhai, Details fill karo!");
 
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
-            const chatID = "7852788120";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzbPKl689H5qIr6kaVHSaLuFmhCg9a4YMJ2gy_ksWcpKLhrZ06K3dUYca6gFabl9YVQtg/exec";
-
-            const magicLink = `${scriptURL}?uid=${userUID}&amt=${amount}&action=approve`;
-
-            const message = `💰 *NEW DEPOSIT REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${amount}%0A🔢 TXN: ${transactionID}`;
-
-            const keyboard = {
-                inline_keyboard: [[
-                    { text: "✅ APPROVE (Add ₹" + amount + ")", url: magicLink },
-                    { text: "❌ REJECT", url: "https://t.me/your_bot" }
-                ]]
-            };
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${message}&parse_mode=Markdown&reply_markup=${JSON.stringify(keyboard)}`)
-            .then(res => {
-                if(res.ok) {
-                    alert("Request Sent! Admin Telegram se approve karte hi balance add ho jayega.");
-                    location.reload();
-                } else {
-                    alert("Telegram Error! Token ya ID check karo.");
-                }
+            database.ref('admin_requests/deposits').push({
+                uid: myUID,
+                name: myName,
+                amount: parseFloat(amt),
+                txnID: txn,
+                status: "pending",
+                time: new Date().toLocaleString()
+            }).then(() => {
+                alert("Request Sent! Admin Dashboard se verify hone ke baad balance add ho jayega.");
+                location.reload();
             });
         }
 
-        // --- WITHDRAW SYSTEM ---
-        function sendWithdraw() {
-            const wAmount = document.getElementById('w-amt').value;
-            const wUPI = document.getElementById('w-upi').value;
+        // 4. Request Withdrawal (Sent to Admin Panel)
+        function requestWithdraw() {
+            const amt = document.getElementById('w-amt').value;
+            const upi = document.getElementById('w-upi').value;
 
-            if(!wAmount || !wUPI) return alert("Pura details bharo!");
+            if(!amt || !upi) return alert("Sahi details dalo!");
 
-            const botToken = "8619264585:AAHQWN0dENuQbIDbvKPgf2gtIcVP8WhjywM";
-            const chatID = "7852788120";
+            // Pehle balance check karte hain
+            database.ref('users/' + myUID + '/balance').once('value').then(snap => {
+                const currentBal = snap.val() || 0;
+                if(amt > currentBal) return alert("Incomplete Balance! Aapke paas itne paise nahi hain.");
 
-            const msg = `📤 *WITHDRAWAL REQUEST*%0A👤 User: ${userName}%0A🆔 UID: ${userUID}%0A💵 Amount: ₹${wAmount}%0A🏦 UPI: ${wUPI}`;
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatID}&text=${msg}&parse_mode=Markdown`)
-            .then(() => {
-                alert("Withdrawal request bhej di gayi hai!");
-                location.reload();
+                database.ref('admin_requests/withdrawals').push({
+                    uid: myUID,
+                    name: myName,
+                    amount: parseFloat(amt),
+                    upiID: upi,
+                    status: "pending",
+                    time: new Date().toLocaleString()
+                }).then(() => {
+                    alert("Withdrawal Request Sent!");
+                    location.reload();
+                });
             });
         }
     </script>
