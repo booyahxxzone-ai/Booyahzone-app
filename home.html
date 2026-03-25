@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOOYAH ZONE | PRO DASHBOARD</title>
+    <title>BOOYAH ZONE | BATTLEGROUND</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,13 +11,13 @@
     <style>
         :root {
             --primary: #ff9900;
-            --primary-dark: #cc7a00;
-            --dark-bg: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --dark: #121212;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%);
+            --orange-grad: linear-gradient(90deg, #ff9900, #ff6a00);
         }
 
+        /* --- Reset & Base --- */
         * {
             margin: 0; padding: 0; box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -25,211 +25,257 @@
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-main);
-            padding-bottom: 100px;
-            overflow-x: hidden;
+            background: var(--gradient); /* Light Theme Gradient */
+            color: var(--dark);
+            padding-bottom: 110px;
+            min-height: 100vh;
         }
 
-        /* --- Header --- */
+        /* --- Stylish Header --- */
         .app-bar {
-            background: rgba(26, 26, 26, 0.95);
-            height: 70px;
+            height: 85px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             padding: 0 20px;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent White */
+            backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 2px solid var(--primary);
-            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 153, 0, 0.1);
         }
 
-        .brand-box { display: flex; align-items: center; gap: 10px; }
-        .app-logo { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); }
-        .brand-name { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: var(--primary); letter-spacing: 1px; }
-        .menu-btn { font-size: 22px; cursor: pointer; color: var(--text-main); }
+        .brand-name {
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--dark), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* --- Main Content --- */
         .content { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        .welcome-section { margin-bottom: 20px; }
-        .welcome-section h2 { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-        .user-name { font-family: 'Orbitron'; font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 0 10px rgba(255,153,0,0.3); }
+        /* --- Welcome Section --- */
+        .welcome-section { margin-bottom: 25px; animation: fadeIn 0.8s ease; }
+        .welcome-section h2 { font-size: 16px; color: #777; font-weight: 600; margin-bottom: 2px; }
+        .user-name { font-family: 'Orbitron'; font-size: 26px; font-weight: 900; color: var(--dark); }
 
-        /* --- Banner Section --- */
-        .banner-container {
-            width: 100%;
-            height: 180px; 
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .banner-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- Match Status Tabs --- */
-        .status-wrapper {
+        /* --- Status Quick Links --- */
+        .status-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-bottom: 30px;
         }
 
-        .status-box {
-            background: var(--card-bg);
-            border-radius: 12px;
+        .status-btn {
+            background: var(--white);
+            border-radius: 18px;
             padding: 15px 5px;
             text-align: center;
             text-decoration: none;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            border: 1px solid rgba(255, 153, 0, 0.1);
+        }
+        .status-btn i { font-size: 20px; color: var(--primary); }
+        .status-btn span { font-family: 'Orbitron'; font-size: 8px; font-weight: 900; color: var(--dark); }
+
+        /* --- Tournament Cards --- */
+        .section-title {
+            font-family: 'Orbitron';
+            font-size: 14px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary); border-radius: 4px; }
+
+        .match-card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            position: relative;
+            border: 1px solid #fff;
             transition: 0.3s;
         }
 
-        .status-box:active { transform: scale(0.95); border-color: var(--primary); }
-        .status-box i { font-size: 20px; }
-        .status-box span { font-family: 'Orbitron'; font-size: 9px; font-weight: 700; color: var(--text-dim); }
-        
-        .up-m i { color: #00a8ff; }
-        .on-m i { color: #ff4757; }
-        .fi-m i { color: #2ed573; }
+        .match-card:active { transform: scale(0.97); }
 
-        /* --- Arena Selection --- */
-        .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .v-bar { width: 4px; height: 20px; background: var(--primary); border-radius: 10px; box-shadow: 0 0 10px var(--primary); }
-        .section-label h3 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
-
-        .mode-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
-            border-radius: 15px;
-            padding: 20px;
+        .card-img-box {
+            width: 100%;
+            height: 140px; /* Base height for the container */
+            position: relative;
+            overflow: hidden;
+            background: #f0f0f0; /* Fallback color */
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            border-left: 5px solid var(--primary);
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .mode-info h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); margin-bottom: 4px; }
-        .mode-info p { font-size: 12px; font-weight: 600; color: var(--text-dim); }
-        .mode-icon { width: 45px; height: 45px; background: rgba(255,153,0,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--primary); border: 1px solid rgba(255,153,0,0.2); }
+        .card-img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Keeps the 1:1 image proportional and centers it */
+            display: block;
+        }
+
+        .mode-tag {
+            position: absolute;
+            top: 15px; left: 15px;
+            background: var(--orange-grad);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-family: 'Orbitron';
+            font-size: 12px;
+            font-weight: 900;
+            box-shadow: 0 5px 10px rgba(255, 153, 0, 0.3);
+            z-index: 5;
+        }
+
+        .match-details {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-left h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); }
+        .info-left p { font-size: 13px; color: #888; font-weight: 700; }
+
+        .join-btn {
+            background: var(--dark);
+            color: var(--primary);
+            width: 45px; height: 45px;
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            border: none;
+        }
 
         /* --- Bottom Nav --- */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; height: 75px;
-            background: #151515; display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid #333; z-index: 2000;
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 85px;
+            background: #fff; display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.05); border-radius: 30px 30px 0 0; z-index: 2000;
         }
-        .nav-item { text-align: center; text-decoration: none; color: #666; flex: 1; transition: 0.3s; }
+        .nav-item { text-align: center; text-decoration: none; color: #ccc; flex: 1; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-item span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
+        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
 
-        /* --- Floating Profile --- */
-        .profile-fab { position: relative; top: -20px; }
-        .fab-icon {
-            width: 60px; height: 60px; background: linear-gradient(45deg, var(--primary), #ff6a00);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 24px; border: 4px solid var(--dark-bg);
-            box-shadow: 0 0 20px rgba(255, 153, 0, 0.4);
-        }
-
-        /* --- Sidebar --- */
-        .sidebar {
-            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
-            background: #111; z-index: 3000; transition: 0.4s; padding: 40px 25px;
-            border-left: 2px solid var(--primary);
-        }
-        .sidebar.active { right: 0; }
-        .side-link { color: #fff; padding: 15px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; font-size: 16px; text-decoration: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 2999; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay"></div>
-
-    <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--primary); font-family:'Orbitron'; margin-bottom:30px;">DASHBOARD</h2>
-        <a href="wallet.html" class="side-link"><i class="fas fa-wallet"></i> My Wallet</a>
-        <a href="leaderboard.html" class="side-link"><i class="fas fa-trophy"></i> Leaderboard</a>
-        <a href="customer.html" class="side-link"><i class="fas fa-headset"></i> Support</a>
-        <a href="logout.html" class="side-link" style="color: #ff4d4d; margin-top: 50px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
-
     <header class="app-bar">
-        <div class="brand-box">
-            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" class="app-logo">
-            <span class="brand-name">BOOYAH ZONE</span>
-        </div>
-        <div class="menu-btn" id="menuOpen"><i class="fas fa-bars-staggered"></i></div>
+        <span class="brand-name">BOOYAH ZONE</span>
     </header>
 
     <div class="content">
+        
         <div class="welcome-section">
-            <h2>Let's Play,</h2>
-            <div class="user-name" id="userTitle">AKASH KOHLI</div>
+            <h2>Welcome Soldier,</h2>
+            <div class="user-name" id="display-name">AKASH KOHLI</div>
         </div>
 
-        <div class="banner-container">
-            <img src="https://i.ibb.co/DfgWBBJ3/freefire-1686171898799-1.jpg" alt="Free Fire Banner">
+        <div class="status-container">
+            <a href="upcoming.html" class="status-btn">
+                <i class="fas fa-crosshairs"></i>
+                <span>UPCOMING</span>
+            </a>
+            <a href="ongoing.html" class="status-btn">
+                <i class="fas fa-fire-alt"></i>
+                <span>ONGOING</span>
+            </a>
+            <a href="finish.html" class="status-btn">
+                <i class="fas fa-trophy"></i>
+                <span>FINISHED</span>
+            </a>
         </div>
 
-        <div class="status-wrapper">
-            <a href="upcoming.html" class="status-box up-m"><i class="fas fa-calendar-alt"></i><span>UPCOMING</span></a>
-            <a href="ongoing.html" class="status-box on-m"><i class="fas fa-bolt"></i><span>ONGOING</span></a>
-            <a href="finish.html" class="status-box fi-m"><i class="fas fa-check-double"></i><span>RESULT</span></a>
+        <div class="section-title">CHOOSE YOUR BATTLE</div>
+
+        <div class="match-card" onclick="location.href='upcoming.html?type=1v1'">
+            <div class="card-img-box">
+                <div class="mode-tag">1 V 1</div>
+                <img src="https://images.weserv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Match">
+            </div>
+            <div class="match-details">
+                <div class="info-left">
+                    <h4>SOLO CLASH</h4>
+                    <p>Price Pool: ₹200</p>
+                </div>
+                <button class="join-btn"><i class="fas fa-arrow-right"></i></button>
+            </div>
         </div>
 
-        <div class="section-label"><div class="v-bar"></div><h3>SELECT GAME MODE</h3></div>
-
-        <div class="mode-card" onclick="location.href='matches.html?type=1v1'">
-            <div class="mode-info"><h4>SOLO (1V1)</h4><p>WIN PRIZE: ₹50</p></div>
-            <div class="mode-icon"><i class="fas fa-user"></i></div>
+        <div class="match-card" onclick="location.href='upcoming.html?type=2v2'">
+            <div class="card-img-box">
+                <div class="mode-tag">2 V 2</div>
+                <img src="https://images.weserv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Match">
+            </div>
+            <div class="match-details">
+                <div class="info-left">
+                    <h4>DUO DOMINATION</h4>
+                    <p>Price Pool: ₹500</p>
+                </div>
+                <button class="join-btn"><i class="fas fa-arrow-right"></i></button>
+            </div>
         </div>
 
-        <div class="mode-card" onclick="location.href='matches.html?type=2v2'">
-            <div class="mode-info"><h4>DUO (2V2)</h4><p>WIN PRIZE: ₹100</p></div>
-            <div class="mode-icon"><i class="fas fa-user-friends"></i></div>
+        <div class="match-card" onclick="location.href='upcoming.html?type=4v4'">
+            <div class="card-img-box">
+                <div class="mode-tag">4 V 4</div>
+                <img src="https://images.weserv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Match">
+            </div>
+            <div class="match-details">
+                <div class="info-left">
+                    <h4>SQUAD WARFARE</h4>
+                    <p>Price Pool: ₹1000</p>
+                </div>
+                <button class="join-btn"><i class="fas fa-arrow-right"></i></button>
+            </div>
         </div>
 
-        <div class="mode-card" onclick="location.href='matches.html?type=4v4'">
-            <div class="mode-info"><h4>SQUAD (4V4)</h4><p>WIN PRIZE: ₹200</p></div>
-            <div class="mode-icon"><i class="fas fa-users"></i></div>
-        </div>
     </div>
 
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
-        <a href="earn.html" class="nav-item"><i class="fas fa-gift"></i><span>Earn</span></a>
-        <div class="profile-fab"><a href="profile.html" class="fab-icon"><i class="fas fa-user-ninja"></i></a></div>
-        <a href="stats.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>Stats</span></a>
-        <a href="me.html" class="nav-item"><i class="fas fa-cog"></i><span>Menu</span></a>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="refer.html" class="nav-item">
+            <i class="fas fa-gift"></i>
+            <span>Refer</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user-ninja" style="font-size: 28px; color: var(--primary);"></i>
+            <span>Profile</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <i class="fas fa-headset"></i>
+            <span>Support</span>
+        </a>
     </nav>
 
     <script>
         // Name update from storage
-        const userName = localStorage.getItem('userName') || "AKASH KOHLI";
-        document.getElementById('userTitle').innerText = userName.toUpperCase();
-
-        // Sidebar Logic
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const menuBtn = document.getElementById('menuOpen');
-
-        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.style.display = 'block'; };
-        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.style.display = 'none'; };
+        const uName = localStorage.getItem('userName') || "AKASH KOHLI";
+        document.getElementById('display-name').innerText = uName.toUpperCase();
     </script>
 </body>
 </html>
