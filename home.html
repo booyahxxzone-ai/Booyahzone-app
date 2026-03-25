@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOOYAH ZONE | PROFESSIONAL ARENA</title>
+    <title>BOOYAH ZONE | PRO DASHBOARD</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
+    
     <style>
         :root {
             --primary: #ff9900;
-            --primary-dark: #e68a00;
+            --primary-light: #fff3e0;
             --dark: #121212;
-            --dark-card: #1e1e1e;
+            --bg: #ffffff; /* Clean White Background */
+            --orange-mix: #fff8f0;
             --white: #ffffff;
-            --bg-grad: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%);
-            --orange-grad: linear-gradient(90deg, #ff9900, #ff6a00);
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         /* --- Reset & Base --- */
@@ -30,168 +26,133 @@
         }
 
         body {
-            background: var(--bg-grad);
-            color: var(--dark);
-            padding-bottom: 120px;
-            min-height: 100vh;
-            overflow-x: hidden;
+            background-color: var(--bg);
+            color: #2d3436;
+            padding-bottom: 110px;
         }
 
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 0; }
-
-        /* --- Sidebar & Overlay --- */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-            display: none; z-index: 2500;
+        /* --- Premium Navbar --- */
+        .app-bar {
+            background: var(--white);
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--primary-light);
         }
 
-        .sidebar {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: var(--dark); z-index: 3000;
-            transition: 0.5s cubic-bezier(0.1, 0.7, 0.1, 1);
-            padding: 30px 20px; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
-        .sidebar.active { left: 0; }
-
-        .side-header { text-align: center; margin-bottom: 40px; }
-        .side-logo { width: 80px; height: 80px; border: 3px solid var(--primary); border-radius: 50%; margin-bottom: 10px; }
-        .side-user { font-family: 'Orbitron'; color: #fff; font-size: 18px; }
-
-        .side-menu { list-style: none; }
-        .side-item {
-            padding: 15px; margin-bottom: 10px; border-radius: 12px;
-            color: #ccc; display: flex; align-items: center; gap: 15px;
-            font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.3s;
-        }
-        .side-item i { color: var(--primary); width: 25px; }
-        .side-item:active { background: rgba(255,153,0,0.1); color: var(--primary); }
-        .side-logout { margin-top: 50px; color: #ff4d4d; border: 1px solid #ff4d4d33; }
-
-        /* --- Premium Header --- */
-        .app-header {
-            height: 80px; background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 20px;
-            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee;
-        }
-
-        .menu-toggle { font-size: 24px; color: var(--dark); cursor: pointer; }
-
-        .brand-logo-text {
-            font-family: 'Orbitron'; font-weight: 900; font-size: 22px;
-            background: var(--orange-grad); -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; letter-spacing: 1px;
-        }
-
-        .wallet-badge {
-            background: var(--dark); color: var(--primary);
-            padding: 6px 12px; border-radius: 10px;
-            display: flex; align-items: center; gap: 8px; font-weight: 700;
-        }
-
-        /* --- News Ticker --- */
-        .news-ticker {
-            background: var(--dark); color: #fff; padding: 10px 0;
-            overflow: hidden; white-space: nowrap; font-weight: 600;
-        }
-        .ticker-text {
-            display: inline-block; animation: scrollText 15s linear infinite;
-            padding-left: 100%; font-family: 'Rajdhani';
-        }
-        @keyframes scrollText {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .app-logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
+        .brand-name { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: var(--dark); }
+        .menu-btn { font-size: 22px; cursor: pointer; color: var(--dark); }
 
         /* --- Main Content --- */
-        .main-container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .content { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        .hero-banner {
-            background: var(--orange-grad); border-radius: 25px; padding: 25px;
-            color: #fff; position: relative; overflow: hidden; margin-bottom: 25px;
-            box-shadow: 0 15px 35px rgba(255, 153, 0, 0.3);
-        }
-        .hero-banner h1 { font-family: 'Orbitron'; font-size: 24px; margin-bottom: 5px; }
-        .hero-banner p { font-weight: 600; opacity: 0.9; font-size: 14px; }
-        .hero-banner i { position: absolute; right: -20px; bottom: -20px; font-size: 120px; opacity: 0.15; transform: rotate(-15deg); }
+        /* --- Welcome Section --- */
+        .welcome-section { margin-bottom: 20px; }
+        .welcome-section h2 { font-size: 16px; color: #777; font-weight: 600; }
+        .user-name { font-family: 'Orbitron'; font-size: 26px; font-weight: 900; color: var(--dark); text-transform: uppercase; }
 
-        /* --- Quick Actions --- */
-        .quick-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 12px; margin-bottom: 30px;
+        /* --- Normal Image Card --- */
+        .banner-container {
+            width: 100%;
+            height: 160px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 2px solid var(--primary-light);
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.1);
         }
-        .action-card {
-            background: #fff; border-radius: 20px; padding: 15px 5px;
-            text-align: center; box-shadow: var(--shadow); cursor: pointer;
-            border: 1.5px solid transparent; transition: 0.3s;
-        }
-        .action-card:active { border-color: var(--primary); transform: translateY(-5px); }
-        .action-card i { font-size: 24px; color: var(--primary); margin-bottom: 8px; display: block; }
-        .action-card span { font-family: 'Orbitron'; font-size: 9px; font-weight: 900; color: var(--dark); }
 
-        /* --- Match Section --- */
-        .section-head {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; padding: 0 5px;
+        .banner-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Photo ekdum clear aur fit dikhegi */
         }
-        .section-head h3 { font-family: 'Orbitron'; font-size: 16px; color: var(--dark); border-left: 4px solid var(--primary); padding-left: 10px; }
+
+        /* --- Status Buttons (Mixed White/Orange) --- */
+        .status-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .status-box {
+            background: var(--orange-mix);
+            border-radius: 18px;
+            padding: 18px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            border: 1px solid rgba(255, 153, 0, 0.15);
+            transition: 0.2s;
+        }
+        .status-box:active { transform: scale(0.95); background: var(--primary-light); }
+
+        .status-box i { font-size: 22px; }
+        .status-box span { font-family: 'Orbitron'; font-size: 8px; font-weight: 900; color: var(--dark); line-height: 1.2; }
         
-        .game-card {
-            background: #fff; border-radius: 30px; overflow: hidden;
-            margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid #fff;
-            position: relative; animation: slideUp 0.6s ease forwards;
+        .up-m i { color: #0984e3; }
+        .on-m i { color: #d63031; }
+        .fi-m i { color: #27ae60; }
+
+        /* --- Tournament Arena --- */
+        .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .v-bar { width: 5px; height: 22px; background: var(--primary); border-radius: 10px; }
+        .section-label h3 { font-family: 'Orbitron'; font-size: 17px; color: var(--dark); }
+
+        .mode-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+            margin-bottom: 15px;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
         }
+        .mode-card:active { border-color: var(--primary); }
 
-        .game-thumb { width: 100%; height: 160px; position: relative; }
-        .game-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .mode-badge {
-            position: absolute; top: 15px; left: 15px;
-            background: rgba(0,0,0,0.8); color: var(--primary);
-            padding: 5px 15px; border-radius: 8px; font-family: 'Orbitron';
-            font-size: 12px; font-weight: 900; border: 1px solid var(--primary);
-        }
-
-        .game-info { padding: 20px; }
-        .game-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .game-top h4 { font-family: 'Orbitron'; font-size: 19px; color: var(--dark); }
-        .game-top .prize { color: #27ae60; font-weight: 800; font-size: 18px; }
-
-        .game-meta { display: flex; gap: 15px; margin-bottom: 20px; }
-        .meta-item { background: #f8f9fa; padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; color: #666; }
-        .meta-item i { color: var(--primary); margin-right: 5px; }
-
-        .btn-join {
-            width: 100%; padding: 14px; background: var(--dark);
-            color: var(--primary); border: none; border-radius: 15px;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 15px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn-join:active { background: var(--primary); color: #fff; }
+        .mode-info h4 { font-family: 'Orbitron'; font-size: 20px; color: var(--primary); }
+        .mode-info p { font-size: 12px; font-weight: 700; color: #95a5a6; }
+        .mode-circle { width: 45px; height: 45px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
         /* --- Bottom Nav --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 90px;
-            background: #fff; display: flex; justify-content: space-around;
-            align-items: center; box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
-            border-radius: 35px 35px 0 0; z-index: 2000;
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; height: 85px;
+            background: var(--white); display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.05); border-radius: 30px 30px 0 0; z-index: 2000;
         }
-        .nav-link { text-align: center; text-decoration: none; color: #bbb; transition: 0.3s; flex: 1; }
-        .nav-link.active { color: var(--primary); }
-        .nav-link i { font-size: 24px; display: block; margin-bottom: 4px; }
-        .nav-link span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        
-        .nav-center {
-            width: 65px; height: 65px; background: var(--orange-grad);
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; margin-top: -45px;
-            box-shadow: 0 10px 20px rgba(255, 153, 0, 0.4);
-            border: 5px solid var(--bg-grad); color: #fff; font-size: 26px;
+        .nav-item { text-align: center; text-decoration: none; color: #b2bec3; flex: 1; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .nav-item.active { color: var(--primary); }
+
+        .profile-fab { position: relative; top: -30px; }
+        .fab-icon {
+            width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary), #ff6a00);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 26px; border: 5px solid var(--white);
+            box-shadow: 0 8px 15px rgba(255, 153, 0, 0.2);
         }
 
-        /* --- Animations --- */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- Sidebar --- */
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: var(--dark); z-index: 3000; transition: 0.4s; padding: 40px 25px;
+        }
+        .sidebar.active { right: 0; }
+        .side-link { color: #fff; padding: 18px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; font-size: 18px; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2999; }
 
     </style>
 </head>
@@ -199,190 +160,75 @@
 
     <div class="overlay" id="overlay"></div>
 
-    <nav class="sidebar" id="sidebar">
-        <div class="side-header">
-            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" class="side-logo">
-            <div class="side-user" id="side-name">AKASH KOHLI</div>
-            <p style="color:var(--primary); font-size:12px; font-weight:700;">PRO PLAYER</p>
-        </div>
-        <div class="side-menu">
-            <div class="side-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> My Wallet</div>
-            <div class="side-item" onclick="location.href='profile.html'"><i class="fas fa-user-circle"></i> Profile</div>
-            <div class="side-item" onclick="location.href='leaderboard.html'"><i class="fas fa-trophy"></i> Leaderboard</div>
-            <div class="side-item" onclick="location.href='refer.html'"><i class="fas fa-gift"></i> Refer & Earn</div>
-            <div class="side-item" onclick="location.href='contact.html'"><i class="fas fa-headset"></i> Support Center</div>
-            <div class="side-item side-logout" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> Logout Account</div>
-        </div>
-    </nav>
+    <div class="sidebar" id="sidebar">
+        <h2 style="color:var(--primary); font-family:'Orbitron'; margin-bottom:30px;">MENU</h2>
+        <div class="side-link" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> My Wallet</div>
+        <div class="side-link" onclick="location.href='leaderboard.html'"><i class="fas fa-trophy"></i> Leaderboard</div>
+        <div class="side-link" style="color: #ff4d4d; margin-top: 50px;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> Logout</div>
+    </div>
 
-    <header class="app-header">
-        <div class="menu-toggle" id="openMenu">
-            <i class="fas fa-bars-staggered"></i>
+    <header class="app-bar">
+        <div class="brand-box">
+            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" class="app-logo">
+            <span class="brand-name">BOOYAH ZONE</span>
         </div>
-        <div class="brand-logo-text">BOOYAH ZONE</div>
-        <div class="wallet-badge" onclick="location.href='wallet.html'">
-            <i class="fas fa-coins"></i>
-            <span id="bal-val">₹0</span>
-        </div>
+        <div class="menu-btn" id="menuOpen"><i class="fas fa-bars-staggered"></i></div>
     </header>
 
-    <div class="news-ticker">
-        <div class="ticker-text">
-            🔥 Welcome to Booyah Zone! New 4v4 Tournament starts at 8:00 PM. Join now to win ₹1000! | 🚀 Refer your friends and get ₹10 instant bonus! | 🏆 Check Leaderboard for Season 1 winners.
-        </div>
-    </div>
-
-    <div class="main-container">
-
-        <div class="hero-banner">
-            <h1>READY TO RUMBLE?</h1>
-            <p>Welcome back, <span id="hero-name">Soldier</span>! Your next victory is just one click away.</p>
-            <i class="fas fa-gamepad"></i>
+    <div class="content">
+        
+        <div class="welcome-section">
+            <h2>Welcome Back,</h2>
+            <div class="user-name" id="userTitle">AKASH KOHLI</div>
         </div>
 
-        <div class="quick-grid">
-            <div class="action-card" onclick="location.href='upcoming.html'">
-                <i class="fas fa-calendar-check"></i>
-                <span>UPCOMING</span>
-            </div>
-            <div class="action-card" onclick="location.href='ongoing.html'">
-                <i class="fas fa-bolt"></i>
-                <span>ONGOING</span>
-            </div>
-            <div class="action-card" onclick="location.href='finish.html'">
-                <i class="fas fa-check-double"></i>
-                <span>FINISHED</span>
-            </div>
+        <div class="banner-container">
+            <img src="https://wsrv.nl/?url=instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70" alt="Free Fire Hero">
         </div>
 
-        <div class="section-head">
-            <h3>BATTLE ARENA</h3>
+        <div class="status-wrapper">
+            <a href="upcoming.html" class="status-box up-m"><i class="fas fa-calendar-alt"></i><span>UPCOMING</span></a>
+            <a href="ongoing.html" class="status-box on-m"><i class="fas fa-bolt"></i><span>ONGOING</span></a>
+            <a href="finish.html" class="status-box fi-m"><i class="fas fa-check-double"></i><span>FINISHED</span></a>
         </div>
 
-        <div class="game-card">
-            <div class="game-thumb">
-                <div class="mode-badge">1 V 1</div>
-                <img src="https://instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70">
-            </div>
-            <div class="game-info">
-                <div class="game-top">
-                    <h4>SOLO BATTLE</h4>
-                    <span class="prize">₹250</span>
-                </div>
-                <div class="game-meta">
-                    <div class="meta-item"><i class="fas fa-ticket-alt"></i> ₹30</div>
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> CS BERMUDA</div>
-                </div>
-                <button class="btn-join" onclick="location.href='upcoming.html?mode=1v1'">VIEW DETAILS</button>
-            </div>
+        <div class="section-label"><div class="v-bar"></div><h3>TOURNAMENTS ARENA</h3></div>
+
+        <div class="mode-card" onclick="location.href='upcoming.html?mode=1v1'">
+            <div class="mode-info"><h4>1 V 1</h4><p>SOLO CLASH SQUAD</p></div>
+            <div class="mode-circle"><i class="fas fa-skull"></i></div>
         </div>
 
-        <div class="game-card" style="animation-delay: 0.2s;">
-            <div class="game-thumb">
-                <div class="mode-badge">2 V 2</div>
-                <img src="https://instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70">
-            </div>
-            <div class="game-info">
-                <div class="game-top">
-                    <h4>DUO CLASH</h4>
-                    <span class="prize">₹600</span>
-                </div>
-                <div class="game-meta">
-                    <div class="meta-item"><i class="fas fa-ticket-alt"></i> ₹60</div>
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> CS PURGATORY</div>
-                </div>
-                <button class="btn-join" onclick="location.href='upcoming.html?mode=2v2'">VIEW DETAILS</button>
-            </div>
+        <div class="mode-card" onclick="location.href='upcoming.html?mode=2v2'">
+            <div class="mode-info"><h4>2 V 2</h4><p>DUO DUEL BATTLE</p></div>
+            <div class="mode-circle"><i class="fas fa-user-friends"></i></div>
         </div>
 
-        <div class="game-card" style="animation-delay: 0.4s;">
-            <div class="game-thumb">
-                <div class="mode-badge">4 V 4</div>
-                <img src="https://instasize.com/p/09126df0e5c4586ad575d05464426aae912eae47a6738303eec66e586dcd1d70">
-            </div>
-            <div class="game-info">
-                <div class="game-top">
-                    <h4>SQUAD WAR</h4>
-                    <span class="prize">₹1500</span>
-                </div>
-                <div class="game-meta">
-                    <div class="meta-item"><i class="fas fa-ticket-alt"></i> ₹120</div>
-                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> CLASSIC MAP</div>
-                </div>
-                <button class="btn-join" onclick="location.href='upcoming.html?mode=4v4'">VIEW DETAILS</button>
-            </div>
+        <div class="mode-card" onclick="location.href='upcoming.html?mode=4v4'">
+            <div class="mode-info"><h4>4 V 4</h4><p>SQUAD WARFARE</p></div>
+            <div class="mode-circle"><i class="fas fa-users"></i></div>
         </div>
 
     </div>
 
-    <nav class="bottom-nav">
-        <a href="home.html" class="nav-link active">
-            <i class="fas fa-house"></i>
-            <span>Home</span>
-        </a>
-        <a href="refer.html" class="nav-link">
-            <i class="fas fa-share-nodes"></i>
-            <span>Refer</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <div class="nav-center">
-                <i class="fas fa-user-ninja"></i>
-            </div>
-            <span>Profile</span>
-        </a>
-        <a href="history.html" class="nav-link">
-            <i class="fas fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="contact.html" class="nav-link">
-            <i class="fas fa-headset"></i>
-            <span>Support</span>
-        </a>
+    <nav class="nav-bar">
+        <a href="home.html" class="nav-item active"><i class="fas fa-house"></i><span>Home</span></a>
+        <a href="refer.html" class="nav-item"><i class="fas fa-share-alt"></i><span>Refer</span></a>
+        <div class="profile-fab"><a href="profile.html" class="fab-icon"><i class="fas fa-user-ninja"></i></a></div>
+        <a href="history.html" class="nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
+        <a href="contact.html" class="nav-item"><i class="fas fa-headset"></i><span>Support</span></a>
     </nav>
 
     <script>
-        // --- Firebase Config & Logic ---
-        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const name = localStorage.getItem('userName') || "AKASH KOHLI";
+        document.getElementById('userTitle').innerText = name.toUpperCase();
 
-        // Load User Data
-        const uName = localStorage.getItem('userName') || "GUEST PLAYER";
-        const uID = localStorage.getItem('gameID');
-
-        document.getElementById('side-name').innerText = uName.toUpperCase();
-        document.getElementById('hero-name').innerText = uName.split(' ')[0];
-
-        if(uID) {
-            database.ref('users/' + uID).on('value', (snapshot) => {
-                const data = snapshot.val();
-                if(data) {
-                    document.getElementById('bal-val').innerText = '₹' + (data.balance || 0);
-                }
-            });
-        }
-
-        // --- Sidebar Toggle Logic ---
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        const openBtn = document.getElementById('openMenu');
+        const menuBtn = document.getElementById('menuOpen');
 
-        openBtn.onclick = () => {
-            sidebar.classList.add('active');
-            overlay.style.display = 'block';
-        }
-
-        overlay.onclick = () => {
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-        }
-
-        // --- Click Feedback ---
-        document.querySelectorAll('.action-card, .btn-join').forEach(el => {
-            el.addEventListener('touchstart', () => el.style.transform = "scale(0.95)");
-            el.addEventListener('touchend', () => el.style.transform = "scale(1)");
-        });
+        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.style.display = 'block'; };
+        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.style.display = 'none'; };
     </script>
 </body>
-            </html>
-            
+</html>
