@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>REFER & EARN | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root { --primary: #ff9900; --bg: #f5f7fa; --white: #ffffff; --dark: #121212; --gray: #95a5a6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding-bottom: 30px; }
+
+        .top-nav { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
+        .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; }
+
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* Refer Card */
+        .refer-card {
+            background: var(--white); border-radius: 25px; padding: 30px 20px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        .refer-card i { font-size: 50px; color: var(--primary); margin-bottom: 15px; }
+        .refer-card h3 { font-family: 'Orbitron'; font-size: 18px; margin-bottom: 10px; }
+        .refer-card p { font-size: 13px; color: var(--gray); margin-bottom: 20px; font-weight: 700; }
+
+        .code-box {
+            background: #f8f9fa; border: 2px dashed var(--primary);
+            padding: 15px; border-radius: 15px; font-size: 24px;
+            font-family: 'Orbitron'; font-weight: 900; color: var(--dark);
+            cursor: pointer; position: relative;
+        }
+        .code-box span { font-size: 10px; display: block; color: var(--gray); margin-top: 5px; }
+
+        .share-btn {
+            background: var(--primary); color: #fff; border: none; width: 100%;
+            padding: 15px; border-radius: 15px; margin-top: 20px;
+            font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+        }
+
+        /* Referral List Section */
+        .list-title { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 15px; padding-left: 5px; color: var(--dark); }
+        .referral-item {
+            background: var(--white); padding: 15px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .user-info h5 { font-size: 15px; font-weight: 700; }
+        .user-info p { font-size: 11px; color: var(--gray); }
+        
+        .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
+        .status-pending { background: #ffeaa7; color: #d35400; }
+        .status-done { background: #dff9fb; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
+        <h2>REFER & EARN</h2>
+    </div>
+
+    <div class="container">
+        <div class="refer-card">
+            <i class="fas fa-gift"></i>
+            <h3>Earn ₹5 Per Friend</h3>
+            <p>Share your code. When your friend plays their 1st match, both get ₹5 bonus!</p>
+            
+            <div class="code-box" onclick="copyCode()">
+                <div id="myReferCode">...</div>
+                <span>TAP TO COPY CODE</span>
+            </div>
+
+            <button class="share-btn" onclick="shareApp()">SHARE ON WHATSAPP</button>
+        </div>
+
+        <h4 class="list-title">MY REFERRALS</h4>
+        <div id="referralList">
+            <p style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">No friends referred yet.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- Firebase Config ---
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 1. Load User's Code
+        const userUID = localStorage.getItem('gameID') || "BOOYAH";
+        document.getElementById('myReferCode').innerText = userUID;
+
+        // 2. Load Referral List (Dost kaun-kaun hain)
+        database.ref('referrals/' + userUID).on('value', (snapshot) => {
+            const listContainer = document.getElementById('referralList');
+            if (snapshot.exists()) {
+                listContainer.innerHTML = "";
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    const statusClass = data.status === "Completed" ? "status-done" : "status-pending";
+                    
+                    listContainer.innerHTML += `
+                        <div class="referral-item">
+                            <div class="user-info">
+                                <h5>${data.name}</h5>
+                                <p>Joined on: ${data.date}</p>
+                            </div>
+                            <div class="status-badge ${statusClass}">${data.status}</div>
+                        </div>
+                    `;
+                });
+            }
+        });
+
+        // 3. Copy Code Function
+        function copyCode() {
+            navigator.clipboard.writeText(userUID);
+            alert("Refer Code Copied!");
+        }
+
+        // 4. WhatsApp Share
+        function shareApp() {
+            const text = `Bhai, Free Fire tournaments khelo aur paise jeeto! \nMere link se join kar aur ₹5 bonus paa: \nRefer Code: ${userUID} \nDownload: [LINK]`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+        }
+    </script>
+</body>
+</html>
