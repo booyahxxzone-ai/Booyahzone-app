@@ -12,177 +12,205 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root {
-            --primary: #ff9900;
-            --bg: #f5f7fa;
-            --white: #ffffff;
-            --dark: #121212;
-            --gray: #95a5a6;
-            --success: #27ae60;
-        }
-
+        :root { --primary: #ff9900; --bg: #f5f7fa; --white: #ffffff; --dark: #121212; --gray: #95a5a6; --success: #27ae60; --danger: #e74c3c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
         body { background: var(--bg); color: var(--dark); padding-bottom: 20px; }
 
-        /* --- Header --- */
-        .top-nav {
-            background: var(--white); padding: 20px;
-            display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
-        }
+        .top-nav { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
         .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
         /* --- Match Card --- */
-        .match-card {
-            background: var(--white); border-radius: 25px;
-            overflow: hidden; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-header {
-            background: #1a1a1a; padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .match-title { color: #fff; font-family: 'Orbitron'; font-size: 13px; font-weight: 700; }
-        .match-tag { background: var(--primary); color: #000; padding: 2px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
+        .match-card { background: var(--white); border-radius: 25px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .card-header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .match-title { color: #fff; font-family: 'Orbitron'; font-size: 13px; }
+        .timer-tag { color: var(--primary); font-size: 11px; font-weight: 900; font-family: 'Orbitron'; }
 
         .card-body { padding: 20px; }
+        .slots-info { margin-bottom: 15px; }
+        .slot-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-top: 5px; overflow: hidden; }
+        .slot-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+        .slot-text { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--gray); }
+
+        .id-pass-box { background: #fff9eb; border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 15px; text-align: center; }
+        .id-pass-box p { font-size: 12px; font-weight: 700; color: #000; }
+
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .info-item { display: flex; align-items: center; gap: 10px; }
         .info-item i { color: var(--primary); font-size: 18px; }
-        .info-item div p { font-size: 9px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
-        .info-item div h5 { font-size: 15px; font-weight: 700; }
+        .info-item div p { font-size: 9px; color: var(--gray); text-transform: uppercase; }
+        .info-item div h5 { font-size: 14px; font-weight: 700; }
 
-        .card-footer {
-            padding: 15px 20px; border-top: 1px dashed #eee;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .price-box h6 { font-size: 10px; color: var(--gray); }
+        .card-footer { padding: 15px 20px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center; }
         .price-box h4 { font-family: 'Orbitron'; color: var(--success); font-size: 18px; }
 
-        .join-btn {
-            background: var(--primary); color: #fff; border: none;
-            padding: 12px 25px; border-radius: 12px; font-family: 'Orbitron';
-            font-weight: 900; font-size: 12px; cursor: pointer; transition: 0.3s;
-        }
-        .join-btn:active { transform: scale(0.9); }
+        .join-btn { background: var(--primary); color: #fff; border: none; padding: 12px 25px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; }
+        .join-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        .loader { text-align: center; margin-top: 100px; color: var(--gray); }
+        /* --- Modal --- */
+        #joinModal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000; }
+        .modal-content { background:white; padding:25px; border-radius:20px; width:90%; max-width:350px; text-align:center; }
+        .modal-content input { width:100%; padding:12px; margin:15px 0; border:2px solid #eee; border-radius:10px; font-weight:700; text-align:center; }
+        .confirm-btn { background:var(--success); color:white; border:none; padding:12px 20px; border-radius:10px; font-weight:900; width:100%; cursor:pointer; }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
         <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
-        <h2>1 V 1 BATTLE GROUND</h2>
+        <h2>1V1 BATTLE GROUND</h2>
     </div>
 
-    <div class="container" id="matchList">
-        <div class="loader">
-            <i class="fas fa-spinner fa-spin fa-2x"></i>
-            <p style="margin-top:10px">Finding Active Battles...</p>
+    <div class="container" id="matchList"></div>
+
+    <div id="joinModal">
+        <div class="modal-content">
+            <h3 style="font-family:'Orbitron'; font-size:16px;">ENTER GAME UID</h3>
+            <p style="font-size:11px; color:var(--gray); margin-top:5px;">Wallet se Entry Fee kaat li jayegi</p>
+            <input type="text" id="playerUID" placeholder="Enter Free Fire UID">
+            <button class="confirm-btn" onclick="processPayment()">PAY & JOIN NOW</button>
+            <button onclick="closeModal()" style="border:none; background:none; margin-top:15px; color:var(--gray); font-weight:700;">CANCEL</button>
         </div>
     </div>
 
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // --- Configuration ---
-        const targetMode = "1v1"; // Sirf 1v1 matches dikhane ke liye
+        let currentMatchId = null;
+        let currentEntryFee = 0;
 
-        // --- Fetch Matches ---
-        database.ref('matches').on('value', (snapshot) => {
+        // 1. Fetch & Real-time Update
+        db.ref('matches').on('value', snap => {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
-            let found = false;
-
-            snapshot.forEach((child) => {
-                const match = child.val();
-
-                // Logic: Match 1v1 hona chahiye aur Status 'upcoming'
-                if(match.mode === targetMode && match.status === "upcoming") {
-                    found = true;
+            
+            snap.forEach(child => {
+                const m = child.val();
+                if(m.mode === "1v1" && m.status !== "finished") {
                     
-                    // Date & Time formatting
-                    const matchDate = match.time ? match.time.split('T')[0] : "TBA";
-                    const matchTime = match.time ? match.time.split('T')[1] : "TBA";
-
+                    const mId = m.mId;
+                    const maxSlots = 2; // 1v1 means 2 players
+                    
+                    // HTML Structure
                     container.innerHTML += `
                         <div class="match-card">
                             <div class="card-header">
-                                <span class="match-title">${match.title}</span>
-                                <span class="match-tag">SOLO CS</span>
+                                <span class="match-title">${m.title}</span>
+                                <span class="timer-tag" id="timer-${mId}">LOADING...</span>
                             </div>
                             <div class="card-body">
+                                <div class="slots-info">
+                                    <div class="slot-text"><span>Slots Filled</span><span id="slot-count-${mId}">0/${maxSlots}</span></div>
+                                    <div class="slot-bar"><div class="slot-fill" id="slot-fill-${mId}"></div></div>
+                                </div>
+
+                                <div id="id-pass-box-${mId}" class="id-pass-box" style="display:none;">
+                                    <p>ROOM ID: <span id="rid-${mId}">${m.roomId || 'TBA'}</span></p>
+                                    <p>PASS: <span id="rps-${mId}">${m.roomPass || 'TBA'}</span></p>
+                                </div>
+
                                 <div class="info-grid">
-                                    <div class="info-item">
-                                        <i class="fas fa-trophy"></i>
-                                        <div><p>Win Prize</p><h5>₹${match.prize}</h5></div>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-map-marked-alt"></i>
-                                        <div><p>Map</p><h5>${match.map || 'Bermuda'}</h5></div>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-clock"></i>
-                                        <div><p>Time</p><h5>${matchTime}</h5></div>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-calendar-day"></i>
-                                        <div><p>Date</p><h5>${matchDate}</h5></div>
-                                    </div>
+                                    <div class="info-item"><i class="fas fa-trophy"></i><div><p>Prize</p><h5>₹${m.prize}</h5></div></div>
+                                    <div class="info-item"><i class="fas fa-map"></i><div><p>Map</p><h5>${m.map || 'Bermuda'}</h5></div></div>
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <div class="price-box">
-                                    <h6>ENTRY FEE</h6>
-                                    <h4>₹${match.entry}</h4>
-                                </div>
-                                <button class="join-btn" onclick="joinMatch('${match.mId}', '${match.entry}')">JOIN NOW</button>
+                                <div class="price-box"><h6>ENTRY</h6><h4>₹${m.entry}</h4></div>
+                                <button class="join-btn" id="btn-${mId}" onclick="openJoinModal('${mId}', ${m.entry})">JOIN NOW</button>
                             </div>
                         </div>
                     `;
+
+                    // Start Timer
+                    startTimer(mId, m.time);
+                    // Sync Slots
+                    syncSlots(mId, maxSlots);
                 }
             });
-
-            if(!found) {
-                container.innerHTML = `
-                    <div style="text-align:center; margin-top:80px; color:#95a5a6;">
-                        <i class="fas fa-ghost fa-3x"></i>
-                        <p style="margin-top:15px; font-weight:700;">No 1v1 Matches Found!</p>
-                        <p style="font-size:12px;">Check back later for new tournaments.</p>
-                    </div>
-                `;
-            }
         });
 
-        // --- Join Function ---
-        function joinMatch(mId, fee) {
-            const userUID = localStorage.getItem('gameID') || "Unknown";
-            const userName = localStorage.getItem('userName') || "Player";
+        function startTimer(id, targetTime) {
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = new Date(targetTime).getTime() - now;
+                const timerEl = document.getElementById(`timer-${id}`);
+                const idPassBox = document.getElementById(`id-pass-box-${id}`);
 
-            if(confirm(`Do you want to join this match for ₹${fee}?`)) {
-                // Firebase mein 'joins' folder mein entry karna
-                database.ref('joins/' + mId + '/' + userUID).set({
-                    name: userName,
-                    uid: userUID,
-                    timestamp: new Date().getTime()
-                }).then(() => {
-                    alert("Successfully Joined! Waiting for match to start.");
-                }).catch((error) => {
-                    alert("Error joining: " + error.message);
-                });
+                if (diff <= 0) {
+                    timerEl.innerText = "MATCH LIVE";
+                    idPassBox.style.display = "block";
+                    return;
+                }
+
+                const h = Math.floor(diff / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                timerEl.innerText = `${h}H ${m}M ${s}S`;
+
+                // Show ID Pass 15 mins before
+                if(diff < 900000) idPassBox.style.display = "block";
+            }, 1000);
+        }
+
+        function syncSlots(id, max) {
+            db.ref(`matches/${id}/players`).on('value', snap => {
+                const count = snap.numChildren();
+                const percent = (count / max) * 100;
+                document.getElementById(`slot-count-${id}`).innerText = `${count}/${max}`;
+                document.getElementById(`slot-fill-${id}`).style.width = percent + "%";
+                
+                const btn = document.getElementById(`btn-${id}`);
+                if(count >= max) { btn.innerText = "FULL"; btn.disabled = true; }
+            });
+        }
+
+        // 2. Join & Payment Logic
+        function openJoinModal(id, fee) {
+            currentMatchId = id;
+            currentEntryFee = fee;
+            document.getElementById('joinModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('joinModal').style.display = 'none'; }
+
+        async function processPayment() {
+            const gameUID = document.getElementById('playerUID').value;
+            const userUID = localStorage.getItem('gameID');
+
+            if(!gameUID) return alert("Game UID dalo!");
+            if(!userUID) return alert("Please Login First!");
+
+            const userRef = db.ref('users/' + userUID);
+            const userSnap = await userRef.get();
+            const balance = userSnap.val().balance || 0;
+
+            if(balance < currentEntryFee) {
+                alert("Low Balance! Please add money to wallet.");
+                return;
             }
+
+            // 1. Deduct Money
+            await userRef.update({ balance: balance - currentEntryFee });
+
+            // 2. Add to Match Players
+            await db.ref(`matches/${currentMatchId}/players`).push({
+                userUID: userUID,
+                gameUID: gameUID,
+                timestamp: Date.now()
+            });
+
+            // 3. Log to History
+            db.ref('admin_requests/withdrawals').push({
+                uid: userUID, name: localStorage.getItem('userName'),
+                amount: currentEntryFee, status: "Joined Match", date: new Date().toLocaleDateString()
+            });
+
+            alert("Joined Successfully! Fee deducted.");
+            closeModal();
         }
     </script>
 </body>
