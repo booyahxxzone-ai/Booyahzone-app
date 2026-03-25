@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOOYAH ZONE | PRO DASHBOARD</title>
+    <title>BOOYAH ZONE | DASHBOARD</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,23 +50,23 @@
         .brand-name { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: var(--dark); }
         .menu-btn { font-size: 22px; cursor: pointer; color: var(--dark); }
 
-        /* --- Content --- */
+        /* --- Content Area --- */
         .content { padding: 20px; max-width: 500px; margin: 0 auto; }
 
         .welcome-section { margin-bottom: 15px; }
-        .welcome-section h2 { font-size: 15px; color: #777; font-weight: 600; }
-        .user-name { font-family: 'Orbitron'; font-size: 24px; font-weight: 900; color: var(--dark); text-transform: uppercase; }
+        .welcome-section h2 { font-size: 14px; color: #888; font-weight: 600; }
+        .user-name { font-family: 'Orbitron'; font-size: 26px; font-weight: 900; color: var(--dark); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- Banner Style --- */
+        /* --- Banner Style (Using your Base64) --- */
         .banner-container {
             width: 100%;
-            height: 180px; 
-            border-radius: 18px;
+            height: 185px; 
+            border-radius: 20px;
             overflow: hidden;
             margin-bottom: 25px;
             border: 2px solid var(--primary-light);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            background: #eee;
+            box-shadow: 0 10px 25px rgba(255, 153, 0, 0.15);
+            background: #f0f0f0;
         }
 
         .banner-container img {
@@ -76,7 +76,7 @@
             display: block;
         }
 
-        /* --- Status Buttons --- */
+        /* --- Status Filter Buttons --- */
         .status-wrapper {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -86,16 +86,18 @@
 
         .status-box {
             background: var(--orange-mix);
-            border-radius: 18px;
-            padding: 15px 5px;
+            border-radius: 15px;
+            padding: 12px 5px;
             text-align: center;
             text-decoration: none;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
             border: 1px solid rgba(255, 153, 0, 0.1);
+            transition: 0.3s;
         }
-
-        .status-box i { font-size: 20px; }
-        .status-box span { font-family: 'Orbitron'; font-size: 8px; font-weight: 900; color: var(--dark); }
+        
+        .status-box:active { transform: scale(0.95); background: var(--primary-light); }
+        .status-box i { font-size: 18px; }
+        .status-box span { font-family: 'Orbitron'; font-size: 9px; font-weight: 800; color: var(--dark); }
         
         .up-m i { color: #0984e3; }
         .on-m i { color: #d63031; }
@@ -103,53 +105,53 @@
 
         /* --- Arena Section --- */
         .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .v-bar { width: 5px; height: 20px; background: var(--primary); border-radius: 10px; }
-        .section-label h3 { font-family: 'Orbitron'; font-size: 16px; color: var(--dark); }
+        .v-bar { width: 4px; height: 18px; background: var(--primary); border-radius: 10px; }
+        .section-label h3 { font-family: 'Orbitron'; font-size: 15px; color: var(--dark); letter-spacing: 1px; }
 
         .mode-card {
             background: var(--white);
-            border-radius: 20px;
-            padding: 18px 22px;
+            border-radius: 18px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             margin-bottom: 12px;
-            border: 1px solid #f2f2f2;
+            border: 1px solid #f8f8f8;
             cursor: pointer;
         }
 
         .mode-info h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
-        .mode-info p { font-size: 11px; font-weight: 700; color: #95a5a6; }
-        .mode-circle { width: 42px; height: 42px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .mode-info p { font-size: 11px; font-weight: 700; color: #a0a0a0; }
+        .mode-circle { width: 45px; height: 45px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary); }
 
-        /* --- Navigation --- */
+        /* --- Bottom Navigation --- */
         .nav-bar {
-            position: fixed; bottom: 0; width: 100%; height: 80px;
+            position: fixed; bottom: 0; width: 100%; height: 75px;
             background: var(--white); display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-radius: 25px 25px 0 0; z-index: 2000;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.06); border-radius: 25px 25px 0 0; z-index: 2000;
         }
-        .nav-item { text-align: center; text-decoration: none; color: #bbb; flex: 1; }
+        .nav-item { text-align: center; text-decoration: none; color: #ccc; flex: 1; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
-        .nav-item span { font-size: 9px; font-weight: 800; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 3px; }
+        .nav-item span { font-size: 10px; font-weight: 700; }
 
-        .profile-fab { position: relative; top: -25px; }
+        .profile-fab { position: relative; top: -20px; }
         .fab-icon {
-            width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), #ff6a00);
+            width: 58px; height: 58px; background: linear-gradient(135deg, var(--primary), #ff7b00);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 24px; border: 5px solid var(--white);
-            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.2);
+            color: #fff; font-size: 22px; border: 4px solid var(--white);
+            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.3);
         }
 
         /* --- Sidebar & Overlay --- */
         .sidebar {
             position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
-            background: var(--dark); z-index: 3000; transition: 0.4s; padding: 40px 25px;
+            background: var(--dark); z-index: 3000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px;
         }
         .sidebar.active { right: 0; }
-        .side-link { color: #fff; padding: 15px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 12px; font-size: 16px; text-decoration: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2999; }
+        .side-link { color: #fff; padding: 16px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; font-size: 16px; text-decoration: none; font-weight: 500; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2999; backdrop-filter: blur(3px); }
     </style>
 </head>
 <body>
@@ -157,15 +159,16 @@
     <div class="overlay" id="overlay"></div>
 
     <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--primary); font-family:'Orbitron'; margin-bottom:25px;">MENU</h2>
-        <a href="wallet.html" class="side-link"><i class="fas fa-wallet"></i> My Wallet</a>
-        <a href="leaderboard.html" class="side-link"><i class="fas fa-trophy"></i> Leaderboard</a>
-        <a href="index.html" class="side-link" style="color: #ff4d4d; margin-top: 40px;"><i class="fas fa-power-off"></i> Logout</a>
+        <h2 style="color:var(--primary); font-family:'Orbitron'; margin-bottom:30px; border-left: 4px solid var(--primary); padding-left: 10px;">MENU</h2>
+        <a href="wallet.html" class="side-link"><i class="fas fa-wallet" style="color:var(--primary)"></i> My Wallet</a>
+        <a href="leaderboard.html" class="side-link"><i class="fas fa-trophy" style="color:var(--primary)"></i> Leaderboard</a>
+        <a href="notifications.html" class="side-link"><i class="fas fa-bell" style="color:var(--primary)"></i> Notifications</a>
+        <a href="index.html" class="side-link" style="color: #ff5e5e; margin-top: 50px; border-bottom: none;"><i class="fas fa-power-off"></i> Logout</a>
     </div>
 
     <header class="app-bar">
         <div class="brand-box">
-            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" class="app-logo">
+            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" class="app-logo" alt="Logo">
             <span class="brand-name">BOOYAH ZONE</span>
         </div>
         <div class="menu-btn" id="menuOpen"><i class="fas fa-bars-staggered"></i></div>
@@ -174,55 +177,65 @@
     <div class="content">
         <div class="welcome-section">
             <h2>Welcome Back,</h2>
-            <div class="user-name" id="userTitle">AKASH KOHLI</div>
+            <div class="user-name" id="userTitle">AKASH</div>
         </div>
 
         <div class="banner-container">
-            <img src="https://images.weserv.nl/?url=kommodo.ai/i/srQw12HZ9KAssOSjktUw" alt="Free Fire Banner" onerror="this.src='https://via.placeholder.com/1024x512?text=FF+Banner+Loading...'">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wgARCAQ4B4ADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAQIAAwQFBgf/xAAaAQEBAQEBAQEAAAAAAAAAAAAAAQIAAwQFBgf/xAAaAQEBAQEBAQEAAAAAAAAAAAAAAQIAAwQFBgf/xAAaAQEBAQEBAQEAAAAAAAAAAAAAAQIAAwQFBgf/..." alt="Free Fire Hero">
         </div>
 
         <div class="status-wrapper">
-            <a href="upcoming.html" class="status-box up-m"><i class="fas fa-calendar-alt"></i><span>UPCOMING</span></a>
-            <a href="ongoing.html" class="status-box on-m"><i class="fas fa-bolt"></i><span>ONGOING</span></a>
-            <a href="finish.html" class="status-box fi-m"><i class="fas fa-check-double"></i><span>FINISHED</span></a>
+            <a href="upcoming.html" class="status-box up-m"><i class="fas fa-calendar-check"></i><span>UPCOMING</span></a>
+            <a href="ongoing.html" class="status-box on-m"><i class="fas fa-fire-alt"></i><span>ONGOING</span></a>
+            <a href="finish.html" class="status-box fi-m"><i class="fas fa-flag-checkered"></i><span>FINISHED</span></a>
         </div>
 
         <div class="section-label"><div class="v-bar"></div><h3>TOURNAMENTS ARENA</h3></div>
 
         <div class="mode-card" onclick="location.href='upcoming.html?mode=1v1'">
             <div class="mode-info"><h4>1 V 1</h4><p>SOLO CLASH SQUAD</p></div>
-            <div class="mode-circle"><i class="fas fa-skull"></i></div>
+            <div class="mode-circle"><i class="fas fa-crosshairs"></i></div>
         </div>
 
         <div class="mode-card" onclick="location.href='upcoming.html?mode=2v2'">
             <div class="mode-info"><h4>2 V 2</h4><p>DUO DUEL BATTLE</p></div>
-            <div class="mode-circle"><i class="fas fa-user-friends"></i></div>
+            <div class="mode-circle"><i class="fas fa-user-group"></i></div>
         </div>
 
         <div class="mode-card" onclick="location.href='upcoming.html?mode=4v4'">
-            <div class="mode-info"><h4>4 V 4</h4><p>SQUAD WARFARE</p></div>
-            <div class="mode-circle"><i class="fas fa-users"></i></div>
+            <div class="mode-info"><h4>4 V 4</h4><p>FULL SQUAD WAR</p></div>
+            <div class="mode-circle"><i class="fas fa-users-rays"></i></div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="home.html" class="nav-item active"><i class="fas fa-house"></i><span>Home</span></a>
-        <a href="refer.html" class="nav-item"><i class="fas fa-share-alt"></i><span>Refer</span></a>
-        <div class="profile-fab"><a href="profile.html" class="fab-icon"><i class="fas fa-user-ninja"></i></a></div>
-        <a href="history.html" class="nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
-        <a href="contact.html" class="nav-item"><i class="fas fa-headset"></i><span>Support</span></a>
+        <a href="home.html" class="nav-item active"><i class="fas fa-home-alt"></i><span>Home</span></a>
+        <a href="refer.html" class="nav-item"><i class="fas fa-gift"></i><span>Refer</span></a>
+        <div class="profile-fab"><a href="profile.html" class="fab-icon"><i class="fas fa-user-astronaut"></i></a></div>
+        <a href="history.html" class="nav-item"><i class="fas fa-receipt"></i><span>History</span></a>
+        <a href="contact.html" class="nav-item"><i class="fas fa-comment-dots"></i><span>Support</span></a>
     </nav>
 
     <script>
-        const name = localStorage.getItem('userName') || "AKASH KOHLI";
+        // Set Username from LocalStorage
+        const name = localStorage.getItem('userName') || "AKASH";
         document.getElementById('userTitle').innerText = name.toUpperCase();
 
+        // Sidebar Logic
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         const menuBtn = document.getElementById('menuOpen');
 
-        menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.style.display = 'block'; };
-        overlay.onclick = () => { sidebar.classList.remove('active'); overlay.style.display = 'none'; };
+        menuBtn.onclick = () => { 
+            sidebar.classList.add('active'); 
+            overlay.style.display = 'block'; 
+        };
+        
+        overlay.onclick = () => { 
+            sidebar.classList.remove('active'); 
+            overlay.style.display = 'none'; 
+        };
     </script>
 </body>
-</html>
+                </html>
+                
