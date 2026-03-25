@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FINISHED MATCHES | BOOYAH ZONE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --success: #27ae60;
+            --primary: #ff9900;
+            --secondary: #121212;
+            --bg: #f4f6f9;
+            --white: #ffffff;
+            --text-dark: #2d3436;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            padding-bottom: 30px;
+        }
+
+        /* --- Custom Header --- */
+        .nav-header {
+            background: var(--white);
+            height: 75px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .back-btn {
+            font-size: 22px;
+            color: var(--secondary);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .nav-header h1 {
+            font-family: 'Orbitron';
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Section Label --- */
+        .page-label {
+            padding: 20px 15px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .v-line { width: 5px; height: 20px; background: var(--success); border-radius: 5px; }
+        .label-text { font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: var(--success); }
+
+        /* --- Match Card --- */
+        .match-list {
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .match-card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .card-banner {
+            width: 100%;
+            height: 110px;
+            background: linear-gradient(135deg, #1e272e, #485460);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .card-banner::after {
+            content: 'MATCH ENDED';
+            position: absolute;
+            top: 15px; right: 15px;
+            background: var(--success);
+            color: #fff;
+            font-size: 9px;
+            font-family: 'Orbitron';
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+        }
+
+        .match-info h2 {
+            font-family: 'Orbitron';
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .match-info p {
+            font-size: 12px;
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .winner-tag {
+            background: rgba(255, 153, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .winner-tag i {
+            font-size: 24px;
+            color: #f1c40f;
+        }
+
+        .winner-details h5 {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .winner-details p {
+            font-family: 'Orbitron';
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--secondary);
+        }
+
+        /* Stats Table */
+        .match-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 15px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .stat-box .title { font-size: 10px; color: #aaa; font-weight: 800; text-transform: uppercase; }
+        .stat-box .val { font-size: 14px; font-weight: 700; color: #333; display: block; }
+
+        /* Action Buttons */
+        .footer-actions {
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-results {
+            flex: 1;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Orbitron';
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.2);
+        }
+
+        .btn-watch-old {
+            flex: 1;
+            padding: 12px;
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* --- Animation --- */
+        .match-card {
+            animation: slideUp 0.6s ease-out backwards;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <i class="fas fa-arrow-left back-btn" onclick="location.href='home.html'"></i>
+        <h1>Finished Matches</h1>
+    </header>
+
+    <div class="page-label">
+        <div class="v-line"></div>
+        <div class="label-text">RECENTLY COMPLETED</div>
+    </div>
+
+    <div class="match-list">
+
+        <div class="match-card" style="animation-delay: 0.1s;">
+            <div class="card-banner">
+                <div class="match-info">
+                    <h2>SQUAD WAR #45</h2>
+                    <p><i class="far fa-calendar-alt"></i> 24 MARCH, 2026</p>
+                </div>
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" style="width:50px; border-radius:50%;" alt="Logo">
+            </div>
+
+            <div class="winner-tag">
+                <i class="fas fa-trophy"></i>
+                <div class="winner-details">
+                    <h5>Match Winner</h5>
+                    <p>TEAM PHOENIX</p>
+                </div>
+            </div>
+
+            <div class="match-stats">
+                <div class="stat-box">
+                    <span class="title">Total Prize</span>
+                    <span class="val">₹2500</span>
+                </div>
+                <div class="stat-box">
+                    <span class="title">Mode</span>
+                    <span class="val">4 V 4</span>
+                </div>
+                <div class="stat-box">
+                    <span class="title">Status</span>
+                    <span class="val" style="color:var(--success)">Paid Out</span>
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <button class="btn-watch-old"><i class="fab fa-youtube"></i> REPLAY</button>
+                <button class="btn-results" onclick="alert('Results loading...')">CHECK RESULTS</button>
+            </div>
+        </div>
+
+        <div class="match-card" style="animation-delay: 0.2s;">
+            <div class="card-banner" style="background: linear-gradient(135deg, #2c3e50, #000000);">
+                <div class="match-info">
+                    <h2>SOLO KING #02</h2>
+                    <p><i class="far fa-calendar-alt"></i> 23 MARCH, 2026</p>
+                </div>
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" style="width:50px; border-radius:50%;" alt="Logo">
+            </div>
+
+            <div class="winner-tag">
+                <i class="fas fa-crown" style="color: #ff9900;"></i>
+                <div class="winner-details">
+                    <h5>Top Fragger</h5>
+                    <p>AKASH GAMER</p>
+                </div>
+            </div>
+
+            <div class="match-stats">
+                <div class="stat-box">
+                    <span class="title">Win Prize</span>
+                    <span class="val">₹400</span>
+                </div>
+                <div class="stat-box">
+                    <span class="title">Mode</span>
+                    <span class="val">1 V 1</span>
+                </div>
+                <div class="stat-box">
+                    <span class="title">Status</span>
+                    <span class="val" style="color:var(--success)">Finished</span>
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <button class="btn-watch-old">VIEW FULL LIST</button>
+                <button class="btn-results">WINNERS</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple touch effect for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => btn.style.transform = "scale(0.96)");
+            btn.addEventListener('touchend', () => btn.style.transform = "scale(1)");
+        });
+    </script>
+
+</body>
+</html>
