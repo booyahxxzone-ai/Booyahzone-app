@@ -3,349 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USER PROFILE | BOOYAH ZONE</title>
+    <title>MY PROFILE | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
-        :root {
-            --primary: #ff9900;
-            --dark: #121212;
-            --bg: #f8f9fc;
-            --white: #ffffff;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --danger: #d63031;
-        }
+        :root { --primary: #ff9900; --bg: #f5f7fa; --dark: #121212; --white: #ffffff; --gray: #95a5a6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding-bottom: 40px; }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            padding-bottom: 110px;
-        }
-
-        /* --- Header --- */
+        /* Header */
         .profile-header {
-            background: linear-gradient(135deg, var(--dark), #333);
-            height: 220px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--dark), #2d3436);
+            padding: 40px 20px; text-align: center; color: #fff;
+            border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
-
-        .back-icon {
-            position: absolute;
-            top: 20px; left: 20px;
-            color: #fff; font-size: 22px; cursor: pointer;
+        .user-avatar {
+            width: 90px; height: 90px; background: var(--primary);
+            border-radius: 50%; margin: 0 auto 15px; border: 4px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
         }
+        .user-name { font-family: 'Orbitron'; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .user-id { font-size: 14px; opacity: 0.7; font-weight: 700; }
 
-        .profile-pic-container {
-            position: relative;
-            margin-top: 20px;
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        /* Stats Card */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: -30px; margin-bottom: 25px; }
+        .stat-card {
+            background: var(--white); padding: 15px; border-radius: 20px;
+            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
+        .stat-card i { color: var(--primary); font-size: 18px; margin-bottom: 5px; }
+        .stat-card span { display: block; font-size: 12px; color: var(--gray); font-weight: 700; }
+        .stat-card h4 { font-family: 'Orbitron'; font-size: 16px; }
 
-        .profile-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid var(--primary);
-            background: #fff;
-            object-fit: cover;
-            box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
-        }
-
-        .edit-badge {
-            position: absolute;
-            bottom: 5px; right: 5px;
-            background: var(--primary);
-            color: #fff; width: 28px; height: 28px;
-            border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 12px; border: 2px solid var(--dark);
-        }
-
-        .user-info {
-            text-align: center;
-            margin-top: 12px;
-            color: #fff;
-        }
-
-        .user-info h2 {
-            font-family: 'Orbitron';
-            font-size: 20px;
-            letter-spacing: 1px;
-        }
-
-        .user-info p {
-            font-size: 13px;
-            color: var(--primary);
-            font-weight: 700;
-            opacity: 0.9;
-        }
-
-        /* --- Stats Bar --- */
-        .stats-bar {
-            background: var(--white);
-            width: 85%;
-            margin: -30px auto 30px;
-            border-radius: 20px;
-            display: flex;
-            padding: 15px 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-        }
-
-        .stat-item {
-            flex: 1; text-align: center;
-            border-right: 1px solid #eee;
-        }
-        .stat-item:last-child { border: none; }
-        .stat-item span { display: block; font-size: 11px; color: var(--text-muted); font-weight: 700; }
-        .stat-item b { font-family: 'Orbitron'; font-size: 16px; color: var(--dark); }
-
-        /* --- Menu Section --- */
-        .menu-section {
-            padding: 0 20px;
-        }
-
-        .menu-label {
-            font-family: 'Orbitron';
-            font-size: 12px;
-            font-weight: 900;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            padding-left: 5px;
-        }
-
-        .menu-list {
-            background: var(--white);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            margin-bottom: 25px;
-        }
-
+        /* Menu Options */
+        .menu-list { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 20px;
-            border-bottom: 1px solid #f8f9fa;
-            cursor: pointer;
-            transition: 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 20px; border-bottom: 1px solid #f1f2f6; cursor: pointer; transition: 0.3s;
         }
-        .menu-item:last-child { border: none; }
-        .menu-item:active { background: #f1f1f1; }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:active { background: #f8f9fa; }
+        .menu-link { display: flex; align-items: center; gap: 15px; }
+        .menu-link i { width: 30px; color: var(--primary); font-size: 18px; }
+        .menu-link span { font-weight: 700; font-size: 15px; }
 
-        .item-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        /* Policies Section */
+        .policy-box { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .policy-btn { width: 100%; display: flex; justify-content: space-between; background: none; border: none; font-family: 'Orbitron'; font-size: 13px; font-weight: 900; cursor: pointer; padding: 10px 0; }
+        .policy-content { display: none; padding: 10px 0; font-size: 13px; color: #555; line-height: 1.6; border-top: 1px solid #eee; margin-top: 10px; text-align: left; }
+        .policy-content ul { list-style: none; }
+        .policy-content li { margin-bottom: 8px; display: flex; gap: 10px; }
+        .policy-content li i { color: var(--primary); margin-top: 4px; font-size: 10px; }
 
-        .item-left i {
-            width: 35px; height: 35px;
-            background: #fff4e5;
-            color: var(--primary);
-            border-radius: 10px;
-            display: flex;
-            align-items: center; justify-content: center;
-            font-size: 16px;
-        }
-
-        .item-left span {
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-main);
-        }
-
-        .menu-item i.fa-chevron-right {
-            font-size: 12px;
-            color: #ccc;
-        }
-
-        /* --- Logout Button --- */
         .logout-btn {
-            margin: 10px 20px 40px;
-            padding: 16px;
-            background: #fff;
-            border: 1px solid #ffebeb;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--danger);
-            font-weight: 800;
-            font-family: 'Orbitron';
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(214, 48, 49, 0.05);
+            width: 100%; padding: 15px; background: #fff; color: #eb4d4b;
+            border: 2px solid #eb4d4b; border-radius: 15px;
+            font-family: 'Orbitron'; font-weight: 900; margin-top: 20px; cursor: pointer;
         }
-
-        /* --- Navigation Bar --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; width: 100%;
-            height: 85px; background: var(--white);
-            display: flex; justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
-            border-radius: 30px 30px 0 0;
-            z-index: 1000;
-        }
-        .nav-item {
-            text-align: center; color: #b2bec3;
-            text-decoration: none; flex: 1;
-        }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .nav-item span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
-
     </style>
 </head>
 <body>
 
-    <section class="profile-header">
-        <i class="fas fa-arrow-left back-icon" onclick="location.href='home.html'"></i>
-        <div class="profile-pic-container">
-            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Profile" class="profile-img">
-            <div class="edit-badge"><i class="fas fa-camera"></i></div>
-        </div>
-        <div class="user-info">
-            <h2 id="uName">AKASH KOHLI</h2>
-            <p>Game ID: <span id="uID">548293021</span></p>
-        </div>
-    </section>
-
-    <div class="stats-bar">
-        <div class="stat-item">
-            <span>Played</span>
-            <b>24</b>
-        </div>
-        <div class="stat-item">
-            <span>Won</span>
-            <b>12</b>
-        </div>
-        <div class="stat-item">
-            <span>Earnings</span>
-            <b>₹1,450</b>
-        </div>
+    <div class="profile-header">
+        <div class="user-avatar"><i class="fas fa-user-ninja"></i></div>
+        <h2 class="user-name" id="p-name">LOADING...</h2>
+        <p class="user-id">UID: <span id="p-uid">000000</span></p>
     </div>
 
-    <div class="menu-section">
-        
-        <div class="menu-label">ACCOUNT SETTINGS</div>
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card" onclick="location.href='wallet.html'">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+                <h4 id="p-balance">₹0</h4>
+            </div>
+            <div class="stat-card" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+                <h4>LOGS</h4>
+            </div>
+        </div>
+
         <div class="menu-list">
-            <div class="menu-item" onclick="location.href='edit-profile.html'">
-                <div class="item-left">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Profile Details</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
+            <div class="menu-item" onclick="location.href='refer.html'">
+                <div class="menu-link"><i class="fas fa-gift"></i><span>Refer & Earn</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 12px; color: #ccc;"></i>
             </div>
-            <div class="menu-item" onclick="location.href='history.html'">
-                <div class="item-left">
-                    <i class="fas fa-history"></i>
-                    <span>Match History</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="menu-item" onclick="location.href='wallet.html'">
-                <div class="item-left">
-                    <i class="fas fa-wallet"></i>
-                    <span>Wallet & Payments</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
+            <div class="menu-item" onclick="window.open('https://wa.me/918968146117')">
+                <div class="menu-link"><i class="fab fa-whatsapp"></i><span>Contact Support</span></div>
+                <i class="fas fa-chevron-right" style="font-size: 12px; color: #ccc;"></i>
             </div>
         </div>
 
-        <div class="menu-label">LEGAL & SUPPORT</div>
-        <div class="menu-list">
-            <div class="menu-item" onclick="location.href='tnc.html'">
-                <div class="item-left">
-                    <i class="fas fa-file-contract"></i>
-                    <span>Terms & Conditions</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="menu-item" onclick="location.href='refund.html'">
-                <div class="item-left">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <span>Money Return Policy</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="menu-item" onclick="location.href='privacy.html'">
-                <div class="item-left">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Privacy Policy</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="menu-item" onclick="location.href='contact.html'">
-                <div class="item-left">
-                    <i class="fas fa-headset"></i>
-                    <span>Contact Us</span>
-                </div>
-                <i class="fas fa-chevron-right"></i>
+        <div class="policy-box">
+            <button class="policy-btn" onclick="togglePolicy('refund')">REFUND POLICY <i class="fas fa-plus"></i></button>
+            <div id="refund" class="policy-content">
+                <ul>
+                    <li><i class="fas fa-circle"></i> 100% refund is processed if the match is cancelled by our management.</li>
+                    <li><i class="fas fa-circle"></i> If killed by a proven hacker, your entry fee will be refunded to your wallet.</li>
+                    <li><i class="fas fa-circle"></i> All refunds are credited only to the app wallet for future matches.</li>
+                </ul>
             </div>
         </div>
 
-        <div class="logout-btn" onclick="location.href='index.html'">
-            <i class="fas fa-sign-out-alt"></i>
-            LOGOUT ACCOUNT
+        <div class="policy-box">
+            <button class="policy-btn" onclick="togglePolicy('fairplay')">FAIR PLAY (FIR) <i class="fas fa-plus"></i></button>
+            <div id="fairplay" class="policy-content">
+                <ul>
+                    <li><i class="fas fa-circle"></i> Room details will be shared on the app 15 mins before match starts.</li>
+                    <li><i class="fas fa-circle"></i> No refund if you fail to join the room on time.</li>
+                    <li><i class="fas fa-circle"></i> Use of Hacks, Mods, or Scripts will result in a permanent account ban.</li>
+                    <li><i class="fas fa-circle"></i> Teaming or exploiting glitches is strictly forbidden and results in disqualification.</li>
+                    <li><i class="fas fa-circle"></i> Using multiple accounts for same match leads to permanent ban.</li>
+                </ul>
+            </div>
         </div>
 
+        <button class="logout-btn" onclick="logout()">LOGOUT ACCOUNT</button>
     </div>
-
-    <nav class="bottom-nav">
-        <a href="home.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="refer.html" class="nav-item">
-            <i class="fas fa-gift"></i>
-            <span>Refer</span>
-        </a>
-        <a href="profile.html" class="nav-item active">
-            <i class="fas fa-user-ninja" style="font-size: 30px; margin-top: -10px; color: var(--primary);"></i>
-            <span>Profile</span>
-        </a>
-        <a href="history.html" class="nav-item">
-            <i class="fas fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="contact.html" class="nav-item">
-            <i class="fas fa-headset"></i>
-            <span>Support</span>
-        </a>
-    </nav>
 
     <script>
-        // LocalStorage se data load karna
-        const savedName = localStorage.getItem('userName') || "AKASH KOHLI";
-        const savedID = localStorage.getItem('gameID') || "548293021";
-        
-        document.getElementById('uName').innerText = savedName.toUpperCase();
-        document.getElementById('uID').innerText = savedID;
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // Feedback on click
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('touchstart', () => item.style.background = "#f9f9f9");
-            item.addEventListener('touchend', () => item.style.background = "#fff");
-        });
+        const userUID = localStorage.getItem('gameID');
+
+        // Fetch User Data
+        if(userUID) {
+            database.ref('users/' + userUID).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    document.getElementById('p-name').innerText = data.name;
+                    document.getElementById('p-uid').innerText = data.uid;
+                    document.getElementById('p-balance').innerText = "₹" + (data.balance || 0);
+                }
+            });
+        }
+
+        function togglePolicy(id) {
+            const el = document.getElementById(id);
+            const isVisible = el.style.display === "block";
+            document.querySelectorAll('.policy-content').forEach(p => p.style.display = "none");
+            el.style.display = isVisible ? "none" : "block";
+        }
+
+        function logout() {
+            if(confirm("Do you want to logout?")) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
     </script>
-
 </body>
 </html>
