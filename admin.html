@@ -3,394 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOYAH ZONE | MASTER ADMIN PANEL</title>
+    <title>BOOYAH ZONE | MASTER ADMIN</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary: #ff9900;
-            --secondary: #2d3436;
-            --dark-bg: #0f1113;
-            --card-bg: #1a1d21;
+            --dark-bg: #0b0c0d;
+            --card-bg: #151719;
             --text-white: #ffffff;
-            --text-gray: #a0a0a0;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --accent: #00d2ff;
+            --success: #00b894;
+            --danger: #d63031;
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Rajdhani', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background: var(--dark-bg); color: var(--text-white); display: flex; min-height: 100vh; }
 
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text-white);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* --- Sidebar Navigation --- */
+        /* --- Sidebar --- */
         .sidebar {
-            width: 260px;
-            background: var(--card-bg);
-            border-right: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            transition: 0.3s;
+            width: 280px; background: var(--card-bg); border-right: 1px solid #222;
+            display: flex; flex-direction: column; position: fixed; height: 100vh;
         }
-
-        .side-header {
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .side-header h1 {
-            font-family: 'Orbitron';
-            font-size: 18px;
-            color: var(--primary);
-            letter-spacing: 1px;
-        }
-
-        .nav-links {
-            padding: 20px 0;
-            flex: 1;
-        }
-
+        .side-header { padding: 30px; text-align: center; border-bottom: 1px solid #222; }
+        .side-header h1 { font-family: 'Orbitron'; font-size: 20px; color: var(--primary); }
         .nav-item {
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: var(--text-gray);
-            font-weight: 600;
-            font-size: 16px;
-            transition: 0.3s;
-            cursor: pointer;
+            padding: 18px 30px; display: flex; align-items: center; gap: 15px;
+            color: #888; text-decoration: none; cursor: pointer; transition: 0.3s;
         }
+        .nav-item:hover, .nav-item.active { background: rgba(255,153,0,0.1); color: var(--primary); border-left: 4px solid var(--primary); }
 
-        .nav-item:hover, .nav-item.active {
-            color: var(--primary);
-            background: rgba(255, 153, 0, 0.1);
-            border-left: 4px solid var(--primary);
+        /* --- Main Content --- */
+        .main { margin-left: 280px; flex: 1; padding: 40px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        /* --- Form Styling --- */
+        .form-box {
+            background: var(--card-bg); padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 40px;
+            border: 1px solid #222;
         }
-
-        .logout-btn {
-            padding: 20px;
-            border-top: 1px solid #333;
-            color: var(--danger);
-            cursor: pointer;
-            text-align: center;
-            font-weight: bold;
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 8px; color: var(--primary); font-weight: bold; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 12px; background: #000; border: 1px solid #333;
+            border-radius: 8px; color: #fff; outline: none;
         }
-
-        /* --- Main Content Area --- */
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 30px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--card-bg);
-            padding: 8px 20px;
-            border-radius: 50px;
-            border: 1px solid #333;
-        }
-
-        .admin-profile img {
-            width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary);
-        }
-
-        /* --- Dashboard Stats --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            border-bottom: 4px solid var(--primary);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .stat-card h3 { font-size: 14px; color: var(--text-gray); margin-bottom: 10px; }
-        .stat-card p { font-size: 28px; font-weight: 800; font-family: 'Orbitron'; }
-
-        /* --- Management Sections --- */
-        .section-box {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-family: 'Orbitron';
-            font-size: 18px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-add {
-            background: var(--primary);
-            color: #000;
-            padding: 8px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
+        .btn-submit {
+            grid-column: span 2; padding: 15px; background: var(--primary);
+            border: none; border-radius: 10px; font-family: 'Orbitron';
+            font-weight: 900; cursor: pointer; margin-top: 10px;
         }
 
         /* --- Table Styling --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+        .table-container { background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid #222; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; color: #555; border-bottom: 2px solid #222; }
+        td { padding: 15px; border-bottom: 1px solid #222; }
+        .badge { padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .badge-1v1 { background: #6c5ce7; }
+        .badge-2v2 { background: #00cec9; }
+        .badge-4v4 { background: #e17055; }
+        
+        .delete-btn { color: var(--danger); cursor: pointer; font-size: 18px; }
 
-        th {
-            text-align: left;
-            color: var(--text-gray);
-            padding: 15px;
-            border-bottom: 1px solid #333;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #222;
-            font-size: 15px;
-        }
-
-        .status-pill {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .pill-active { background: rgba(46, 204, 113, 0.2); color: var(--success); }
-        .pill-pending { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
-
-        .action-btns i {
-            margin-right: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .action-btns i:hover { color: var(--primary); }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .sidebar { width: 70px; }
-            .sidebar span, .side-header h1 { display: none; }
-            .main-content { margin-left: 70px; padding: 15px; }
-            .nav-item { justify-content: center; padding: 20px 0; }
+            .sidebar span { display: none; }
+            .main { margin-left: 70px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .btn-submit { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="side-header">
-            <h1>BOOYAH ADMIN</h1>
-        </div>
-        <div class="nav-links">
-            <div class="nav-item active" onclick="showTab('dashboard')">
-                <i class="fas fa-th-large"></i> <span>Dashboard</span>
-            </div>
-            <div class="nav-item" onclick="showTab('matches')">
-                <i class="fas fa-gamepad"></i> <span>Manage Matches</span>
-            </div>
-            <div class="nav-item" onclick="showTab('users')">
-                <i class="fas fa-users"></i> <span>Users List</span>
-            </div>
-            <div class="nav-item" onclick="showTab('withdraw')">
-                <i class="fas fa-hand-holding-usd"></i> <span>Withdrawals</span>
-            </div>
-            <div class="nav-item" onclick="showTab('settings')">
-                <i class="fas fa-cog"></i> <span>App Settings</span>
-            </div>
-        </div>
-        <div class="logout-btn" onclick="location.href='index.html'">
-            <i class="fas fa-power-off"></i> <span>LOGOUT</span>
-        </div>
+        <div class="side-header"><h1>ADMIN PANEL</h1></div>
+        <div class="nav-item active"><i class="fas fa-plus-circle"></i> <span>Add Match</span></div>
+        <div class="nav-item"><i class="fas fa-users"></i> <span>Users List</span></div>
+        <div class="nav-item"><i class="fas fa-wallet"></i> <span>Withdrawals</span></div>
+        <div class="nav-item" onclick="location.href='index.html'"><i class="fas fa-sign-out-alt"></i> <span>Exit</span></div>
     </div>
 
-    <div class="main-content">
-        <header>
-            <h2 id="tabTitle">DASHBOARD OVERVIEW</h2>
-            <div class="admin-profile">
-                <span style="font-size: 14px; font-weight: bold;">AKASH ADMIN</span>
-                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Admin">
-            </div>
-        </header>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>TOTAL USERS</h3>
-                <p id="totalUsers">1,245</p>
-            </div>
-            <div class="stat-card">
-                <h3>TOTAL EARNING</h3>
-                <p id="totalEarn">₹45,200</p>
-            </div>
-            <div class="stat-card">
-                <h3>LIVE MATCHES</h3>
-                <p id="liveMatch">08</p>
-            </div>
-            <div class="stat-card">
-                <h3>WITHDRAW REQUESTS</h3>
-                <p id="pendingWithdraw" style="color: var(--danger);">12</p>
-            </div>
+    <div class="main">
+        <div class="header">
+            <h2 id="pageTitle">MANAGE TOURNAMENTS</h2>
+            <div style="color: var(--primary); font-weight: bold;"><i class="fas fa-user-shield"></i> Akash Kohli</div>
         </div>
 
-        <div id="dashboard" class="tab-content">
-            <div class="section-box">
-                <div class="section-title">
-                    RECENT TRANSACTIONS
-                    <button class="btn-add">View All</button>
+        <div class="form-box">
+            <h3 style="margin-bottom: 20px; font-family: 'Orbitron';">ADD NEW MATCH</h3>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>MATCH TITLE</label>
+                    <input type="text" id="mTitle" placeholder="e.g. Solo CS Night">
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Amount</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#667788</td>
-                            <td>₹200.00</td>
-                            <td>Deposit</td>
-                            <td><span class="status-pill pill-active">Success</span></td>
-                            <td>2 mins ago</td>
-                        </tr>
-                        <tr>
-                            <td>#992233</td>
-                            <td>₹500.00</td>
-                            <td>Withdraw</td>
-                            <td><span class="status-pill pill-pending">Pending</span></td>
-                            <td>15 mins ago</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="matches" class="tab-content" style="display: none;">
-            <div class="section-box">
-                <div class="section-title">
-                    ACTIVE TOURNAMENTS
-                    <button class="btn-add" onclick="addNewMatch()">+ ADD NEW MATCH</button>
+                <div class="input-group">
+                    <label>MATCH MODE</label>
+                    <select id="mMode">
+                        <option value="1v1">1 V 1 (Solo)</option>
+                        <option value="2v2">2 V 2 (Duo)</option>
+                        <option value="4v4">4 V 4 (Squad)</option>
+                    </select>
                 </div>
-                <table id="matchTable">
-                    <thead>
-                        <tr>
-                            <th>Match Title</th>
-                            <th>Type</th>
-                            <th>Entry</th>
-                            <th>Prize</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Solo Clash Squad</td>
-                            <td>1v1</td>
-                            <td>₹20</td>
-                            <td>₹40</td>
-                            <td class="action-btns">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash" style="color:var(--danger)"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="input-group">
+                    <label>ENTRY FEE (₹)</label>
+                    <input type="number" id="mEntry" placeholder="20">
+                </div>
+                <div class="input-group">
+                    <label>PRIZE POOL (₹)</label>
+                    <input type="number" id="mPrize" placeholder="40">
+                </div>
+                <div class="input-group">
+                    <label>MATCH TIME</label>
+                    <input type="datetime-local" id="mTime">
+                </div>
+                <div class="input-group">
+                    <label>MAP NAME</label>
+                    <input type="text" id="mMap" placeholder="Bermuda">
+                </div>
+                <button class="btn-submit" onclick="uploadMatch()">DEPLOY TOURNAMENT</button>
             </div>
         </div>
 
-        <div id="users" class="tab-content" style="display: none;">
-            <div class="section-box">
-                <div class="section-title">REGISTERED PLAYERS</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>Username</th>
-                            <th>Wallet</th>
-                            <th>Total Wins</th>
-                            <th>Block</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>667788</td>
-                            <td>Akash Kohli</td>
-                            <td>₹500</td>
-                            <td>12</td>
-                            <td><button style="color:var(--danger); background:none; border:none; cursor:pointer;">BAN</button></td>
-                        </tr>
+        <div class="table-container">
+            <h3 style="margin-bottom: 20px; font-family: 'Orbitron';">LIVE MATCHES ON DATABASE</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Mode</th>
+                        <th>Entry</th>
+                        <th>Prize</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="matchList">
                     </tbody>
-                </table>
-            </div>
+            </table>
         </div>
-
     </div>
 
     <script>
-        function showTab(tabId) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.style.display = 'none';
-            });
-            // Remove active class from nav
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
+        // --- Firebase Config ---
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-            // Show current tab
-            document.getElementById(tabId).style.display = 'block';
-            document.getElementById('tabTitle').innerText = tabId.toUpperCase() + " OVERVIEW";
+        // --- Upload Match Function ---
+        function uploadMatch() {
+            const title = document.getElementById('mTitle').value;
+            const mode = document.getElementById('mMode').value;
+            const entry = document.getElementById('mEntry').value;
+            const prize = document.getElementById('mPrize').value;
+            const time = document.getElementById('mTime').value;
+            const map = document.getElementById('mMap').value;
+
+            if(!title || !entry || !prize || !time) {
+                alert("Bhai, saari details bharo pehle!");
+                return;
+            }
+
+            const matchId = Date.now(); // Unique ID using timestamp
             
-            // Add active class to clicked nav
-            event.currentTarget.classList.add('active');
+            // Saving to Firebase
+            database.ref('matches/' + matchId).set({
+                matchId: matchId,
+                title: title,
+                mode: mode,
+                entry: entry,
+                prize: prize,
+                time: time,
+                map: map,
+                status: "upcoming"
+            }).then(() => {
+                alert("Match Successfully Added!");
+                location.reload(); // Refresh to see new match
+            });
         }
 
-        function addNewMatch() {
-            let title = prompt("Enter Match Title:");
-            if(title) {
-                let table = document.getElementById('matchTable').getElementsByTagName('tbody')[0];
-                let row = table.insertRow();
-                row.innerHTML = `<td>${title}</td><td>Solo</td><td>₹10</td><td>₹20</td><td class="action-btns"><i class="fas fa-edit"></i><i class="fas fa-trash" style="color:var(--danger)"></i></td>`;
+        // --- Load Matches from Firebase ---
+        database.ref('matches').on('value', (snapshot) => {
+            const list = document.getElementById('matchList');
+            list.innerHTML = ""; // Clear existing
+            
+            snapshot.forEach((child) => {
+                const data = child.val();
+                let row = `
+                    <tr>
+                        <td>${data.title}</td>
+                        <td><span class="badge badge-${data.mode}">${data.mode.toUpperCase()}</span></td>
+                        <td>₹${data.entry}</td>
+                        <td>₹${data.prize}</td>
+                        <td><i class="fas fa-trash delete-btn" onclick="deleteMatch('${data.matchId}')"></i></td>
+                    </tr>
+                `;
+                list.innerHTML += row;
+            });
+        });
+
+        // --- Delete Function ---
+        function deleteMatch(id) {
+            if(confirm("Are you sure to delete this match?")) {
+                database.ref('matches/' + id).remove();
             }
         }
     </script>
