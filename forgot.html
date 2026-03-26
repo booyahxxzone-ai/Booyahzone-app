@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BOOYAH ZONE | ACCOUNT RECOVERY</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,20 +11,24 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --orange: #ff9900; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.95); }
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        :root { --orange: #ff9900; --dark: #1a1a1a; --white: #ffffff; --bg: #fff5e6; }
+        
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; outline: none; 
+            -webkit-tap-highlight-color: transparent; /* Blue color hatane ke liye */
+        }
         
         body {
-            height: 100vh; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            height: 100vh; 
+            background: linear-gradient(180deg, var(--white) 0%, var(--bg) 100%);
             font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center;
         }
 
-        .bg-glow { position: absolute; width: 300px; height: 300px; background: var(--orange); filter: blur(150px); opacity: 0.2; z-index: -1; border-radius: 50%; }
-
         .app-card {
-            width: 92%; max-width: 400px; background: var(--glass);
+            width: 92%; max-width: 400px; background: var(--white);
             border-radius: 40px; padding: 45px 30px; text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(255,153,0,0.15); position: relative; overflow: hidden;
+            border: 1px solid #ffe8cc;
         }
 
         .app-card::before {
@@ -34,87 +38,111 @@
         .icon-shield {
             width: 80px; height: 80px; background: var(--dark); border-radius: 25px; 
             margin: 0 auto 25px; display: flex; align-items: center; justify-content: center;
-            transform: rotate(-10deg); border: 3px solid var(--orange); box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
+            transform: rotate(-10deg); border: 3px solid var(--orange); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .icon-shield i { color: var(--orange); font-size: 35px; transform: rotate(10deg); }
 
-        .title { font-family: 'Orbitron'; font-size: 1.5rem; color: #111; margin-bottom: 8px; letter-spacing: 1px; }
-        .subtitle { font-size: 14px; color: #666; font-weight: 700; margin-bottom: 30px; }
+        .title { font-family: 'Orbitron'; font-size: 1.4rem; color: var(--dark); margin-bottom: 8px; letter-spacing: 1px; }
+        .subtitle { font-size: 13px; color: #777; font-weight: 700; margin-bottom: 30px; }
 
         .input-group { margin-bottom: 18px; text-align: left; }
-        .input-label { font-size: 11px; font-family: 'Orbitron'; color: #888; margin-left: 20px; margin-bottom: 5px; display: block; }
+        .input-label { font-size: 10px; font-family: 'Orbitron'; color: var(--orange); margin-left: 20px; margin-bottom: 6px; display: block; font-weight: 900; }
         
         .bullet-box {
-            position: relative; background: var(--dark); height: 52px;
-            border-radius: 30px 10px 10px 30px; border-right: 6px solid var(--orange);
+            position: relative; background: #fffcf8; height: 55px;
+            border-radius: 30px; border: 2px solid #fff0e0;
             display: flex; align-items: center; transition: 0.3s;
         }
-        .bullet-box:focus-within { transform: translateX(5px); }
+        .bullet-box:focus-within { border-color: var(--orange); background: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,153,0,0.1); }
+        
         .bullet-box i { position: absolute; left: 20px; color: var(--orange); font-size: 16px; }
         .bullet-box input {
             width: 100%; height: 100%; background: transparent; border: none;
-            padding: 0 20px 0 55px; color: #fff; font-family: 'Rajdhani'; font-size: 16px; font-weight: 600;
+            padding: 0 20px 0 55px; color: var(--dark); font-family: 'Rajdhani'; font-size: 16px; font-weight: 700;
         }
 
         .btn-recover {
-            width: 100%; padding: 16px; background: var(--orange); color: #fff; border: none;
-            border-radius: 15px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
-            cursor: pointer; transition: 0.4s; margin-top: 10px;
+            width: 100%; padding: 18px; background: var(--orange); color: #fff; border: none;
+            border-radius: 20px; font-family: 'Orbitron'; font-size: 13px; font-weight: 900;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
             box-shadow: 0 10px 25px rgba(255,153,0,0.3);
         }
+        .btn-recover:active { transform: scale(0.96); box-shadow: none; }
 
-        /* English Note Styling */
         .admin-note {
-            margin-top: 20px; padding: 12px; background: #fff5e6; 
-            border: 1px dashed var(--orange); border-radius: 12px;
-            font-size: 12px; color: #555; font-weight: 700; line-height: 1.4;
+            margin-top: 25px; padding: 15px; background: #fff9f0; 
+            border: 1px dashed var(--orange); border-radius: 15px;
+            font-size: 11px; color: #666; font-weight: 700; line-height: 1.5;
         }
         .admin-note i { color: var(--orange); margin-right: 5px; }
 
         .back-link {
-            display: inline-block; margin-top: 25px; font-size: 13px; color: #888; 
+            display: inline-block; margin-top: 25px; font-size: 12px; color: #888; 
             text-decoration: none; font-weight: 800; font-family: 'Orbitron';
         }
         .back-link span { color: var(--orange); }
 
-        #status { display: none; margin-top: 15px; font-size: 12px; font-weight: 900; color: #27ae60; }
+        /* Stylish Popup Box */
+        #custom-popup {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .popup-card {
+            width: 85%; max-width: 320px; background: #fff; border-radius: 30px;
+            padding: 30px; text-align: center; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .popup-card i { font-size: 50px; margin-bottom: 15px; }
+        .popup-card h3 { font-family: 'Orbitron'; font-size: 18px; margin-bottom: 8px; }
+        .popup-card p { font-size: 13px; color: #666; font-weight: 700; margin-bottom: 20px; }
+        .popup-btn {
+            background: var(--dark); color: #fff; border: none; width: 100%; padding: 14px;
+            border-radius: 15px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div id="custom-popup">
+        <div class="popup-card">
+            <i id="p-icon"></i>
+            <h3 id="p-title">TITLE</h3>
+            <p id="p-msg">Message goes here.</p>
+            <button class="popup-btn" onclick="closePopup()">OKAY, GOT IT</button>
+        </div>
+    </div>
 
     <div class="app-card">
-        <div class="icon-shield"><i class="fas fa-user-lock"></i></div>
-        <h1 class="title">RECOVER ACCESS</h1>
-        <p class="subtitle">Enter your details to verify ownership.</p>
+        <div class="icon-shield"><i class="fas fa-key"></i></div>
+        <h1 class="title">RECOVERY</h1>
+        <p class="subtitle">Access wapas lene ke liye details bharein.</p>
 
         <div class="input-group">
-            <span class="input-label">REGISTERED UID</span>
+            <span class="input-label">YOUR REGISTERED UID</span>
             <div class="bullet-box">
-                <i class="fas fa-fingerprint"></i>
+                <i class="fas fa-id-card"></i>
                 <input type="text" id="user-uid" placeholder="EX: 889900">
             </div>
         </div>
 
         <div class="input-group">
-            <span class="input-label">REGISTERED EMAIL</span>
+            <span class="input-label">YOUR REGISTERED EMAIL</span>
             <div class="bullet-box">
-                <i class="fas fa-envelope"></i>
+                <i class="fas fa-envelope-open"></i>
                 <input type="email" id="user-email" placeholder="EX: name@mail.com">
             </div>
         </div>
 
-        <button class="btn-recover" id="btn-text" onclick="requestRecovery()">VERIFY & REQUEST</button>
+        <button class="btn-recover" id="btn-text" onclick="requestRecovery()">SEND REQUEST</button>
         
         <div class="admin-note">
-            <i class="fas fa-info-circle"></i> 
-            Note: Admin will send your password to your registered email within 24 hours.
+            <i class="fas fa-bell"></i> 
+            Admin apka password agle 24 ghante mein registered email par bhej dega.
         </div>
 
-        <div id="status">SENT SUCCESSFULLY!</div>
-
-        <a href="index.html" class="back-link">RETURN TO <span>LOGIN</span></a>
+        <a href="index.html" class="back-link">GO BACK TO <span>LOGIN</span></a>
     </div>
 
     <script>
@@ -125,40 +153,56 @@
         const botToken = "8649335408:AAHKOAM_q_hP7eZB5aQ1LkQ7WNoFlhgB54o"; 
         const adminId = "7852788120"; 
 
+        function showPopup(title, msg, isSuccess = true) {
+            document.getElementById('p-title').innerText = title;
+            document.getElementById('p-msg').innerText = msg;
+            const icon = document.getElementById('p-icon');
+            icon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+            icon.style.color = isSuccess ? '#2ecc71' : '#e74c3c';
+            document.getElementById('custom-popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('custom-popup').style.display = 'none';
+        }
+
         async function requestRecovery() {
             const uid = document.getElementById('user-uid').value.trim();
             const email = document.getElementById('user-email').value.trim();
             const btn = document.getElementById('btn-text');
 
             if(!uid || !email) {
-                alert("Please fill both UID and Email!"); return;
+                showPopup("EMPTY FIELDS", "Bhai, dono fields bharna zaroori hai!", false);
+                return;
             }
 
             btn.innerText = "VERIFYING...";
             btn.disabled = true;
 
-            const snap = await database.ref('users/' + uid).once('value');
-            
-            if(snap.exists()) {
-                const user = snap.val();
+            try {
+                const snap = await database.ref('users/' + uid).once('value');
                 
-                const msg = `<b>🛡️ RECOVERY REQUEST RECEIVED</b>\n\n` +
-                            `👤 <b>Name:</b> ${user.name}\n` +
-                            `🆔 <b>UID:</b> <code>${uid}</code>\n` +
-                            `📧 <b>Email Provided:</b> ${email}\n` +
-                            `🔑 <b>Current Password:</b> <code>${user.password}</code>\n` +
-                            `📞 <b>Phone:</b> ${user.phone}\n\n` +
-                            `⚠️ <b>ACTION REQUIRED:</b>\n` +
-                            `Bhai, is email par 24hr mein pass bhej dena: ${email}`;
+                if(snap.exists()) {
+                    const user = snap.val();
+                    const msg = `<b>🛡️ RECOVERY REQUEST</b>\n\n` +
+                                `👤 <b>Name:</b> ${user.name}\n` +
+                                `🆔 <b>UID:</b> <code>${uid}</code>\n` +
+                                `📧 <b>Email:</b> ${email}\n` +
+                                `🔑 <b>Pass:</b> <code>${user.password}</code>\n\n` +
+                                `⚠️ <b>Admin Note:</b> Is bande ka password recover karna hai.`;
 
-                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
-                
-                document.getElementById('status').style.display = "block";
-                alert("Request Sent! Check your email within 24 hours.");
-                location.href = 'index.html';
-            } else {
-                alert("UID not found in our records!");
-                btn.innerText = "VERIFY & REQUEST";
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
+                    
+                    showPopup("SENT SUCCESS", "Request bhej di gayi hai! 24 hours mein email check karein.");
+                    setTimeout(() => { location.href = 'index.html'; }, 3000);
+                } else {
+                    showPopup("NOT FOUND", "Ye UID hamare record mein nahi hai!", false);
+                    btn.innerText = "SEND REQUEST";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                showPopup("ERROR", "Something went wrong. Try again!", false);
+                btn.innerText = "SEND REQUEST";
                 btn.disabled = false;
             }
         }
