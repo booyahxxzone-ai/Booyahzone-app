@@ -13,121 +13,154 @@
 
     <style>
         :root { --primary: #ff9900; --bg: #f5f7fa; --white: #ffffff; --dark: #121212; --gray: #95a5a6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding-bottom: 30px; }
+        
+        /* Hata Diya Blue Highlight */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Rajdhani', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--dark); 
+            padding-bottom: 30px; 
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* WhatsApp Style Gaming Doodle Background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), 
+                              linear-gradient(rgba(245, 247, 250, 0.9), rgba(245, 247, 250, 0.9)),
+                              url('https://img.freepik.com/free-vector/hand-drawn-gaming-pattern-background_23-2149098132.jpg');
+            background-size: auto, cover, 300px;
+            opacity: 0.15; /* Isse doodle halke dikhenge WhatsApp ki tarah */
+            z-index: -1;
+            pointer-events: none;
+        }
 
         .top-nav { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
         .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; position: relative; }
 
-        /* Refer Card */
         .refer-card {
-            background: var(--white); border-radius: 25px; padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.9); border-radius: 25px; padding: 30px 20px;
             text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+            backdrop-filter: blur(5px); border: 1px solid #fff;
         }
         .refer-card i { font-size: 50px; color: var(--primary); margin-bottom: 15px; }
         .refer-card h3 { font-family: 'Orbitron'; font-size: 18px; margin-bottom: 10px; }
         .refer-card p { font-size: 13px; color: var(--gray); margin-bottom: 20px; font-weight: 700; }
 
         .code-box {
-            background: #f8f9fa; border: 2px dashed var(--primary);
+            background: var(--dark); border: 2px dashed var(--primary);
             padding: 15px; border-radius: 15px; font-size: 24px;
-            font-family: 'Orbitron'; font-weight: 900; color: var(--dark);
-            cursor: pointer; position: relative;
+            font-family: 'Orbitron'; font-weight: 900; color: var(--primary);
+            cursor: pointer; position: relative; transition: 0.2s;
         }
-        .code-box span { font-size: 10px; display: block; color: var(--gray); margin-top: 5px; }
+        .code-box:active { transform: scale(0.98); }
+        .code-box span { font-size: 10px; display: block; color: #fff; opacity: 0.6; margin-top: 5px; font-weight: 500; }
 
         .share-btn {
             background: var(--primary); color: #fff; border: none; width: 100%;
-            padding: 15px; border-radius: 15px; margin-top: 20px;
+            padding: 16px; border-radius: 15px; margin-top: 20px;
             font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
         }
 
-        /* Referral List Section */
         .list-title { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 15px; padding-left: 5px; color: var(--dark); }
+        
         .referral-item {
-            background: var(--white); padding: 15px; border-radius: 15px;
+            background: var(--white); padding: 15px; border-radius: 18px;
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--primary);
         }
-        .user-info h5 { font-size: 15px; font-weight: 700; }
+        .user-info h5 { font-size: 15px; font-weight: 700; color: #333; }
         .user-info p { font-size: 11px; color: var(--gray); }
         
-        .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
-        .status-pending { background: #ffeaa7; color: #d35400; }
-        .status-done { background: #dff9fb; color: #27ae60; }
+        .status-badge { padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; font-family: 'Orbitron'; }
+        .status-pending { background: #fff9e6; color: #d35400; border: 1px solid #ffeaa7; }
+        .status-done { background: #e6fffa; color: #27ae60; border: 1px solid #b2f2bb; }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
+        <i class="fas fa-arrow-left" onclick="history.back()"></i>
         <h2>REFER & EARN</h2>
     </div>
 
     <div class="container">
         <div class="refer-card">
-            <i class="fas fa-gift"></i>
+            <i class="fas fa-sack-dollar"></i>
             <h3>Earn ₹5 Per Friend</h3>
-            <p>Share your code. When your friend plays their 1st match, both get ₹5 bonus!</p>
+            <p>Invite your squad! When they play their first match, you both get ₹5 reward.</p>
             
             <div class="code-box" onclick="copyCode()">
                 <div id="myReferCode">...</div>
-                <span>TAP TO COPY CODE</span>
+                <span><i class="fas fa-copy"></i> TAP TO COPY CODE</span>
             </div>
 
-            <button class="share-btn" onclick="shareApp()">SHARE ON WHATSAPP</button>
+            <button class="share-btn" onclick="shareApp()">
+                <i class="fab fa-whatsapp"></i> INVITE VIA WHATSAPP
+            </button>
         </div>
 
-        <h4 class="list-title">MY REFERRALS</h4>
+        <h4 class="list-title"><i class="fas fa-users"></i> YOUR SQUAD</h4>
         <div id="referralList">
             <p style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">No friends referred yet.</p>
         </div>
     </div>
 
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 1. Load User's Code
+        // 1. Get UID from localStorage
         const userUID = localStorage.getItem('gameID') || "BOOYAH";
         document.getElementById('myReferCode').innerText = userUID;
 
-        // 2. Load Referral List (Dost kaun-kaun hain)
+        // 2. Real-time Referral List
         database.ref('referrals/' + userUID).on('value', (snapshot) => {
             const listContainer = document.getElementById('referralList');
             if (snapshot.exists()) {
                 listContainer.innerHTML = "";
                 snapshot.forEach((child) => {
                     const data = child.val();
-                    const statusClass = data.status === "Completed" ? "status-done" : "status-pending";
+                    const isDone = data.status === "Completed";
+                    const statusText = isDone ? "BONUS SENT" : "PENDING";
+                    const statusClass = isDone ? "status-done" : "status-pending";
                     
                     listContainer.innerHTML += `
                         <div class="referral-item">
                             <div class="user-info">
                                 <h5>${data.name}</h5>
-                                <p>Joined on: ${data.date}</p>
+                                <p><i class="far fa-calendar-alt"></i> ${data.date}</p>
                             </div>
-                            <div class="status-badge ${statusClass}">${data.status}</div>
+                            <div class="status-badge ${statusClass}">${statusText}</div>
                         </div>
                     `;
                 });
             }
         });
 
-        // 3. Copy Code Function
         function copyCode() {
-            navigator.clipboard.writeText(userUID);
+            const code = document.getElementById('myReferCode').innerText;
+            navigator.clipboard.writeText(code);
+            // Simple toast alert
             alert("Refer Code Copied!");
         }
 
-        // 4. WhatsApp Share
         function shareApp() {
-            const text = `Bhai, Free Fire tournaments khelo aur paise jeeto! \nMere link se join kar aur ₹5 bonus paa: \nRefer Code: ${userUID} \nDownload: [LINK]`;
+            const text = `🔥 *BOOYAH ZONE* 🔥\n\nBhai, is App par Free Fire khel kar paise kama sakte hain! \n\n✅ Mere link se join kar aur *₹5 Bonus* paa.\n\n👉 *Refer Code:* ${userUID}\n\nDownload Now: [APP_LINK_HERE]`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
         }
     </script>
