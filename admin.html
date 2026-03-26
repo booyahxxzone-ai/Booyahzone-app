@@ -1,80 +1,74 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOYAH MASTER | SUPER ADMIN</title>
+    <title>RISE UP | SUPER ADMIN</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root {
-            --primary: #ff9900; --bg: #f4f7f6; --white: #ffffff;
-            --text: #2d3436; --success: #27ae60; --danger: #d63031; --ongoing: #0984e3; --dark: #1a1a1a;
-        }
-
+        :root { --primary: #ff9900; --bg: #f4f7f6; --white: #ffffff; --text: #2d3436; --success: #27ae60; --danger: #d63031; --dark: #1a1a1a; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
 
         /* Sidebar */
-        .sidebar { width: 260px; background: var(--white); height: 100vh; position: fixed; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; z-index: 100; }
-        .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; }
-        .side-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
-        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; border-left: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
+        .sidebar { width: 260px; background: var(--white); height: 100vh; position: fixed; border-right: 1px solid #e0e0e0; z-index: 100; }
+        .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; font-family: 'Orbitron'; color: var(--primary); font-size: 14px; }
+        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700; border-left: 4px solid transparent; }
+        .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
 
         /* Main Content */
-        .main { margin-left: 260px; flex: 1; padding: 30px; }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .main { margin-left: 260px; flex: 1; padding: 30px; width: calc(100% - 260px); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
 
-        .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #eee; }
+        .card { background: var(--white); border-radius: 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        h2 { font-family: 'Orbitron'; font-size: 18px; margin-bottom: 20px; color: var(--dark); border-left: 4px solid var(--primary); padding-left: 10px; }
+
+        /* Tables & Inputs */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #f8f9fa; color: #b2bec3; font-size: 11px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f1f1; font-weight: 600; font-size: 13px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; outline: none; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; padding: 12px; color: #b2bec3; font-size: 11px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 13px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 6px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; color: white; font-size: 10px; }
+        .btn-p { background: var(--primary); padding: 15px; width: 100%; font-size: 14px; }
+        .btn-green { background: var(--success); }
+        .btn-red { background: var(--danger); }
+        .btn-blue { background: #0984e3; }
 
-        .btn { padding: 8px 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 10px; color: white; margin: 2px; }
-        .btn-primary { background: var(--primary); width: 100%; padding: 15px; font-size: 14px; }
-        .btn-approve { background: var(--success); }
-        .btn-reject { background: var(--danger); }
-        .btn-room { background: #6c5ce7; }
-        .btn-edit { background: #0984e3; }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 10px; font-weight: 600; }
-
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 400px; text-align: center; }
-        
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; text-transform: uppercase; color: white; }
-        .bg-pending { background: #ff9900; }
+        /* Status Badges */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; color: white; }
+        .bg-pending { background: #f39c12; }
         .bg-approved { background: #27ae60; }
-        .bg-rejected { background: #d63031; }
+
+        /* Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-box { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="side-header"><h1>RISE UP ADMIN</h1></div>
-        <div class="nav-item active" onclick="showTab('add-match', this)"><i class="fas fa-plus-circle"></i> <span>Add Match</span></div>
-        <div class="nav-item" onclick="showTab('live-matches', this)"><i class="fas fa-gamepad"></i> <span>Manage Matches</span></div>
-        <div class="nav-item" onclick="showTab('deposits', this)"><i class="fas fa-hand-holding-usd"></i> <span>Deposits</span></div>
-        <div class="nav-item" onclick="showTab('withdrawals', this)"><i class="fas fa-wallet"></i> <span>Withdrawals</span></div>
-        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> <span>User Database</span></div>
+        <div class="side-header"><h2>RISE UP PANEL</h2></div>
+        <div class="nav-item active" onclick="showTab('add-match', this)"><i class="fas fa-plus"></i> Add Match</div>
+        <div class="nav-item" onclick="showTab('live-matches', this)"><i class="fas fa-gamepad"></i> Manage Matches</div>
+        <div class="nav-item" onclick="showTab('deposits', this)"><i class="fas fa-coins"></i> Deposits</div>
+        <div class="nav-item" onclick="showTab('withdrawals', this)"><i class="fas fa-wallet"></i> Withdrawals</div>
+        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> Users</div>
     </div>
 
     <div class="main">
         <div id="add-match" class="tab-content active">
             <div class="card">
-                <h2 style="font-family:'Orbitron'; margin-bottom:20px;">DEPLOY TOURNAMENT</h2>
-                <div class="grid-2">
-                    <input type="text" id="mTitle" placeholder="Match Name">
+                <h2>CREATE TOURNAMENT</h2>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <input type="text" id="mTitle" placeholder="Match Name (e.g. Solo Elite)">
                     <select id="mMode">
                         <option value="Solo">Solo (1v1)</option>
                         <option value="Duo">Duo (2v2)</option>
@@ -83,24 +77,24 @@
                     <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
                     <input type="number" id="mPrize" placeholder="Total Prize (₹)">
                     <input type="datetime-local" id="mTime">
-                    <input type="text" id="mMap" value="Bermuda">
-                    <button class="btn btn-primary" style="grid-column: span 2;" onclick="uploadMatch()">CREATE MATCH NOW</button>
+                    <input type="text" id="mMap" placeholder="Map Name" value="Bermuda">
                 </div>
+                <button class="btn btn-p" onclick="uploadMatch()">PUBLISH MATCH</button>
             </div>
         </div>
 
         <div id="live-matches" class="tab-content">
             <div class="card">
-                <h2 style="font-family:'Orbitron';">MATCH MANAGEMENT</h2>
-                <div style="display:flex; gap:10px; margin: 15px 0;">
-                    <button class="btn btn-primary" style="width:auto;" onclick="loadMatches('upcoming')">UPCOMING</button>
-                    <button class="btn btn-room" style="width:auto;" onclick="loadMatches('live')">ONGOING</button>
-                    <button class="btn btn-approve" style="width:auto;" onclick="loadMatches('finished')">FINISHED</button>
+                <h2>MANAGE MATCHES</h2>
+                <div style="margin-bottom:15px;">
+                    <button class="btn btn-blue" onclick="loadMatches('upcoming')">UPCOMING</button>
+                    <button class="btn btn-p" onclick="loadMatches('live')">ONGOING</button>
+                    <button class="btn btn-green" onclick="loadMatches('finished')">FINISHED</button>
                 </div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>Title</th><th>Room Details</th><th>Players</th><th>Action</th></tr></thead>
-                        <tbody id="matchTableBody"></tbody>
+                        <thead><tr><th>Title</th><th>Players</th><th>Details</th><th>Actions</th></tr></thead>
+                        <tbody id="matchTable"></tbody>
                     </table>
                 </div>
             </div>
@@ -108,49 +102,54 @@
 
         <div id="deposits" class="tab-content">
             <div class="card">
-                <h2>DEPOSIT REQUESTS (Recent 50)</h2>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>User/Name</th><th>Amount</th><th>UTR Number</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="depositTable"></tbody>
-                    </table>
-                </div>
+                <h2>DEPOSIT REQUESTS</h2>
+                <table>
+                    <thead><tr><th>User</th><th>Amount</th><th>UTR</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="depositTable"></tbody>
+                </table>
             </div>
         </div>
 
         <div id="withdrawals" class="tab-content">
             <div class="card">
-                <h2>WITHDRAWAL REQUESTS</h2>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>User/Name</th><th>Amount</th><th>UPI ID</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="withdrawTable"></tbody>
-                    </table>
-                </div>
+                <h2>WITHDRAW REQUESTS</h2>
+                <table>
+                    <thead><tr><th>User</th><th>Amount</th><th>UPI</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="withdrawTable"></tbody>
+                </table>
             </div>
         </div>
 
         <div id="user-list" class="tab-content">
             <div class="card">
                 <h2>USER DATABASE</h2>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>Name</th><th>UID/Phone</th><th>Balance</th><th>Action</th></tr></thead>
-                        <tbody id="userTable"></tbody>
-                    </table>
-                </div>
+                <input type="text" id="userSearch" onkeyup="searchUser()" placeholder="🔍 Search User by Phone or Name...">
+                <table>
+                    <thead><tr><th>Name</th><th>Phone/UID</th><th>Balance</th><th>Action</th></tr></thead>
+                    <tbody id="userTable"></tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <div class="modal" id="roomModal">
-        <div class="modal-content">
-            <h3 style="font-family:'Orbitron';">SET ROOM ACCESS</h3>
-            <p id="roomMatchName" style="margin:10px 0; color:var(--primary); font-weight:bold;"></p>
-            <input type="text" id="roomIdInput" placeholder="Enter Room ID">
-            <input type="text" id="roomPassInput" placeholder="Enter Room Password">
-            <button class="btn btn-approve" onclick="saveRoomDetails()">SAVE & GO LIVE</button>
-            <button class="btn btn-reject" onclick="closeModal('roomModal')">CANCEL</button>
+        <div class="modal-box">
+            <h2 id="roomMName">ROOM ACCESS</h2>
+            <input type="text" id="rID" placeholder="Room ID">
+            <input type="text" id="rPS" placeholder="Room Pass">
+            <button class="btn btn-p" onclick="saveRoom()">SAVE & NOTIFY USERS</button>
+            <button class="btn btn-red" style="width:100%; margin-top:10px;" onclick="closeModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <div class="modal" id="playerModal">
+        <div class="modal-box">
+            <h2>JOINED PLAYERS</h2>
+            <table id="playerTable">
+                <thead><tr><th>Name</th><th>Game UID</th></tr></thead>
+                <tbody id="playerBody"></tbody>
+            </table>
+            <button class="btn btn-red" style="width:100%; margin-top:15px;" onclick="closeModal()">CLOSE</button>
         </div>
     </div>
 
@@ -164,106 +163,108 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
-
-            if(id === 'live-matches') loadMatches('upcoming');
-            if(id === 'deposits') loadTxn('deposits');
-            if(id === 'withdrawals') loadTxn('withdrawals');
-            if(id === 'user-list') loadUsers();
+            if(id==='live-matches') loadMatches('upcoming');
+            if(id==='deposits') loadTxn('deposits');
+            if(id==='withdrawals') loadTxn('withdrawals');
+            if(id==='user-list') loadUsers();
         }
 
-        // MATCH LOGIC
+        // --- MATCH FUNCTIONS ---
         function uploadMatch() {
-            const mId = "MATCH_" + Date.now();
+            const id = "M" + Date.now();
             const data = {
-                mId, title: document.getElementById('mTitle').value,
+                mId: id,
+                title: document.getElementById('mTitle').value,
                 mode: document.getElementById('mMode').value,
                 entry: document.getElementById('mEntry').value,
                 prize: document.getElementById('mPrize').value,
                 time: document.getElementById('mTime').value,
                 map: document.getElementById('mMap').value,
-                status: "upcoming", roomId: "", roomPass: ""
+                status: "upcoming",
+                roomId: "", roomPass: ""
             };
-            db.ref('matches/' + mId).set(data).then(() => alert("Match Live!"));
+            db.ref('matches/' + id).set(data).then(() => alert("Match Created!"));
         }
 
         function loadMatches(status) {
             db.ref('matches').orderByChild('status').equalTo(status).on('value', snap => {
-                const body = document.getElementById('matchTableBody');
+                const body = document.getElementById('matchTable');
                 body.innerHTML = "";
                 snap.forEach(child => {
                     const m = child.val();
-                    const players = m.players ? Object.keys(m.players).length : 0;
+                    const pCount = m.players ? Object.keys(m.players).length : 0;
                     body.innerHTML += `<tr>
-                        <td>${m.title}</td>
-                        <td style="color:#6c5ce7;">${m.roomId || 'Wait'} / ${m.roomPass || 'Wait'}</td>
-                        <td>${players} Joined</td>
+                        <td>${m.title}<br><small>${m.mode} | ${m.map}</small></td>
+                        <td><button class="btn btn-blue" onclick="viewPlayers('${m.mId}')">${pCount} PLAYERS</button></td>
+                        <td>ID: ${m.roomId || '--'}<br>PS: ${m.roomPass || '--'}</td>
                         <td>
-                            <button class="btn btn-room" onclick="openRoomModal('${m.mId}','${m.title}')">SET ROOM</button>
-                            <button class="btn btn-reject" onclick="deleteM('${m.mId}')">DEL</button>
+                            <button class="btn btn-p" onclick="openRoom('${m.mId}','${m.title}')">SET ROOM</button>
+                            <button class="btn btn-green" onclick="updateStatus('${m.mId}','finished')">FINISH</button>
+                            <button class="btn btn-red" onclick="deleteM('${m.mId}')">DEL</button>
                         </td>
                     </tr>`;
                 });
             });
         }
 
-        // TRANSACTION LOGIC (FIXED)
+        function viewPlayers(mId) {
+            db.ref(`matches/${mId}/players`).once('value', snap => {
+                const body = document.getElementById('playerBody');
+                body.innerHTML = "";
+                snap.forEach(child => {
+                    const p = child.val();
+                    body.innerHTML += `<tr><td>${p.playerName || p.userPhone}</td><td>${p.gameUID}</td></tr>`;
+                });
+                document.getElementById('playerModal').style.display = 'flex';
+            });
+        }
+
+        // --- TRANSACTION FUNCTIONS ---
         function loadTxn(path) {
-            db.ref(path).limitToLast(50).on('value', snap => {
+            db.ref(path).on('value', snap => {
                 const body = document.getElementById(path === 'deposits' ? 'depositTable' : 'withdrawTable');
                 body.innerHTML = "";
                 snap.forEach(child => {
                     const t = child.val();
-                    const key = child.key;
-                    
-                    let actionBtns = t.status === 'pending' ? `
-                        <button class="btn btn-approve" onclick="approveTxn('${path}','${key}','${t.userUID}',${t.amount})">✔</button>
-                        <button class="btn btn-reject" onclick="rejectTxn('${path}','${key}','${t.userUID}',${t.amount})">✖</button>
-                    ` : `<i class="fas fa-check-double" style="color:#ccc"></i>`;
+                    const id = child.key;
+                    let actions = t.status === 'pending' ? 
+                        `<button class="btn btn-green" onclick="approveTxn('${path}','${id}','${t.userUID}',${t.amount})">✔</button>
+                         <button class="btn btn-red" onclick="rejectTxn('${path}','${id}','${t.userUID}',${t.amount})">✖</button>` : 'COMPLETED';
 
-                    if(path === 'deposits') {
-                        body.innerHTML = `<tr>
-                            <td>${t.userName}<br><small>${t.userUID}</small></td>
-                            <td>₹${t.amount}</td>
-                            <td style="color:blue;">${t.utr || 'N/A'}</td>
-                            <td><span class="status-badge bg-${t.status}">${t.status}</span></td>
-                            <td>${actionBtns}</td>
-                        </tr>` + body.innerHTML;
-                    } else {
-                        body.innerHTML = `<tr>
-                            <td>${t.userName}<br><small>${t.userUID}</small></td>
-                            <td>₹${t.amount}</td>
-                            <td>${t.upiID}</td>
-                            <td><span class="status-badge bg-${t.status}">${t.status}</span></td>
-                            <td>${actionBtns}</td>
-                        </tr>` + body.innerHTML;
-                    }
+                    body.innerHTML += `<tr>
+                        <td>${t.userName}<br><small>${t.userUID}</small></td>
+                        <td>₹${t.amount}</td>
+                        <td>${t.utr || t.upiID}</td>
+                        <td><span class="badge bg-${t.status}">${t.status}</span></td>
+                        <td>${actions}</td>
+                    </tr>`;
                 });
             });
         }
 
         async function approveTxn(path, id, uid, amt) {
-            const uRef = db.ref('users/'+uid);
             if(path === 'deposits') {
-                const snap = await uRef.child('balance').once('value');
-                const newBal = (Number(snap.val()) || 0) + Number(amt);
+                const uRef = db.ref('users/' + uid);
+                const uSnap = await uRef.once('value');
+                const newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
                 await uRef.update({ balance: newBal });
             }
-            await db.ref(path+'/'+id).update({ status: 'approved' });
-            alert("Approved Successfully!");
+            await db.ref(path + '/' + id).update({ status: 'approved' });
+            alert("Success!");
         }
 
         async function rejectTxn(path, id, uid, amt) {
             if(path === 'withdrawals') {
-                const uRef = db.ref('users/'+uid);
-                const snap = await uRef.child('balance').once('value');
-                const newBal = (Number(snap.val()) || 0) + Number(amt);
+                const uRef = db.ref('users/' + uid);
+                const uSnap = await uRef.once('value');
+                const newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
                 await uRef.update({ balance: newBal });
             }
-            await db.ref(path+'/'+id).update({ status: 'rejected' });
-            alert("Request Rejected!");
+            await db.ref(path + '/' + id).update({ status: 'rejected' });
+            alert("Rejected!");
         }
 
-        // USER LIST
+        // --- USER FUNCTIONS & SEARCH ---
         function loadUsers() {
             db.ref('users').on('value', snap => {
                 const body = document.getElementById('userTable');
@@ -271,30 +272,35 @@
                 snap.forEach(child => {
                     const u = child.val();
                     body.innerHTML += `<tr>
-                        <td>${u.name}</td><td>${u.uid}</td>
+                        <td>${u.name}</td><td>${child.key}</td>
                         <td style="color:green">₹${u.balance || 0}</td>
-                        <td><button class="btn btn-reject" onclick="deleteUser('${u.uid}')">BAN</button></td>
+                        <td><button class="btn btn-red" onclick="banUser('${child.key}')">BAN</button></td>
                     </tr>`;
                 });
             });
         }
 
-        // UTILS
-        let currentRoomId = "";
-        function openRoomModal(id, title) {
-            currentRoomId = id;
-            document.getElementById('roomMatchName').innerText = title;
-            document.getElementById('roomModal').style.display = 'flex';
+        function searchUser() {
+            const input = document.getElementById('userSearch').value.toLowerCase();
+            const rows = document.getElementById('userTable').getElementsByTagName('tr');
+            for (let row of rows) {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            }
         }
-        function saveRoomDetails() {
-            const rid = document.getElementById('roomIdInput').value;
-            const rps = document.getElementById('roomPassInput').value;
-            db.ref('matches/' + currentRoomId).update({ roomId: rid, roomPass: rps, status: 'live' })
-            .then(() => { alert("Room Updated!"); closeModal('roomModal'); });
+
+        // --- UTILS ---
+        let activeMId = "";
+        function openRoom(id, title) { activeMId = id; document.getElementById('roomMName').innerText = title; document.getElementById('roomModal').style.display = 'flex'; }
+        function saveRoom() {
+            const rid = document.getElementById('rID').value;
+            const rps = document.getElementById('rPS').value;
+            db.ref('matches/' + activeMId).update({ roomId: rid, roomPass: rps, status: 'live' }).then(() => { alert("Updated!"); closeModal(); });
         }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function updateStatus(id, s) { db.ref('matches/'+id).update({ status: s }); }
         function deleteM(id) { if(confirm("Delete Match?")) db.ref('matches/'+id).remove(); }
-        function deleteUser(uid) { if(confirm("Ban User?")) db.ref('users/'+uid).remove(); }
+        function banUser(uid) { if(confirm("Ban this User?")) db.ref('users/'+uid).remove(); }
+        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     </script>
 </body>
 </html>
