@@ -12,82 +12,78 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #f5f7fa; --dark: #121212; --white: #ffffff; --win: #27ae60; --lose: #e74c3c; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding-bottom: 100px; }
+        :root { --primary: #ff9900; --bg: #ffffff; --card-bg: #fff; --text: #1a1a1a; --gray: #888; --win: #27ae60; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        .header {
-            background: var(--dark); padding: 30px 20px; text-align: center; color: #fff;
-            border-radius: 0 0 30px 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        body { 
+            background: radial-gradient(circle at top right, #fff5e6 0%, #ffffff 60%);
+            color: var(--text); min-height: 100vh; padding-bottom: 30px;
         }
-        .header h2 { font-family: 'Orbitron'; font-size: 20px; letter-spacing: 1px; }
+
+        /* Top Header with Back Arrow */
+        .header {
+            background: #fff; padding: 18px 20px; display: flex; align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.08); border-bottom: 2px solid #fdf0d5;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header .back-btn { 
+            font-size: 20px; color: var(--text); cursor: pointer; padding: 5px 10px 5px 0; 
+            transition: 0.2s;
+        }
+        .header .back-btn:active { transform: scale(0.9); color: var(--primary); }
+        .header h2 { font-family: 'Orbitron'; font-size: 15px; letter-spacing: 1px; color: var(--text); flex: 1; text-align: center; margin-right: 30px; }
+        .header h2 i { color: var(--primary); margin-right: 5px; }
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* History Card Styles */
+        /* Match Card Style */
         .history-card {
-            background: var(--white); border-radius: 15px; padding: 15px; margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 5px solid #ccc;
+            background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1.5px solid #f0f0f0;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px;
+            transition: 0.2s;
         }
+        .history-card:active { transform: scale(0.98); }
 
-        /* Winner Special Effect */
-        .winner-card {
-            border-left: 5px solid var(--win);
-            background: linear-gradient(to right, #ffffff, #f0fff4);
-            position: relative; overflow: hidden;
-        }
-        .winner-card::after {
-            content: "WINNER"; position: absolute; top: 5px; right: -20px;
-            background: var(--win); color: #fff; font-size: 10px; font-weight: 900;
-            padding: 2px 25px; transform: rotate(45deg); font-family: 'Orbitron';
-        }
+        .match-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
+        .match-type { font-family: 'Orbitron'; font-size: 11px; color: var(--primary); background: #fff5e6; padding: 4px 10px; border-radius: 8px; font-weight: 900; }
+        .match-map { font-size: 10px; font-weight: 800; color: var(--gray); text-transform: uppercase; }
 
-        .match-info h4 { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 5px; }
-        .match-info p { font-size: 12px; color: #7f8c8d; font-weight: 700; }
-        
-        .match-status { text-align: right; }
-        .status-tag { font-family: 'Orbitron'; font-size: 12px; font-weight: 900; }
-        .win-text { color: var(--win); }
-        .lose-text { color: #95a5a6; }
+        .match-main { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+        .match-title { font-family: 'Orbitron'; font-size: 14px; color: #000; }
+        .match-price { text-align: right; }
+        .match-price h3 { font-family: 'Orbitron'; font-size: 17px; color: var(--text); }
+        .match-price p { font-size: 9px; font-weight: 900; color: var(--gray); }
+
+        .match-bottom { display: flex; justify-content: space-between; align-items: center; background: #fafafa; padding: 10px 15px; margin: 0 -18px -18px; }
+        .match-time { font-size: 10px; font-weight: 700; color: #666; }
+        .match-winner { font-size: 10px; font-weight: 800; color: var(--win); display: flex; align-items: center; gap: 5px; }
+
+        .booyah-badge {
+            position: absolute; top: 10px; right: -30px; background: var(--win); color: #fff;
+            font-family: 'Orbitron'; font-size: 9px; font-weight: 900; padding: 4px 35px;
+            transform: rotate(40deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
         /* Empty State */
-        .empty-history { text-align: center; padding: 50px 20px; color: #95a5a6; }
-        .empty-history i { font-size: 50px; margin-bottom: 10px; }
-
-        /* Bottom Nav (Same as Home) */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; height: 80px;
-            background: var(--white); display: flex; justify-content: space-around;
-            align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-            border-radius: 25px 25px 0 0; z-index: 1000;
-        }
-        .nav-item { text-align: center; text-decoration: none; color: #b2bec3; flex: 1; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-item span { font-size: 10px; font-weight: 800; font-family: 'Orbitron'; }
-        .nav-item.active { color: var(--primary); }
+        .empty-history { text-align: center; padding: 60px 20px; color: #ccc; }
+        .empty-history i { font-size: 60px; margin-bottom: 15px; color: #eee; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>BATTLE LOGS</h2>
+        <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
+        <h2><i class="fas fa-history"></i> BATTLE RECORDS</h2>
     </div>
 
     <div class="container" id="history-list">
         <div class="empty-history">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>Loading your battles...</p>
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <p style="font-family:'Orbitron'; font-size:12px; margin-top:10px;">FETCHING BATTLES...</p>
         </div>
     </div>
-
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item"><i class="fas fa-house"></i><span>Home</span></a>
-        <a href="refer.html" class="nav-item"><i class="fas fa-share-alt"></i><span>Refer</span></a>
-        <a href="profile.html" class="nav-item"><i class="fas fa-user-ninja"></i><span>Profile</span></a>
-        <a href="history.html" class="nav-item active"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
-        <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i><span>Wallet</span></a>
-    </nav>
 
     <script>
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
@@ -107,28 +103,39 @@
                         const isWinner = data.result === "WINNER";
                         
                         list.innerHTML += `
-                            <div class="history-card ${isWinner ? 'winner-card' : ''}">
-                                <div class="match-info">
-                                    <h4>${data.matchTitle || 'FREE FIRE MATCH'}</h4>
-                                    <p><i class="far fa-clock"></i> ${data.time || 'N/A'}</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> BERMUDA</p>
+                            <div class="history-card">
+                                ${isWinner ? '<div class="booyah-badge">BOOYAH</div>' : ''}
+                                <div class="match-top">
+                                    <span class="match-type">${data.mode || '1vs1'} BATTLE</span>
+                                    <span class="match-map"><i class="fas fa-map"></i> ${data.map || 'BERMUDA'}</span>
                                 </div>
-                                <div class="match-status">
-                                    <span class="status-tag ${isWinner ? 'win-text' : 'lose-text'}">
-                                        ${isWinner ? 'BOOYAH!' : 'PLAYED'}
-                                    </span>
-                                    <h3 style="margin-top:5px;">₹${data.entry || 0}</h3>
+                                <div class="match-main">
+                                    <div class="match-title">
+                                        <p style="font-size:10px; color:var(--gray); font-weight:800;">ID: #${child.key.substr(-5).toUpperCase()}</p>
+                                        <h4 style="margin-top:2px;">${data.matchTitle || 'BATTLE ROYALE'}</h4>
+                                    </div>
+                                    <div class="match-price">
+                                        <h3>₹${data.entry || 0}</h3>
+                                        <p>ENTRY FEE</p>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                                <div class="match-bottom">
+                                    <div class="match-time">
+                                        <i class="far fa-calendar-alt"></i> ${data.date || 'Today'} | ${data.time || '00:00'}
+                                    </div>
+                                    <div class="match-winner">
+                                        <i class="fas fa-crown"></i> 
+                                        <span>WINNER: ${data.winnerName || 'WAITING'}</span>
+                                    </div>
+                                </div>
+                            </div>`;
                     });
                 } else {
                     list.innerHTML = `
                         <div class="empty-history">
                             <i class="fas fa-ghost"></i>
-                            <p>No matches played yet!</p>
-                        </div>
-                    `;
+                            <p style="font-family:'Orbitron'; font-size:12px;">NO BATTLES FOUND!</p>
+                        </div>`;
                 }
             });
         }
