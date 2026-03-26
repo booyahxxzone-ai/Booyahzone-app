@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>1V1 ARENA | BOOYAH ZONE</title>
+    <title>1V1 ELITE ARENA</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,81 +12,86 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff8c00; --dark: #1a1a1a; }
+        :root { --primary: #ff8c00; --dark: #1a1a1a; --bg-grad: linear-gradient(135deg, #fff5e6 0%, #ffffff 50%, #fff0e0 100%); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
 
-        body { 
-            background: linear-gradient(135deg, #fff5e6 0%, #ffffff 50%, #fff0e0 100%);
-            background-attachment: fixed; min-height: 100vh; padding-bottom: 50px;
-        }
+        body { background: var(--bg-grad); background-attachment: fixed; min-height: 100vh; padding-bottom: 40px; }
 
         .header {
             background: #fff; padding: 15px 20px; display: flex; align-items: center; gap: 15px;
             position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(255,140,0,0.1);
         }
-        .header i { font-size: 22px; color: var(--primary); }
-        .header h2 { font-family: 'Orbitron'; font-size: 16px; }
+        .header i { font-size: 20px; color: var(--primary); cursor: pointer; }
+        .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
 
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
-        /* No Match Styling */
-        .no-match {
-            text-align: center; padding: 50px 20px; background: #fff; border-radius: 20px;
-            border: 2px dashed #ccc; margin-top: 50px;
-        }
-        .no-match i { font-size: 50px; color: #ddd; margin-bottom: 10px; }
-        .no-match p { font-weight: 700; color: #888; text-transform: uppercase; }
+        /* Empty State */
+        #noMatchBox { display: none; text-align: center; padding: 60px 20px; background: #fff; border-radius: 30px; border: 2px dashed #ff8c00; margin-top: 30px; }
+        #noMatchBox i { font-size: 50px; color: #ff8c00; opacity: 0.3; margin-bottom: 15px; }
+        #noMatchBox p { font-weight: 700; color: #666; font-size: 14px; }
 
         /* Match Card */
         .m-card {
             background: #fff; border-radius: 25px; margin-bottom: 20px; overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05); border: 1px solid rgba(255,140,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid rgba(255,140,0,0.15);
+            animation: fadeIn 0.4s ease;
         }
-        .m-head { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; color: #fff; font-family: 'Orbitron'; font-size: 11px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .m-head { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .m-head span { color: #fff; font-family: 'Orbitron'; font-size: 10px; }
+        .m-timer { color: var(--primary); font-weight: 800; font-size: 12px; }
+
         .m-body { padding: 20px; }
+        .vs-row { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; }
+        .vs-box { text-align: center; }
+        .vs-box i { font-size: 28px; color: #eee; margin-bottom: 5px; }
+        .vs-badge { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; box-shadow: 0 4px 10px rgba(255,140,0,0.4); }
 
-        .vs-ui { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; }
-        .vs-circle { width: 35px; height: 35px; background: var(--primary); border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .slot-info { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; margin-bottom: 5px; color: #555; }
+        .slot-bar { width: 100%; height: 8px; background: #f0f0f0; border-radius: 10px; overflow: hidden; margin-bottom: 15px; }
+        .slot-fill { height: 100%; background: linear-gradient(90deg, #ff8c00, #ff4500); width: 0%; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .slot-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; }
-        .slot-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s; }
+        .footer-row { display: flex; justify-content: space-between; align-items: center; background: #fffaf5; padding: 12px 18px; border-radius: 18px; border: 1px solid #ffe8cc; }
+        .prize-txt small { display: block; font-size: 9px; color: #888; font-weight: 700; }
+        .prize-txt b { font-size: 18px; color: #27ae60; font-family: 'Orbitron'; }
 
-        .prize-box { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: #fff9f0; padding: 12px; border-radius: 15px; 
-        }
-        .join-btn { 
-            background: var(--primary); color: #fff; border: none; padding: 10px 20px; 
-            border-radius: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
-        }
-        .join-btn:disabled { background: #ccc; }
+        .join-btn { background: var(--primary); color: #fff; border: none; padding: 10px 22px; border-radius: 12px; font-family: 'Orbitron'; font-size: 13px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(255,140,0,0.3); }
+        .join-btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
 
-        /* Modal */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: #fff; width: 90%; max-width: 360px; border-radius: 25px; padding: 25px; text-align: center; border: 3px solid var(--primary); }
-        .inp { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 15px; font-weight: 800; text-align: center; font-size: 16px; }
+        /* Payment Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: #fff; width: 90%; max-width: 360px; border-radius: 30px; padding: 25px; text-align: center; border: 3px solid var(--primary); }
+        .uid-input { width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 15px; margin: 15px 0; text-align: center; font-weight: 800; font-size: 18px; color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <i class="fas fa-chevron-left" onclick="history.back()"></i>
-        <h2>1V1 BATTLE ARENA</h2>
-    </header>
-
-    <div class="container" id="matchArea">
-        <div class="no-match"><i class="fas fa-ghost"></i><p>Loading Matches...</p></div>
+    <div class="header">
+        <i class="fas fa-arrow-left" onclick="history.back()"></i>
+        <h2>1V1 <span>ARENA</span></h2>
     </div>
 
-    <div class="modal" id="pModal">
+    <div class="container" id="matchList"></div>
+
+    <div class="container">
+        <div id="noMatchBox">
+            <i class="fas fa-gamepad"></i>
+            <p>NO 1V1 MATCHES AVAILABLE RIGHT NOW</p>
+            <span style="font-size:11px; color:#999;">Check back later for new battles!</span>
+        </div>
+    </div>
+
+    <div class="modal" id="payModal">
         <div class="modal-content">
-            <h3 style="font-family:'Orbitron'">JOIN MATCH</h3>
-            <p id="mTitle" style="font-size:12px; color:#888; margin-bottom:15px;"></p>
-            <input type="text" id="pUID" class="inp" placeholder="ENTER GAME UID">
-            <button class="join-btn" style="width:100%" onclick="payAndJoin()">CONFIRM PAY</button>
-            <p onclick="closeM()" style="margin-top:15px; color:#999; cursor:pointer; font-weight:700;">CANCEL</p>
+            <h3 style="font-family:'Orbitron'">CONFIRM JOIN</h3>
+            <p id="mName" style="font-size:12px; color:#888; margin-top:5px;"></p>
+            <input type="text" id="ffUID" class="uid-input" placeholder="ENTER FREE FIRE UID">
+            <button class="join-btn" style="width:100%; padding:15px;" onclick="handlePayment()">PAY & SECURE SLOT</button>
+            <p onclick="closeModal()" style="margin-top:15px; font-size:12px; font-weight:700; color:#bbb; cursor:pointer;">CANCEL</p>
         </div>
     </div>
 
@@ -95,108 +100,112 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const myID = localStorage.getItem('gameID');
-        let curM = null, curF = 0, curT = "";
+        const myID = localStorage.getItem('gameID') || "USER_" + Math.floor(Math.random()*1000);
+        let activeM = null, activeF = 0, activeT = "";
 
-        // Fetch Matches
+        // 🔥 FETCH MATCHES (Universal Logic)
         db.ref('matches').on('value', snap => {
-            const area = document.getElementById('matchArea');
-            let hasMatch = false;
-            area.innerHTML = "";
+            const list = document.getElementById('matchList');
+            const noMatch = document.getElementById('noMatchBox');
+            let count = 0;
+            list.innerHTML = "";
 
             snap.forEach(child => {
                 const m = child.val();
-                // Check if mode is 1v1 and status is not finished
-                if(m.mode === "1v1" && m.status !== "finished") {
-                    hasMatch = true;
-                    const mId = child.key;
-                    area.innerHTML += `
+                const mId = child.key;
+
+                // 1. Mode Check (Flexible)
+                const is1v1 = (m.mode && m.mode.toLowerCase().includes('1v1')) || 
+                              (m.title && m.title.toLowerCase().includes('1v1'));
+
+                if(is1v1 && m.status !== "finished") {
+                    count++;
+                    list.innerHTML += `
                         <div class="m-card">
-                            <div class="m-head"><span>${m.title}</span><span id="t-${mId}">--:--</span></div>
+                            <div class="m-head"><span>MATCH ID: #${mId.slice(-4)}</span><span class="m-timer" id="time-${mId}">--:--</span></div>
                             <div class="m-body">
-                                <div class="vs-ui">
-                                    <div style="text-align:center"><i class="fas fa-user-circle" style="font-size:30px;color:#ccc"></i><p style="font-size:10px">PLAYER 1</p></div>
-                                    <div class="vs-circle">VS</div>
-                                    <div style="text-align:center"><i class="fas fa-user-circle" style="font-size:30px;color:#ccc"></i><p style="font-size:10px">PLAYER 2</p></div>
+                                <div class="vs-row">
+                                    <div class="vs-box"><i class="fas fa-user-ninja"></i><p style="font-size:10px;font-weight:700;">PLAYER 1</p></div>
+                                    <div class="vs-badge">VS</div>
+                                    <div class="vs-box"><i class="fas fa-user-ninja"></i><p style="font-size:10px;font-weight:700;">PLAYER 2</p></div>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;">
-                                    <span>SLOTS</span><span id="c-${mId}">0/2</span>
-                                </div>
-                                <div class="slot-bar"><div class="slot-fill" id="f-${mId}"></div></div>
-                                <div class="prize-box">
-                                    <div><small style="font-size:9px;color:#888;display:block">PRIZE</small><b style="color:#27ae60">₹${m.prize}</b></div>
-                                    <button class="join-btn" id="b-${mId}" onclick="openM('${mId}', ${m.entry}, '${m.title}')">JOIN ₹${m.entry}</button>
+                                <div class="slot-info"><span>FILLED SLOTS</span><span id="slot-txt-${mId}">0/2</span></div>
+                                <div class="slot-bar"><div class="slot-fill" id="fill-${mId}"></div></div>
+                                <div class="footer-row">
+                                    <div class="prize-txt"><small>WIN PRIZE</small><b>₹${m.prize}</b></div>
+                                    <button class="join-btn" id="btn-${mId}" onclick="openModal('${mId}', ${m.entry}, '${m.title}')">JOIN ₹${m.entry}</button>
                                 </div>
                             </div>
                         </div>
                     `;
-                    syncMatch(mId, m.time);
+                    syncMatchDetails(mId, m.time);
                 }
             });
 
-            if(!hasMatch) {
-                area.innerHTML = '<div class="no-match"><i class="fas fa-search"></i><p>No 1v1 Matches Available</p></div>';
-            }
+            noMatch.style.display = (count === 0) ? "block" : "none";
         });
 
-        function syncMatch(id, time) {
-            // Slots Update
+        function syncMatchDetails(id, time) {
+            // Live Slot Sync
             db.ref(`matches/${id}/players`).on('value', s => {
-                const count = s.numChildren();
-                document.getElementById(`c-${id}`).innerText = `${count}/2`;
-                document.getElementById(`f-${id}`).style.width = (count/2)*100 + "%";
+                const pCount = s.numChildren();
+                document.getElementById(`slot-txt-${id}`).innerText = `${pCount}/2`;
+                document.getElementById(`fill-${id}`).style.width = (pCount/2)*100 + "%";
                 
-                const btn = document.getElementById(`b-${id}`);
-                s.forEach(p => { if(p.val().userUID === myID) { btn.innerText="JOINED"; btn.disabled=true; btn.style.background="#27ae60"; } });
-                if(count >= 2 && !btn.disabled) { btn.innerText="FULL"; btn.disabled=true; }
+                const btn = document.getElementById(`btn-${id}`);
+                s.forEach(p => { if(p.val().userUID === myID) { btn.innerText="JOINED ✅"; btn.disabled=true; btn.style.background="#27ae60"; } });
+                if(pCount >= 2 && !btn.disabled) { btn.innerText="FULL"; btn.disabled=true; }
             });
 
-            // Timer
+            // Timer Logic
             setInterval(() => {
                 const diff = new Date(time).getTime() - Date.now();
-                const el = document.getElementById(`t-${id}`);
+                const el = document.getElementById(`time-${id}`);
                 if(!el) return;
-                if(diff <= 0) { el.innerText = "LIVE"; return; }
+                if(diff <= 0) { el.innerText = "MATCH LIVE"; return; }
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
                 el.innerText = `${m}m ${s}s LEFT`;
             }, 1000);
         }
 
-        function openM(id, fee, title) {
-            curM=id; curF=fee; curT=title;
-            document.getElementById('mTitle').innerText = title;
-            document.getElementById('pModal').style.display='flex';
+        function openModal(id, fee, title) {
+            activeM=id; activeF=fee; activeT=title;
+            document.getElementById('mName').innerText = title;
+            document.getElementById('payModal').style.display='flex';
         }
-        function closeM() { document.getElementById('pModal').style.display='none'; }
 
-        async function payAndJoin() {
-            const uid = document.getElementById('pUID').value.trim();
-            if(!uid) return alert("Enter Game UID");
+        function closeModal() { document.getElementById('payModal').style.display='none'; }
+
+        async function handlePayment() {
+            const uid = document.getElementById('ffUID').value.trim();
+            if(!uid) return alert("Please enter FF UID!");
 
             const uRef = db.ref(`users/${myID}`);
             const uSnap = await uRef.once('value');
-            const bal = uSnap.val().balance || 0;
+            const bal = uSnap.val() ? uSnap.val().balance : 0;
 
-            if(bal < curF) return alert("Low Balance!");
+            if(bal < activeF) return alert("Insufficient Balance!");
 
-            // 1. Deduct & Join
-            await uRef.update({ balance: bal - curF });
-            await db.ref(`matches/${curM}/players`).push({ userUID: myID, gameUID: uid });
+            // 1. Deduct Balance
+            await uRef.update({ balance: bal - activeF });
 
-            // 2. Add to HISTORY (History me record jayega)
+            // 2. Add to Match
+            await db.ref(`matches/${activeM}/players`).push({ userUID: myID, gameUID: uid });
+
+            // 3. TRANSACTION HISTORY (User side pe dikhega)
             await db.ref(`users/${myID}/history`).push({
-                type: "Match Join",
-                match: curT,
-                amount: "-" + curF,
-                date: new Date().toLocaleDateString(),
-                time: new Date().toLocaleTimeString()
+                match: activeT,
+                amount: "-" + activeF,
+                type: "1v1 Match Join",
+                date: new Date().toLocaleDateString()
             });
 
-            // 3. Admin Notification
-            await db.ref('admin_panel/joins').push({ match: curT, user: myID, ffid: uid, fee: curF });
+            // 4. ADMIN RECORD (Hame pata chale)
+            await db.ref('admin_records/joins').push({ match: activeT, user: myID, uid: uid, fee: activeF, time: new Date().toLocaleString() });
 
-            alert("Joined!"); closeM();
+            alert("Payment Successful! Slot Booked.");
+            closeModal();
         }
     </script>
 </body>
