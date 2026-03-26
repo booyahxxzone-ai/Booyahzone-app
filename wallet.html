@@ -28,7 +28,6 @@
         .back-btn { font-size: 22px; color: var(--primary); cursor: pointer; padding-right: 15px; }
         .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; color: var(--dark); }
 
-        /* Updated Black Balance Card */
         .balance-card {
             background: var(--dark);
             margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff;
@@ -55,7 +54,6 @@
 
         .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); border: 1px solid #ffe8cc; margin-bottom: 25px; }
         
-        /* Goli (Pill) Style Inputs */
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 6px; margin-left: 15px; text-transform: uppercase; }
         .input-group input { 
@@ -67,7 +65,7 @@
         .main-btn {
             background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px;
             border-radius: 50px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
-            box-shadow: 0 10px 20px rgba(255,153,0,0.2); cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255,153,0,0.2); cursor: pointer; margin-top: 10px;
         }
 
         .upi-intent-btn {
@@ -76,7 +74,6 @@
             display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; cursor: pointer;
         }
 
-        /* History Items */
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.2px solid #fff5e6; }
         .status-tag { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 5px; text-transform: uppercase; }
         .pending { background: #fff4e5; color: #ff9800; }
@@ -118,25 +115,26 @@
         <div id="dep-sec" class="section active">
             <div class="ui-box">
                 <div class="input-group">
-                    <label>Amount (₹)</label>
+                    <label>Amount to Add (₹)</label>
                     <input type="number" id="dep-amt-input" placeholder="Min ₹10">
                 </div>
                 
-                <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT REQUEST</button>
-                
                 <button class="upi-intent-btn" onclick="openUPIIntent()">
-                    <i class="fas fa-bolt"></i> DIRECT PAY VIA UPI
+                    <i class="fas fa-bolt"></i> PAY VIA UPI APPS
                 </button>
 
-                <div style="text-align:center; margin-top:25px;">
-                    <p style="font-size:10px; font-weight:900; color:var(--gray); margin-bottom:10px;">SCAN & SEND UTR BELOW</p>
-                    <img src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:150px; border-radius:15px; border:2px solid #eee;">
-                    
-                    <div class="input-group" style="margin-top:20px; text-align: left;">
-                        <label>12-Digit UTR / Ref No.</label>
-                        <input type="text" id="dep-utr-input" placeholder="Enter Reference Number">
-                    </div>
+                <div style="text-align:center; margin: 20px 0;">
+                    <p style="font-size:10px; font-weight:900; color:var(--gray); margin-bottom:10px;">- OR SCAN QR CODE -</p>
+                    <img src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:160px; border-radius:15px; border:2px solid #fff3e6; padding: 5px;">
+                    <p style="font-size:12px; font-weight:800; margin-top:5px; color:var(--primary);">8968146117@ybl</p>
                 </div>
+
+                <div class="input-group">
+                    <label>12-Digit UTR / Ref No.</label>
+                    <input type="text" id="dep-utr-input" placeholder="Enter Reference Number">
+                </div>
+
+                <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT REQUEST</button>
             </div>
         </div>
 
@@ -171,7 +169,6 @@
 
         if(!myUID) window.location.href = "index.html";
 
-        // Realtime Balance Sync
         db.ref('users/' + myUID + '/balance').on('value', snap => {
             document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
@@ -198,11 +195,10 @@
             window.location.href = `upi://pay?pa=8968146117@ybl&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
         }
 
-        // FIXED: Sending to folders that Admin Panel reads
         function handleDepositSubmit() {
             const amt = document.getElementById('dep-amt-input').value;
             const utr = document.getElementById('dep-utr-input').value;
-            if(!amt || !utr) return showNotice("WAIT", "Enter Amount & UTR Number!", false);
+            if(!amt || !utr) return showNotice("WAIT", "Amount aur UTR dono bhariye!", false);
 
             db.ref('deposits').push({
                 userUID: myUID,
@@ -212,7 +208,7 @@
                 status: "pending",
                 time: new Date().toLocaleString()
             }).then(() => {
-                showNotice("SUCCESS", "Request Sent! Admin will verify soon.");
+                showNotice("SUCCESS", "Request Sent! Verification pending.");
                 document.getElementById('dep-amt-input').value = "";
                 document.getElementById('dep-utr-input').value = "";
             });
@@ -222,13 +218,12 @@
             const amt = parseFloat(document.getElementById('wd-amt-input').value);
             const upi = document.getElementById('wd-upi-input').value;
 
-            if(!amt || !upi.includes('@')) return showNotice("ERROR", "Invalid Details!", false);
+            if(!amt || !upi.includes('@')) return showNotice("ERROR", "Details sahi bhariye!", false);
 
             db.ref('users/' + myUID + '/balance').get().then(snap => {
                 const bal = snap.val() || 0;
-                if(amt > bal) return showNotice("LOW BALANCE", "You don't have enough money!", false);
+                if(amt > bal) return showNotice("FAILED", "Balance kam hai!", false);
 
-                // Deduct balance first
                 db.ref('users/' + myUID + '/balance').set(bal - amt).then(() => {
                     db.ref('withdrawals').push({
                         userUID: myUID,
@@ -238,7 +233,7 @@
                         status: "pending",
                         time: new Date().toLocaleString()
                     });
-                    showNotice("REQUESTED", "₹" + amt + " will be sent to your UPI.");
+                    showNotice("DONE", "₹" + amt + " request lag gayi hai.");
                     document.getElementById('wd-amt-input').value = "";
                 });
             });
@@ -248,14 +243,12 @@
             const container = document.getElementById('logs-container');
             container.innerHTML = "";
             
-            // Get Deposits
             db.ref('deposits').orderByChild('userUID').equalTo(myUID).once('value', snap => {
-                snap.forEach(child => renderLog(child.val(), 'CREDIT'));
+                snap.forEach(child => renderLog(child.val(), 'CREDIT (DEP)'));
             });
 
-            // Get Withdrawals
             db.ref('withdrawals').orderByChild('userUID').equalTo(myUID).once('value', snap => {
-                snap.forEach(child => renderLog(child.val(), 'DEBIT'));
+                snap.forEach(child => renderLog(child.val(), 'DEBIT (WD)'));
             });
         }
 
@@ -269,7 +262,7 @@
                     <p style="font-size:10px; color:#999;">${data.time}</p>
                 </div>
                 <div style="text-align:right">
-                    <h4 style="color:${type==='CREDIT'?'#2ecc71':'#e74c3c'}">₹${data.amount}</h4>
+                    <h4 style="color:${type.includes('CREDIT')?'#2ecc71':'#e74c3c'}">₹${data.amount}</h4>
                     <span class="status-tag ${data.status}">${data.status}</span>
                 </div>
             `;
