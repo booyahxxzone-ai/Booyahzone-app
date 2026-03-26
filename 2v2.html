@@ -19,6 +19,7 @@
         .page-header { background: #fff; padding: 18px 20px; box-shadow: 0 4px 15px rgba(255,106,0,0.15); display: flex; align-items: center; gap: 12px; position: sticky; top:0; z-index: 100; border-bottom: 3px solid var(--primary); }
         .page-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); letter-spacing: 0.5px; }
 
+        /* Card Styles */
         .m-card { background: #fff; margin: 25px 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(255,106,0,0.15); position: relative; border: 2px solid #fff; }
         .card-header { background: var(--dark); color: #fff; padding: 12px 20px; font-family: 'Orbitron'; font-size: 11px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; border-bottom: 4px solid var(--primary); }
         .timer-badge { background: rgba(255,106,0,0.2); color: var(--primary-light); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; }
@@ -39,6 +40,7 @@
         .btn-main { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 14px; font-family: 'Orbitron'; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 8px 20px rgba(255,106,0,0.3); transition: 0.3s; letter-spacing: 1px; text-transform: uppercase; }
         .btn-main.joined { background: linear-gradient(90deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
 
+        /* Overlay & Inputs */
         .join-overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .overlay-head { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; }
@@ -51,6 +53,11 @@
         .input-box label { display: block; font-weight: 800; margin-bottom: 8px; color: #475569; font-size: 12px; }
         .input-box input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 700; background: #fff; }
         .input-box input:disabled { background: #f8fafc; color: #94a3b8; border-color: #cbd5e1; }
+
+        /* Checkbox Style */
+        .check-container { display: flex; align-items: flex-start; gap: 12px; background: #fff; padding: 15px; border-radius: 15px; border: 1px dashed var(--primary); margin: 20px 0; }
+        #agreeCheck { width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; }
+        .check-container label { font-size: 12px; font-weight: 700; color: #475569; line-height: 1.5; cursor: pointer; }
 
         #customToast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--dark); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; opacity: 0; transition: 0.3s; z-index: 9999; }
         #customToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -66,7 +73,7 @@
     </div>
 
     <div id="matchList">
-        <p style="text-align:center; padding: 40px; font-weight: 700;">Searching for Duo Matches...</p>
+        <p style="text-align:center; padding: 40px; font-weight: 700;">Loading 2v2 matches...</p>
     </div>
 
     <div class="join-overlay" id="joinUI">
@@ -83,21 +90,26 @@
 
             <div class="input-box">
                 <label>YOUR UID (PLAYER 1)</label>
-                <input type="number" id="p1UID" placeholder="Enter Your ID...">
+                <input type="number" id="p1UID" placeholder="Enter Player 1 ID...">
             </div>
 
             <div class="input-box">
                 <label>PARTNER UID (PLAYER 2)</label>
-                <input type="number" id="p2UID" placeholder="Enter Partner ID...">
+                <input type="number" id="p2UID" placeholder="Enter Player 2 ID...">
             </div>
 
-            <div id="billSec" style="background:#fff; border-radius:15px; padding:18px; border:1px solid #e2e8f0; margin-bottom:25px;">
+            <div class="check-container" id="checkSec">
+                <input type="checkbox" id="agreeCheck" onchange="togglePayBtn()">
+                <label for="agreeCheck">I agree that my team will not use any hacks or configs. We will follow all match rules honestly.</label>
+            </div>
+
+            <div class="bill-card" id="billSec" style="background:#fff; border-radius:15px; padding:18px; border:1px solid #e2e8f0; margin-bottom:25px;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700;"><span>Duo Entry Fee</span><span id="txtEntry">₹0</span></div>
                 <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:800; border-top:2px dashed #eee; padding-top:10px;"><span>Total</span><span id="txtTotal">₹0</span></div>
             </div>
 
-            <button class="btn-main" id="mainPayBtn" onclick="confirmPayment()">PAY & JOIN AS DUO</button>
-            <div id="statusMsg" style="display:none; text-align:center; color: var(--success); font-weight: 800; margin-top: 15px;">✅ YOUR DUO TEAM HAS JOINED</div>
+            <button class="btn-main" id="mainPayBtn" onclick="confirmPayment()" disabled style="opacity:0.5; cursor:not-allowed;">PAY & JOIN AS DUO</button>
+            <div id="statusMsg" style="display:none; text-align:center; color: var(--success); font-weight: 800; margin-top: 15px;">✅ TEAM REGISTERED SUCCESSFULLY</div>
         </div>
     </div>
 
@@ -116,12 +128,20 @@
             setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
+        function togglePayBtn() {
+            const isChecked = document.getElementById('agreeCheck').checked;
+            const btn = document.getElementById('mainPayBtn');
+            btn.disabled = !isChecked;
+            btn.style.opacity = isChecked ? "1" : "0.5";
+            btn.style.cursor = isChecked ? "pointer" : "not-allowed";
+        }
+
         function formatTime(iso) {
             const d = new Date(iso);
             return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) + ", " + d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         }
 
-        // Live Match Listener (Filtering 2v2)
+        // Match Listener (2v2 focus)
         db.ref('matches').on('value', snap => {
             const list = document.getElementById('matchList');
             list.innerHTML = "";
@@ -146,12 +166,12 @@
                                     <div class="duo-icons"><i class="fas fa-user"></i><i class="fas fa-user"></i></div>
                                 </div>
                                 <div class="match-meta">
-                                    <div class="meta-box"><span>TEAM FEE</span><b>₹${m.entry}</b></div>
-                                    <div class="meta-box"><span>WIN</span><b>₹${m.prize}</b></div>
+                                    <div class="meta-box"><span>DUO FEE</span><b>₹${m.entry}</b></div>
+                                    <div class="meta-box"><span>TEAM WIN</span><b>₹${m.prize}</b></div>
                                     <div class="meta-box"><span>MAP</span><b>${m.map}</b></div>
                                 </div>
                                 <button class="btn-main ${iJoined ? 'joined' : ''}" onclick="openJoin('${child.key}', ${m.entry}, '${m.title}')">
-                                    ${iJoined ? '✅ TEAM JOINED' : 'JOIN AS DUO'}
+                                    ${iJoined ? '✅ TEAM JOINED' : 'VIEW DETAILS / JOIN'}
                                 </button>
                             </div>
                         </div>
@@ -179,6 +199,8 @@
             document.getElementById('txtEntry').innerText = "₹" + fee;
             document.getElementById('txtTotal').innerText = "₹" + fee;
             document.getElementById('joinUI').style.display = 'flex';
+            document.getElementById('agreeCheck').checked = false; 
+            togglePayBtn();
             
             db.ref(`matches/${id}`).once('value', snap => {
                 const m = snap.val();
@@ -190,6 +212,7 @@
                     document.getElementById('p2UID').value = myData.p2;
                     document.getElementById('p1UID').disabled = true;
                     document.getElementById('p2UID').disabled = true;
+                    document.getElementById('checkSec').style.display = 'none';
                     document.getElementById('roomBox').style.display = 'block';
                     document.getElementById('mainPayBtn').style.display = 'none';
                     document.getElementById('statusMsg').style.display = 'block';
@@ -199,6 +222,7 @@
                 } else {
                     document.getElementById('p1UID').value = ""; document.getElementById('p2UID').value = "";
                     document.getElementById('p1UID').disabled = false; document.getElementById('p2UID').disabled = false;
+                    document.getElementById('checkSec').style.display = 'flex';
                     document.getElementById('roomBox').style.display = 'none';
                     document.getElementById('mainPayBtn').style.display = 'block';
                     document.getElementById('statusMsg').style.display = 'none';
@@ -210,10 +234,10 @@
         async function confirmPayment() {
             const p1 = document.getElementById('p1UID').value;
             const p2 = document.getElementById('p2UID').value;
-            if(!p1 || !p2) return showToast("Dono UIDs daalo!");
+            if(!p1 || !p2) return showToast("Dono UIDs bharna zaroori hai!");
 
             const btn = document.getElementById('mainPayBtn');
-            btn.innerText = "WAIT..."; btn.disabled = true;
+            btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             try {
                 const uRef = db.ref(`users/${myPhone}`);
@@ -222,17 +246,18 @@
 
                 if(bal < activeFee) {
                     btn.innerText = "PAY & JOIN AS DUO"; btn.disabled = false;
-                    return showToast("Balance kam hai!");
+                    return showToast("Aapka balance kam hai!");
                 }
 
                 await uRef.update({ balance: bal - activeFee });
                 await db.ref(`matches/${activeMatch}/players`).push({ userUID: myPhone, p1: p1, p2: p2 });
-                await db.ref(`users/${myPhone}/history`).push({ title: activeTitle + " (Duo)", amount: "-" + activeFee, date: new Date().toLocaleDateString(), type: "2v2 Match" });
+                await db.ref(`users/${myPhone}/history`).push({ title: activeTitle + " (Duo)", amount: "-" + activeFee, date: new Date().toLocaleDateString(), type: "Match Joined" });
 
-                showToast("Duo Team Joined!");
+                showToast("Duo Team Registered!");
                 openJoin(activeMatch, activeFee, activeTitle);
             } catch(e) {
-                showToast("Error!"); btn.disabled = false;
+                showToast("Error! Network check karein.");
+                btn.disabled = false;
             }
         }
 
@@ -244,4 +269,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
