@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2V2 DUO ELITE</title>
+    <title>2V2 ELITE ARENA</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,324 +11,237 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { 
-            --primary: #ff6a00; 
-            --primary-glow: rgba(255, 106, 0, 0.4);
-            --dark-bg: #0f172a;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --success: #10b981;
-        }
-
+        :root { --primary: #ff6a00; --primary-light: #ff8c00; --dark: #0f172a; --dark-card: #1e293b; --success: #10b981; --error: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            background: #f8fafc; 
-            background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
-            background-size: 24px 24px;
-            min-height: 100vh; color: var(--text-main); padding-bottom: 50px;
-        }
+        body { background: linear-gradient(135deg, #ffffff 0%, #ffebd6 50%, #ffe4cc 100%); min-height: 100vh; color: #333; padding-bottom: 30px; }
 
-        /* Header UI */
-        .app-bar { 
-            background: #fff; padding: 20px; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--primary);
-        }
-        .app-bar h1 { font-family: 'Orbitron'; font-size: 18px; letter-spacing: 1px; color: var(--dark-bg); }
+        .page-header { background: #fff; padding: 18px 20px; box-shadow: 0 4px 15px rgba(255,106,0,0.15); display: flex; align-items: center; gap: 12px; position: sticky; top:0; z-index: 100; border-bottom: 3px solid var(--primary); }
+        .page-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); letter-spacing: 0.5px; }
 
-        /* Match Card Design */
-        .match-card {
-            background: var(--card-bg); margin: 20px 15px; border-radius: 24px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(255,106,0,0.1); border: 1px solid #fff;
-            transition: 0.3s; position: relative;
-        }
-        .card-tag {
-            position: absolute; top: 15px; right: -30px; background: var(--primary);
-            color: #fff; padding: 5px 35px; transform: rotate(40deg);
-            font-size: 10px; font-weight: 900; font-family: 'Orbitron';
-        }
-        .match-header {
-            background: var(--dark-bg); color: #fff; padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .timer-badge {
-            background: var(--primary); color: #fff; padding: 4px 10px; border-radius: 8px;
-            font-size: 11px; font-weight: 800; font-family: 'Orbitron';
-        }
+        .m-card { background: #fff; margin: 25px 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(255,106,0,0.15); position: relative; border: 2px solid #fff; }
+        .card-header { background: var(--dark); color: #fff; padding: 12px 20px; font-family: 'Orbitron'; font-size: 11px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; border-bottom: 4px solid var(--primary); }
+        .timer-badge { background: rgba(255,106,0,0.2); color: var(--primary-light); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; }
 
-        .match-content { padding: 25px 20px; text-align: center; }
-        .match-title { font-family: 'Orbitron'; font-size: 22px; margin-bottom: 15px; color: var(--dark-bg); }
+        .card-body { padding: 25px 20px; text-align: center; }
+        .m-title { font-family: 'Orbitron'; font-size: 20px; color: var(--dark); margin-bottom: 8px; text-transform: uppercase; }
+        .schedule-tag { display: inline-block; background: #f1f5f9; color: #475569; padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 20px; border: 1px solid #e2e8f0; }
 
-        /* VS Duo Section */
-        .vs-area {
-            display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 25px;
-        }
-        .team-box { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .team-box i { font-size: 32px; color: #cbd5e1; }
-        .vs-divider {
-            width: 50px; height: 50px; background: var(--primary); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
-            box-shadow: 0 0 15px var(--primary-glow); border: 4px solid #fff;
-        }
+        .vs-container { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 15px 0 25px 0; }
+        .duo-icons { font-size: 24px; color: #cbd5e1; display: flex; gap: 5px; }
+        .vs-circle { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-weight: 900; font-size: 16px; border: 3px solid #fff; box-shadow: 0 5px 15px rgba(255,106,0,0.3); }
 
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
-        .stat-item { background: #f1f5f9; padding: 12px; border-radius: 16px; text-align: center; }
-        .stat-item span { display: block; font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
-        .stat-item b { font-family: 'Orbitron'; font-size: 15px; color: var(--primary); }
+        .match-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .meta-box { background: var(--dark-card); padding: 12px; border-radius: 14px; text-align: center; }
+        .meta-box span { display: block; font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .meta-box b { font-size: 16px; color: var(--primary-light); font-family: 'Orbitron'; }
 
-        /* Action Button */
-        .btn-action {
-            width: 100%; padding: 18px; border-radius: 16px; border: none;
-            background: linear-gradient(135deg, #ff6a00, #ff8c00);
-            color: #fff; font-family: 'Orbitron'; font-weight: 900; font-size: 14px;
-            cursor: pointer; box-shadow: 0 8px 20px var(--primary-glow);
-            transition: 0.3s; text-transform: uppercase;
-        }
-        .btn-action.joined { background: #10b981; box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+        .btn-main { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 14px; font-family: 'Orbitron'; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 8px 20px rgba(255,106,0,0.3); transition: 0.3s; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-main.joined { background: linear-gradient(90deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
 
-        /* Overlay / Checkout */
-        .overlay {
-            position: fixed; inset: 0; background: #fff; z-index: 2000;
-            display: none; flex-direction: column; animation: slideIn 0.4s cubic-bezier(0,0,0.2,1);
-        }
-        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .join-overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .overlay-head { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; }
+        .content { padding: 25px; flex: 1; overflow-y: auto; background: #fffaf5; }
         
-        .overlay-header { padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; }
-        .overlay-body { padding: 25px; flex: 1; overflow-y: auto; background: #fffaf5; }
+        .room-info { background: var(--dark); color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: none; }
+        .room-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-family: 'Orbitron'; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        
+        .input-box { margin-bottom: 15px; }
+        .input-box label { display: block; font-weight: 800; margin-bottom: 8px; color: #475569; font-size: 12px; }
+        .input-box input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 700; background: #fff; }
+        .input-box input:disabled { background: #f8fafc; color: #94a3b8; border-color: #cbd5e1; }
 
-        .input-card {
-            background: #fff; padding: 20px; border-radius: 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px;
-        }
-        .field { margin-bottom: 15px; }
-        .field label { display: block; font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 8px; }
-        .field input {
-            width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #e2e8f0;
-            font-size: 16px; font-weight: 700; transition: 0.3s;
-        }
-        .field input:focus { border-color: var(--primary); outline: none; }
-        .field input:disabled { background: #f8fafc; color: var(--success); }
-
-        /* Room Details Box */
-        .room-status {
-            background: var(--dark-bg); color: #fff; padding: 20px; border-radius: 20px;
-            margin-bottom: 25px; border-left: 5px solid var(--primary); display: none;
-        }
-        .room-data { display: flex; justify-content: space-between; margin-top: 10px; font-family: 'Orbitron'; font-size: 14px; }
-
-        /* Toast Message */
-        #toast {
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
-            background: #334155; color: #fff; padding: 12px 25px; border-radius: 50px;
-            font-size: 13px; font-weight: 700; z-index: 5000; opacity: 0; transition: 0.3s;
-        }
-        #toast.active { opacity: 1; top: 50px; }
+        #customToast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--dark); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; opacity: 0; transition: 0.3s; z-index: 9999; }
+        #customToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div id="toast">Message</div>
+    <div id="customToast"><span id="toastMsg">Message</span></div>
 
-    <div class="app-bar">
-        <h1><i class="fas fa-bolt" style="color:var(--primary)"></i> 2V2 ARENA</h1>
-        <div id="userBalance" style="font-weight: 800; font-size: 14px; background: #fff0e6; padding: 5px 12px; border-radius: 10px; color: var(--primary);">₹..</div>
+    <div class="page-header">
+        <i class="fas fa-users" style="color:var(--primary);"></i>
+        <h1>2V2 DUO ARENA</h1>
     </div>
 
-    <div id="matchContainer">
-        <p style="text-align: center; margin-top: 50px; font-weight: 700; color: #94a3b8;">SABAR KARO... MATCHES LOAD HO RAHE HAIN...</p>
+    <div id="matchList">
+        <p style="text-align:center; padding: 40px; font-weight: 700;">Searching for Duo Matches...</p>
     </div>
 
-    <div class="overlay" id="checkoutUI">
-        <div class="overlay-header">
-            <i class="fas fa-chevron-left" style="font-size: 20px;" onclick="closeUI()"></i>
-            <h2 id="matchName" style="font-family:'Orbitron'; font-size: 16px;">DUO CHECKOUT</h2>
+    <div class="join-overlay" id="joinUI">
+        <div class="overlay-head">
+            <i class="fas fa-arrow-left" onclick="closeJoin()"></i>
+            <h2 id="mHeader" style="font-family:'Orbitron'; font-size:16px;">DUO CHECKOUT</h2>
         </div>
-        <div class="overlay-body">
-            
-            <div class="room-status" id="roomBox">
-                <p style="color: var(--primary); font-size: 10px; font-weight: 900; letter-spacing: 1px;">MATCH REGISTERED ✅</p>
-                <div class="room-data"><span>Room ID:</span> <span id="rID">WAITING...</span></div>
-                <div class="room-data"><span>Password:</span> <span id="rPass">WAITING...</span></div>
+        <div class="content">
+            <div class="room-info" id="roomBox">
+                <p style="font-size:11px; color:var(--success); font-weight:900; margin-bottom:15px; text-align: center;">🟢 DUO TEAM REGISTERED</p>
+                <div class="room-row"><span>ID: <b id="rID" style="color:#fff">WAITING...</b></span><button style="background:var(--primary); border:none; color:#fff; padding:5px 10px; border-radius:5px;" onclick="copyIt('rID')">COPY</button></div>
+                <div class="room-row" style="border:none;"><span>PASS: <b id="rPass" style="color:#fff">WAITING...</b></span><button style="background:var(--primary); border:none; color:#fff; padding:5px 10px; border-radius:5px;" onclick="copyIt('rPass')">COPY</button></div>
             </div>
 
-            <div class="input-card">
-                <div class="field">
-                    <label>PLAYER 1 UID (MAIN)</label>
-                    <input type="number" id="uid1" placeholder="Enter Your UID">
-                </div>
-                <div class="field" style="margin-bottom: 0;">
-                    <label>PLAYER 2 UID (PARTNER)</label>
-                    <input type="number" id="uid2" placeholder="Enter Partner UID">
-                </div>
+            <div class="input-box">
+                <label>YOUR UID (PLAYER 1)</label>
+                <input type="number" id="p1UID" placeholder="Enter Your ID...">
             </div>
 
-            <div id="priceInfo" style="background:#fff; padding: 20px; border-radius: 20px; margin-bottom: 25px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:700;">
-                    <span style="color:#64748b;">Duo Entry Fee</span>
-                    <span id="feeLabel">₹0</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:900; border-top:2px dashed #f1f5f9; padding-top:10px;">
-                    <span>Total Amount</span>
-                    <span id="totalLabel" style="color:var(--primary);">₹0</span>
-                </div>
+            <div class="input-box">
+                <label>PARTNER UID (PLAYER 2)</label>
+                <input type="number" id="p2UID" placeholder="Enter Partner ID...">
             </div>
 
-            <button class="btn-action" id="payBtn" onclick="handlePayment()">PAY & REGISTER DUO</button>
-            <p id="successTxt" style="display:none; text-align:center; color: var(--success); font-weight: 800; margin-top: 20px;">AAPKI TEAM REGISTER HO GAYI HAI!</p>
+            <div id="billSec" style="background:#fff; border-radius:15px; padding:18px; border:1px solid #e2e8f0; margin-bottom:25px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-weight:700;"><span>Duo Entry Fee</span><span id="txtEntry">₹0</span></div>
+                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:800; border-top:2px dashed #eee; padding-top:10px;"><span>Total</span><span id="txtTotal">₹0</span></div>
+            </div>
+
+            <button class="btn-main" id="mainPayBtn" onclick="confirmPayment()">PAY & JOIN AS DUO</button>
+            <div id="statusMsg" style="display:none; text-align:center; color: var(--success); font-weight: 800; margin-top: 15px;">✅ YOUR DUO TEAM HAS JOINED</div>
         </div>
     </div>
 
     <script>
-        // FIREBASE SETUP
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         const myPhone = localStorage.getItem('gameID') || "USER_01";
-        let activeMatchID = null, activeFee = 0, activeTitle = "";
+        let activeMatch = null, activeFee = 0, activeTitle = "";
 
-        function showMsg(m) {
-            const t = document.getElementById('toast'); t.innerText = m;
-            t.classList.add('active'); setTimeout(() => t.classList.remove('active'), 3000);
+        function showToast(msg) {
+            const t = document.getElementById('customToast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
-        // Live Balance Fetch
-        db.ref(`users/${myPhone}/balance`).on('value', s => {
-            document.getElementById('userBalance').innerText = "₹" + (s.val() || 0);
-        });
+        function formatTime(iso) {
+            const d = new Date(iso);
+            return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) + ", " + d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+        }
 
-        // Load 2V2 Matches
+        // Live Match Listener (Filtering 2v2)
         db.ref('matches').on('value', snap => {
-            const container = document.getElementById('matchContainer');
-            container.innerHTML = "";
-            let count = 0;
-
+            const list = document.getElementById('matchList');
+            list.innerHTML = "";
             snap.forEach(child => {
                 const m = child.val();
                 if(m.mode && m.mode.toLowerCase() === "2v2" && m.status !== "finished") {
-                    count++;
-                    let joined = false;
-                    if(m.players) Object.values(m.players).forEach(p => { if(p.userUID === myPhone) joined = true; });
+                    let iJoined = false;
+                    if(m.players) Object.values(m.players).forEach(p => { if(p.userUID === myPhone) iJoined = true; });
 
-                    container.innerHTML += `
-                        <div class="match-card">
-                            <div class="card-tag">DUO</div>
-                            <div class="match-header">
-                                <span style="font-size:9px; font-family:'Orbitron';">ELITE BATTLE</span>
-                                <span class="timer-badge" data-time="${m.time}">LOADING...</span>
+                    list.innerHTML += `
+                        <div class="m-card">
+                            <div class="card-header">
+                                <span>2V2 BATTLE</span>
+                                <span class="timer-badge" data-time="${m.time}">Loading...</span>
                             </div>
-                            <div class="match-content">
-                                <h2 class="match-title">${m.title}</h2>
-                                <div class="vs-area">
-                                    <div class="team-box"><i class="fas fa-users"></i><span style="font-size:10px; font-weight:800;">TEAM 1</span></div>
-                                    <div class="vs-divider">VS</div>
-                                    <div class="team-box"><i class="fas fa-users"></i><span style="font-size:10px; font-weight:800;">TEAM 2</span></div>
+                            <div class="card-body">
+                                <h2 class="m-title">${m.title}</h2>
+                                <div class="schedule-tag"><i class="fas fa-calendar-alt"></i> ${formatTime(m.time)}</div>
+                                <div class="vs-container">
+                                    <div class="duo-icons"><i class="fas fa-user"></i><i class="fas fa-user"></i></div>
+                                    <div class="vs-circle">VS</div>
+                                    <div class="duo-icons"><i class="fas fa-user"></i><i class="fas fa-user"></i></div>
                                 </div>
-                                <div class="stats-grid">
-                                    <div class="stat-item"><span>ENTRY</span><b>₹${m.entry}</b></div>
-                                    <div class="stat-item"><span>WIN PRIZE</span><b>₹${m.prize}</b></div>
-                                    <div class="stat-item"><span>MAP</span><b>${m.map}</b></div>
+                                <div class="match-meta">
+                                    <div class="meta-box"><span>TEAM FEE</span><b>₹${m.entry}</b></div>
+                                    <div class="meta-box"><span>WIN</span><b>₹${m.prize}</b></div>
+                                    <div class="meta-box"><span>MAP</span><b>${m.map}</b></div>
                                 </div>
-                                <button class="btn-action ${joined ? 'joined' : ''}" onclick="openCheckout('${child.key}', ${m.entry}, '${m.title}')">
-                                    ${joined ? '✅ TEAM REGISTERED' : 'JOIN AS DUO'}
+                                <button class="btn-main ${iJoined ? 'joined' : ''}" onclick="openJoin('${child.key}', ${m.entry}, '${m.title}')">
+                                    ${iJoined ? '✅ TEAM JOINED' : 'JOIN AS DUO'}
                                 </button>
                             </div>
                         </div>
                     `;
                 }
             });
-            if(count === 0) container.innerHTML = "<p style='text-align:center; padding:50px;'>Abhi koi Duo match nahi hai.</p>";
         });
 
-        // Countdown Timer Logic
+        // Timer Logic
         setInterval(() => {
             document.querySelectorAll('.timer-badge').forEach(el => {
                 const target = new Date(el.getAttribute('data-time')).getTime();
-                const now = new Date().getTime();
-                const diff = target - now;
-                if(diff < 0) { el.innerHTML = "LIVE"; return; }
-                const h = Math.floor(diff / (1000*60*60));
-                const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-                const s = Math.floor((diff % (1000*60)) / 1000);
-                el.innerHTML = `${h}H ${m}M ${s}S`;
+                const dist = target - new Date().getTime();
+                if(dist < 0) { el.innerHTML = "🔴 LIVE"; return; }
+                const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((dist % (1000 * 60)) / 1000);
+                el.innerHTML = `⏱️ ${h}h ${m}m ${s}s left`;
             });
         }, 1000);
 
-        function openCheckout(id, fee, title) {
-            activeMatchID = id; activeFee = fee; activeTitle = title;
-            document.getElementById('feeLabel').innerText = "₹" + fee;
-            document.getElementById('totalLabel').innerText = "₹" + fee;
-            document.getElementById('checkoutUI').style.display = 'flex';
+        function openJoin(id, fee, title) {
+            activeMatch = id; activeFee = fee; activeTitle = title;
+            document.getElementById('mHeader').innerText = title;
+            document.getElementById('txtEntry').innerText = "₹" + fee;
+            document.getElementById('txtTotal').innerText = "₹" + fee;
+            document.getElementById('joinUI').style.display = 'flex';
+            
+            db.ref(`matches/${id}`).once('value', snap => {
+                const m = snap.val();
+                let myData = null;
+                if(m.players) Object.values(m.players).forEach(p => { if(p.userUID === myPhone) myData = p; });
 
-            db.ref(`matches/${id}`).once('value', s => {
-                const m = s.val();
-                let myTeam = null;
-                if(m.players) Object.values(m.players).forEach(p => { if(p.userUID === myPhone) myTeam = p; });
-
-                if(myTeam) {
-                    document.getElementById('uid1').value = myTeam.p1;
-                    document.getElementById('uid2').value = myTeam.p2;
-                    document.getElementById('uid1').disabled = true;
-                    document.getElementById('uid2').disabled = true;
+                if(myData) {
+                    document.getElementById('p1UID').value = myData.p1;
+                    document.getElementById('p2UID').value = myData.p2;
+                    document.getElementById('p1UID').disabled = true;
+                    document.getElementById('p2UID').disabled = true;
                     document.getElementById('roomBox').style.display = 'block';
-                    document.getElementById('payBtn').style.display = 'none';
-                    document.getElementById('priceInfo').style.display = 'none';
-                    document.getElementById('successTxt').style.display = 'block';
+                    document.getElementById('mainPayBtn').style.display = 'none';
+                    document.getElementById('statusMsg').style.display = 'block';
+                    document.getElementById('billSec').style.display = 'none';
                     document.getElementById('rID').innerText = m.roomID || "WAITING...";
                     document.getElementById('rPass').innerText = m.roomPass || "WAITING...";
                 } else {
-                    document.getElementById('uid1').value = ""; document.getElementById('uid2').value = "";
-                    document.getElementById('uid1').disabled = false; document.getElementById('uid2').disabled = false;
+                    document.getElementById('p1UID').value = ""; document.getElementById('p2UID').value = "";
+                    document.getElementById('p1UID').disabled = false; document.getElementById('p2UID').disabled = false;
                     document.getElementById('roomBox').style.display = 'none';
-                    document.getElementById('payBtn').style.display = 'block';
-                    document.getElementById('priceInfo').style.display = 'flex';
-                    document.getElementById('successTxt').style.display = 'none';
+                    document.getElementById('mainPayBtn').style.display = 'block';
+                    document.getElementById('statusMsg').style.display = 'none';
+                    document.getElementById('billSec').style.display = 'block';
                 }
             });
         }
 
-        async function handlePayment() {
-            const u1 = document.getElementById('uid1').value;
-            const u2 = document.getElementById('uid2').value;
-            if(!u1 || !u2) return showMsg("Dono UIDs fill karo bhai!");
+        async function confirmPayment() {
+            const p1 = document.getElementById('p1UID').value;
+            const p2 = document.getElementById('p2UID').value;
+            if(!p1 || !p2) return showToast("Dono UIDs daalo!");
 
-            const btn = document.getElementById('payBtn');
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
+            const btn = document.getElementById('mainPayBtn');
+            btn.innerText = "WAIT..."; btn.disabled = true;
 
             try {
                 const uRef = db.ref(`users/${myPhone}`);
                 const uSnap = await uRef.once('value');
-                const bal = uSnap.val().balance || 0;
+                const bal = (uSnap.val() && uSnap.val().balance) ? Number(uSnap.val().balance) : 0;
 
                 if(bal < activeFee) {
-                    btn.innerText = "PAY & REGISTER DUO"; btn.disabled = false;
-                    return showMsg("Wallet mein paise kam hain!");
+                    btn.innerText = "PAY & JOIN AS DUO"; btn.disabled = false;
+                    return showToast("Balance kam hai!");
                 }
 
-                // Deduct Balance
                 await uRef.update({ balance: bal - activeFee });
-                // Add Player to Match
-                await db.ref(`matches/${activeMatchID}/players`).push({ userUID: myPhone, p1: u1, p2: u2 });
-                // Add to History
-                await db.ref(`users/${myPhone}/history`).push({
-                    title: activeTitle + " (Duo)",
-                    amount: "-" + activeFee,
-                    date: new Date().toLocaleDateString(),
-                    type: "2v2 Match"
-                });
+                await db.ref(`matches/${activeMatch}/players`).push({ userUID: myPhone, p1: p1, p2: p2 });
+                await db.ref(`users/${myPhone}/history`).push({ title: activeTitle + " (Duo)", amount: "-" + activeFee, date: new Date().toLocaleDateString(), type: "2v2 Match" });
 
-                showMsg("Team Registered!");
-                openCheckout(activeMatchID, activeFee, activeTitle);
+                showToast("Duo Team Joined!");
+                openJoin(activeMatch, activeFee, activeTitle);
             } catch(e) {
-                showMsg("Network Error!");
-                btn.disabled = false;
+                showToast("Error!"); btn.disabled = false;
             }
         }
 
-        function closeUI() { document.getElementById('checkoutUI').style.display = 'none'; }
+        function closeJoin() { document.getElementById('joinUI').style.display = 'none'; }
+        function copyIt(id) {
+            const val = document.getElementById(id).innerText;
+            if(val.includes("WAITING")) return showToast("Sabar karo!");
+            navigator.clipboard.writeText(val); showToast("Copied!");
+        }
     </script>
 </body>
 </html>
