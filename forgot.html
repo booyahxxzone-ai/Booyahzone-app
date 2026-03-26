@@ -1,0 +1,161 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOYAH ZONE | ACCOUNT RECOVERY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root { --orange: #ff9900; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.95); }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        body {
+            height: 100vh; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Animated Background Elements */
+        .bg-glow { position: absolute; width: 300px; height: 300px; background: var(--orange); filter: blur(150px); opacity: 0.2; z-index: -1; border-radius: 50%; }
+
+        .app-card {
+            width: 92%; max-width: 400px; background: var(--glass);
+            border-radius: 40px; padding: 45px 30px; text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+
+        .app-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--orange);
+        }
+
+        .icon-shield {
+            width: 80px; height: 80px; background: var(--dark); border-radius: 25px; 
+            margin: 0 auto 25px; display: flex; align-items: center; justify-content: center;
+            transform: rotate(-10deg); border: 3px solid var(--orange); box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
+        }
+        .icon-shield i { color: var(--orange); font-size: 35px; transform: rotate(10deg); }
+
+        .title { font-family: 'Orbitron'; font-size: 1.5rem; color: #111; margin-bottom: 8px; letter-spacing: 1px; }
+        .subtitle { font-size: 14px; color: #666; font-weight: 700; margin-bottom: 30px; }
+
+        /* Input Gooli Style */
+        .input-group { margin-bottom: 18px; text-align: left; }
+        .input-label { font-size: 11px; font-family: 'Orbitron'; color: #888; margin-left: 20px; margin-bottom: 5px; display: block; }
+        
+        .bullet-box {
+            position: relative; background: var(--dark); height: 52px;
+            border-radius: 30px 10px 10px 30px; border-right: 6px solid var(--orange);
+            display: flex; align-items: center; transition: 0.3s;
+        }
+        .bullet-box:focus-within { transform: translateX(5px); }
+        .bullet-box i { position: absolute; left: 20px; color: var(--orange); font-size: 16px; }
+        .bullet-box input {
+            width: 100%; height: 100%; background: transparent; border: none;
+            padding: 0 20px 0 55px; color: #fff; font-family: 'Rajdhani'; font-size: 16px; font-weight: 600;
+        }
+
+        .btn-recover {
+            width: 100%; padding: 16px; background: var(--orange); color: #fff; border: none;
+            border-radius: 15px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
+            cursor: pointer; transition: 0.4s; margin-top: 10px;
+            box-shadow: 0 10px 25px rgba(255,153,0,0.3);
+        }
+        .btn-recover:hover { letter-spacing: 1px; background: #e68a00; }
+
+        .back-link {
+            display: inline-block; margin-top: 25px; font-size: 13px; color: #888; 
+            text-decoration: none; font-weight: 800; font-family: 'Orbitron';
+        }
+        .back-link span { color: var(--orange); }
+
+        #status { display: none; margin-top: 15px; font-size: 12px; font-weight: 900; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="app-card">
+        <div class="icon-shield"><i class="fas fa-user-lock"></i></div>
+        <h1 class="title">RECOVER ACCESS</h1>
+        <p class="subtitle">Enter your details to verify ownership.</p>
+
+        <div class="input-group">
+            <span class="input-label">REGISTERED UID</span>
+            <div class="bullet-box">
+                <i class="fas fa-fingerprint"></i>
+                <input type="text" id="user-uid" placeholder="EX: 889900">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <span class="input-label">REGISTERED EMAIL</span>
+            <div class="bullet-box">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="user-email" placeholder="EX: name@mail.com">
+            </div>
+        </div>
+
+        <button class="btn-recover" id="btn-text" onclick="requestRecovery()">VERIFY & REQUEST</button>
+        
+        <div id="status">SENT SUCCESSFULLY!</div>
+
+        <a href="index.html" class="back-link">RETURN TO <span>LOGIN</span></a>
+    </div>
+
+    <script>
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Updated Naya Bot Token
+        const botToken = "8649335408:AAHKOAM_q_hP7eZB5aQ1LkQ7WNoFlhgB54o"; 
+        const adminId = "7852788120"; 
+
+        async function requestRecovery() {
+            const uid = document.getElementById('user-uid').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const btn = document.getElementById('btn-text');
+
+            if(!uid || !email) {
+                alert("Please fill both UID and Email!"); return;
+            }
+
+            btn.innerText = "VERIFYING...";
+            btn.disabled = true;
+
+            const snap = await database.ref('users/' + uid).once('value');
+            
+            if(snap.exists()) {
+                const user = snap.val();
+                
+                // Telegram Message Formatting (Professional)
+                const msg = `<b>🛡️ RECOVERY REQUEST RECEIVED</b>\n\n` +
+                            `👤 <b>Name:</b> ${user.name}\n` +
+                            `🆔 <b>UID:</b> <code>${uid}</code>\n` +
+                            `📧 <b>Email Provided:</b> ${email}\n` +
+                            `🔑 <b>Current Password:</b> <code>${user.password}</code>\n` +
+                            `📞 <b>Phone:</b> ${user.phone}\n\n` +
+                            `⚠️ <b>ACTION REQUIRED:</b>\n` +
+                            `Bhai, agar email sahi hai toh user ko password de do.\n\n` +
+                            `🔗 <b>Change Email Link:</b>\n` +
+                            `<code>https://console.firebase.google.com/</code>`;
+
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
+                
+                document.getElementById('status').style.display = "block";
+                alert("Verification sent to Admin! Admin will check your Email and contact you.");
+                location.href = 'index.html';
+            } else {
+                alert("UID not found in our records!");
+                btn.innerText = "VERIFY & REQUEST";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
