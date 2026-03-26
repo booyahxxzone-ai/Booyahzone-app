@@ -3,236 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wallet | BOOYAH ZONE</title>
+    <title>WALLET | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #f4f7f6; --white: #ffffff; --text: #2d3436; --gray: #636e72; --success: #27ae60; --danger: #d63031; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --bg: #fffbf5; --success: #2ecc71; --error: #e74c3c; --gray: #95a5a6; }
         
-        body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
+        /* 🚫 Stop Blue Highlight & Selection */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
 
-        /* Professional Header */
-        .header-card {
-            background: var(--white); padding: 40px 20px; text-align: center;
-            border-bottom: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        body { 
+            background: linear-gradient(180deg, var(--white) 0%, var(--bg) 100%);
+            color: var(--dark); min-height: 100vh; padding-bottom: 50px;
         }
-        .balance-title { font-size: 13px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-amount { font-size: 42px; font-weight: 800; color: var(--text); margin: 5px 0; }
 
-        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
-
-        /* Quick Actions */
-        .action-row { display: flex; gap: 15px; margin-top: -30px; }
-        .action-card {
-            flex: 1; background: var(--white); padding: 20px; border-radius: 15px;
-            text-align: center; box-shadow: 0 8px 15px rgba(0,0,0,0.08); cursor: pointer; transition: 0.3s;
+        /* 🏆 Professional Header with Back Arrow */
+        .header {
+            background: var(--white); padding: 18px 20px; display: flex; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .action-card:active { transform: scale(0.95); }
-        .action-card i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
-        .action-card p { font-size: 12px; font-weight: 700; }
+        .back-btn { font-size: 22px; color: var(--dark); cursor: pointer; padding-right: 15px; transition: 0.2s; }
+        .back-btn:active { color: var(--primary); transform: scale(0.9); }
+        .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; }
 
-        /* Sections */
-        .section { background: var(--white); border-radius: 20px; padding: 25px; margin-top: 25px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .section.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .section-h { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-
-        /* Form Styling */
-        .input-box { margin-bottom: 15px; }
-        .input-box label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--gray); }
-        .input-box input { width: 100%; padding: 12px 15px; border: 2px solid #f1f1f1; border-radius: 10px; font-size: 15px; outline: none; background: #fafafa; }
-        .input-box input:focus { border-color: var(--primary); }
-
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; transition: 0.3s; }
-        .btn-dep { background: var(--primary); color: white; }
-        .btn-wd { background: var(--text); color: white; }
-
-        /* History List */
-        .history-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid #f1f1f1;
+        /* 💰 Elegant Balance Card */
+        .balance-card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff;
+            text-align: center; position: relative; overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
-        .history-info p { font-size: 14px; font-weight: 600; }
-        .history-info span { font-size: 11px; color: var(--gray); }
-        .history-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
-        .st-pending { background: #fff9eb; color: #f39c12; }
-        .st-approved { background: #ebfaf0; color: #27ae60; }
-        .st-rejected { background: #fff0f0; color: #d63031; }
+        .balance-card::after {
+            content: ''; position: absolute; top: -20px; right: -20px; width: 80px; height: 80px;
+            background: var(--primary); opacity: 0.1; border-radius: 50%;
+        }
+        .balance-card p { font-size: 11px; font-weight: 800; opacity: 0.6; text-transform: uppercase; letter-spacing: 2px; }
+        .balance-card h1 { font-family: 'Orbitron'; font-size: 42px; margin-top: 8px; color: var(--primary); }
 
-        /* Bottom Nav */
-        .nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 70px; border-top: 1px solid #eee; }
-        .nav-link { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #b2bec3; font-size: 11px; font-weight: 600; }
-        .nav-link.active { color: var(--primary); }
-        .nav-link i { font-size: 20px; margin-bottom: 3px; }
+        .container { padding: 0 20px; max-width: 500px; margin: 0 auto; }
 
-        .qr-area { text-align: center; background: #fdfdfd; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed #ddd; }
+        /* 🔘 Action Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn {
+            flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #eee;
+            background: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+        }
+        .tab-btn i { font-size: 20px; color: var(--gray); }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.3); }
+        .tab-btn.active i { color: #fff; }
+
+        /* 📦 Section Styling */
+        .section { display: none; animation: slideUp 0.4s ease-out; }
+        .section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1px solid #f0f0f0; margin-bottom: 25px; }
+        
+        /* 📱 UPI Intent Button */
+        .upi-intent-btn {
+            background: #000; color: #fff; border: none; width: 100%; padding: 18px;
+            border-radius: 18px; font-family: 'Orbitron'; font-size: 12px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .upi-intent-btn:active { transform: scale(0.97); background: #222; }
+
+        /* ⌨️ Form Elements */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 900; color: #888; margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
+        .input-group input { 
+            width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid #f5f5f5;
+            background: #fafafa; font-weight: 700; font-size: 16px; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--primary); background: #fff; }
+
+        .main-btn {
+            background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px;
+            border-radius: 18px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
+            box-shadow: 0 12px 25px rgba(255,153,0,0.25); cursor: pointer; transition: 0.2s;
+        }
+        .main-btn:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* 🔔 Modern Custom Notice */
+        #notice-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 5000;
+            backdrop-filter: blur(6px);
+        }
+        .notice-card { 
+            width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .notice-card i { font-size: 60px; margin-bottom: 20px; }
+        .notice-card h3 { font-family: 'Orbitron'; font-size: 20px; margin-bottom: 12px; }
+        .notice-card p { font-size: 14px; color: #555; font-weight: 700; line-height: 1.6; margin-bottom: 25px; }
+
+        /* 📜 History Items */
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.5px solid #f9f9f9; }
+        .hist-info h4 { font-size: 15px; font-weight: 800; color: #333; }
+        .hist-info p { font-size: 11px; color: #999; font-weight: 700; margin-top: 2px; }
+        .hist-status { text-align: right; }
+        .status-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .pending { background: #fff4e5; color: #ff9800; }
+        .approved { background: #e8f5e9; color: #2ecc71; }
+        .rejected { background: #ffebee; color: #e74c3c; }
+
     </style>
 </head>
 <body>
 
-    <div class="header-card">
-        <p class="balance-title">Available Balance</p>
-        <div class="balance-amount" id="balance-txt">₹0</div>
+    <div id="notice-overlay">
+        <div class="notice-card">
+            <i id="n-icon" class="fas fa-check-circle"></i>
+            <h3 id="n-title">TITLE</h3>
+            <p id="n-msg">This is a custom message for the user.</p>
+            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-weight:900; font-family:'Orbitron'; font-size:12px; cursor:pointer;">DISMISS</button>
+        </div>
+    </div>
+
+    <div class="header">
+        <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
+        <h2><i class="fas fa-shield-alt"></i> BOOYAH WALLET</h2>
+    </div>
+
+    <div class="balance-card">
+        <p>AVAILABLE BALANCE</p>
+        <h1 id="user-balance">₹0</h1>
     </div>
 
     <div class="container">
-        <div class="action-row">
-            <div class="action-card" onclick="toggle('deposit')">
-                <i class="fas fa-wallet"></i>
-                <p>Deposit</p>
+        <div class="tabs">
+            <div class="tab-btn active" onclick="switchTab('dep-sec', this)"><i class="fas fa-wallet"></i> DEPOSIT</div>
+            <div class="tab-btn" onclick="switchTab('wd-sec', this)"><i class="fas fa-receipt"></i> WITHDRAW</div>
+            <div class="tab-btn" onclick="switchTab('hist-sec', this)"><i class="fas fa-history"></i> LOGS</div>
+        </div>
+
+        <div id="dep-sec" class="section active">
+            <div class="ui-box" style="text-align: center;">
+                <button class="upi-intent-btn" onclick="openUPIIntent()">
+                    <i class="fas fa-bolt"></i> PAY VIA UPI APPS
+                </button>
+                <p style="font-size:11px; font-weight:900; color:#ccc; margin-bottom:20px;">- OR SCAN QR MANUALLY -</p>
+                <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" style="width:160px; border-radius:15px; padding:10px; border:2px dashed #ddd;">
+                <p style="font-size:12px; font-weight:800; margin-top:12px; color:var(--dark);">BOOYAH ZONE OFFICIAL</p>
             </div>
-            <div class="action-card" onclick="toggle('withdraw')">
-                <i class="fas fa-money-bill-transfer"></i>
-                <p>Withdraw</p>
-            </div>
-            <div class="action-card" onclick="toggle('history')">
-                <i class="fas fa-clock-rotate-left"></i>
-                <p>History</p>
+            
+            <div class="ui-box">
+                <div class="input-group">
+                    <label>Amount to Add (₹)</label>
+                    <input type="number" id="dep-amt-input" placeholder="Min ₹10">
+                </div>
+                <div class="input-group">
+                    <label>12-Digit Transaction UTR</label>
+                    <input type="text" id="dep-utr-input" placeholder="Enter Ref Number">
+                </div>
+                <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT RECHARGE</button>
             </div>
         </div>
 
-        <div id="deposit" class="section">
-            <div class="section-h"><i class="fas fa-plus-circle"></i> Add Cash</div>
-            <div class="qr-area">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" style="width:130px;">
-                <p style="font-size: 10px; font-weight: 700; margin-top: 5px; color: var(--gray);">UPI: 8968146117@okbizaxis</p>
+        <div id="wd-sec" class="section">
+            <div class="ui-box">
+                <div class="input-group">
+                    <label>Withdrawal Amount (₹)</label>
+                    <input type="number" id="wd-amt-input" placeholder="Min ₹50">
+                </div>
+                <div class="input-group">
+                    <label>Transfer to UPI ID</label>
+                    <input type="text" id="wd-upi-input" placeholder="example@ybl">
+                </div>
+                <button class="main-btn" style="background:#000;" onclick="handleWithdrawSubmit()">REQUEST CASH-OUT</button>
+                <div style="margin-top:20px; background:#fff9f0; padding:15px; border-radius:12px; font-size:12px; font-weight:700; color:#d68910;">
+                    ⚠️ Note: Withdrawal requests are processed within 2-24 hours directly to your UPI ID.
+                </div>
             </div>
-            <div class="input-box">
-                <label>Amount (₹)</label>
-                <input type="number" id="d-amt" placeholder="Enter amount">
-            </div>
-            <div class="input-box">
-                <label>Transaction ID / UTR</label>
-                <input type="text" id="d-txn" placeholder="12 digit UTR number">
-            </div>
-            <button class="btn-main btn-dep" onclick="doDeposit()">Submit Deposit</button>
         </div>
 
-        <div id="withdraw" class="section">
-            <div class="section-h"><i class="fas fa-arrow-up-right-from-square"></i> Withdraw Money</div>
-            <div class="input-box">
-                <label>Amount (₹)</label>
-                <input type="number" id="w-amt" placeholder="Min Withdrawal ₹50">
-            </div>
-            <div class="input-box">
-                <label>UPI ID</label>
-                <input type="text" id="w-upi" placeholder="yourname@upi">
-            </div>
-            <button class="btn-main btn-wd" onclick="doWithdraw()">Withdraw Now</button>
-        </div>
-
-        <div id="history" class="section">
-            <div class="section-h"><i class="fas fa-list"></i> Transaction History</div>
-            <div id="history-list">
-                <p style="text-align:center; color:#999; font-size:12px; padding:20px;">No history found</p>
+        <div id="hist-sec" class="section">
+            <div class="ui-box" id="logs-container">
+                <p style="text-align:center; padding:30px; color:#bbb;">No transaction history found.</p>
             </div>
         </div>
     </div>
 
-    <nav class="nav">
-        <a href="home.html" class="nav-link"><i class="fas fa-home"></i>Home</a>
-        <a href="wallet.html" class="nav-link active"><i class="fas fa-wallet"></i>Wallet</a>
-        <a href="profile.html" class="nav-link"><i class="fas fa-user"></i>Profile</a>
-    </nav>
-
     <script>
-        // --- Firebase Setup ---
+        // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const myUID = localStorage.getItem('gameID') || "TEST_USER";
-        const myName = localStorage.getItem('userName') || "Player";
+        const myUID = localStorage.getItem('gameID') || "GUEST_USER";
+        const myName = localStorage.getItem('userName') || "Anonymous Player";
 
-        // 1. Balance Display
+        // --- 2. LIVE BALANCE UPDATER ---
         db.ref('users/' + myUID + '/balance').on('value', snap => {
-            document.getElementById('balance-txt').innerText = "₹" + (snap.val() || 0);
+            const currentBal = snap.val() || 0;
+            document.getElementById('user-balance').innerText = "₹" + currentBal;
         });
 
-        function toggle(id) {
+        // --- 3. UI TAB SWITCHER ---
+        function switchTab(targetID, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'history') loadHistory();
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(targetID).classList.add('active');
+            btn.classList.add('active');
+            if(targetID === 'hist-sec') fetchHistory();
         }
 
-        // 2. Deposit Logic
-        function doDeposit() {
-            const amt = document.getElementById('d-amt').value;
-            const txn = document.getElementById('d-txn').value;
-            if(!amt || !txn) return alert("Details bharo bhai!");
+        // --- 4. CUSTOM NOTIFICATION SYSTEM ---
+        function showNotice(title, msg, isSuccess = true) {
+            document.getElementById('n-title').innerText = title;
+            document.getElementById('n-msg').innerText = msg;
+            const icon = document.getElementById('n-icon');
+            icon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+            icon.style.color = isSuccess ? '#2ecc71' : '#e74c3c';
+            document.getElementById('notice-overlay').style.display = 'flex';
+        }
+        function closeNotice() { document.getElementById('notice-overlay').style.display = 'none'; }
+
+        // --- 5. UPI INTENT (PAY VIA APPS) ---
+        function openUPIIntent() {
+            const amt = document.getElementById('dep-amt-input').value;
+            if(!amt || amt < 1) {
+                showNotice("AMOUNT MISSING", "Please enter recharge amount first to pay via apps.", false);
+                return;
+            }
+            // Intent URL for PhonePe, GPay, Paytm etc.
+            const intentURL = `upi://pay?pa=8968146117@okbizaxis&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
+            window.location.href = intentURL;
+        }
+
+        // --- 6. DEPOSIT LOGIC ---
+        function handleDepositSubmit() {
+            const amt = document.getElementById('dep-amt-input').value;
+            const utr = document.getElementById('dep-utr-input').value;
+
+            if(!amt || utr.length < 8) {
+                showNotice("INVALID DATA", "Please enter valid amount and 12-digit UTR number.", false);
+                return;
+            }
 
             db.ref('admin_requests/deposits').push({
-                uid: myUID, name: myName, amount: parseFloat(amt), txnID: txn, status: "pending", date: new Date().toLocaleDateString()
+                uid: myUID, name: myName, amount: parseFloat(amt), txnID: utr, status: "pending", date: new Date().toLocaleString()
             }).then(() => {
-                alert("Request Sent!");
-                location.reload();
+                showNotice("SUBMITTED", "Recharge request sent! Balance will update after admin verification.");
+                document.getElementById('dep-amt-input').value = "";
+                document.getElementById('dep-utr-input').value = "";
             });
         }
 
-        // 3. Withdraw Logic (Paisa Katne Wala Logic)
-        function doWithdraw() {
-            const amt = parseFloat(document.getElementById('w-amt').value);
-            const upi = document.getElementById('w-upi').value;
+        // --- 7. WITHDRAW LOGIC (AUTO-DEDUCT) ---
+        function handleWithdrawSubmit() {
+            const amt = parseFloat(document.getElementById('wd-amt-input').value);
+            const upi = document.getElementById('wd-upi-input').value;
 
-            if(!amt || amt < 50 || !upi) return alert("Min withdrawal ₹50 hai!");
+            if(!amt || amt < 50 || !upi.includes('@')) {
+                showNotice("ERROR", "Min withdrawal is ₹50 with a valid UPI ID.", false);
+                return;
+            }
 
             db.ref('users/' + myUID + '/balance').get().then(snap => {
                 const currentBal = snap.val() || 0;
-                if(amt > currentBal) return alert("Balance kam hai!");
+                if(amt > currentBal) {
+                    showNotice("INSUFFICIENT", "You don't have enough balance to withdraw.", false);
+                    return;
+                }
 
-                // --- MAGIC LOGIC: Paisa turant minus karo ---
+                // MAGIC: Immediately minus balance
                 db.ref('users/' + myUID + '/balance').set(currentBal - amt).then(() => {
-                    // Request Admin ko bhejo
                     db.ref('admin_requests/withdrawals').push({
-                        uid: myUID, name: myName, amount: amt, upiID: upi, status: "pending", date: new Date().toLocaleDateString()
+                        uid: myUID, name: myName, amount: amt, upiID: upi, status: "pending", date: new Date().toLocaleString()
                     });
-                    alert("₹" + amt + " aapke wallet se kat gaye hain. Admin 24h mein pay kar denge.");
-                    location.reload();
+                    showNotice("REQUESTED", `₹${amt} deducted from wallet. Money will be sent to your UPI within 24h.`);
+                    document.getElementById('wd-amt-input').value = "";
                 });
             });
         }
 
-        // 4. History Loader
-        function loadHistory() {
-            const hList = document.getElementById('history-list');
-            hList.innerHTML = "<p style='text-align:center;'>Loading...</p>";
+        // --- 8. TRANSACTION LOGS FETCHER ---
+        function fetchHistory() {
+            const container = document.getElementById('logs-container');
+            container.innerHTML = "<p style='text-align:center; padding:20px;'>Loading Logs...</p>";
 
-            // Fetching both Deposits and Withdrawals
             db.ref('admin_requests').once('value', snap => {
-                hList.innerHTML = "";
-                let hasData = false;
+                container.innerHTML = "";
+                let count = 0;
 
                 snap.forEach(typeSnap => {
                     typeSnap.forEach(itemSnap => {
-                        const data = itemSnap.val();
-                        if(data.uid === myUID) {
-                            hasData = true;
-                            const type = typeSnap.key === 'deposits' ? 'Deposit' : 'Withdraw';
-                            const statusClass = "st-" + data.status;
-                            hList.innerHTML += `
+                        const val = itemSnap.val();
+                        if(val.uid === myUID) {
+                            count++;
+                            const isDep = typeSnap.key === 'deposits';
+                            container.innerHTML += `
                                 <div class="history-item">
-                                    <div class="history-info">
-                                        <p>${type} - ₹${data.amount}</p>
-                                        <span>${data.date}</span>
+                                    <div class="hist-info">
+                                        <h4>${isDep ? 'DEPOSIT' : 'WITHDRAWAL'}</h4>
+                                        <p>${val.date}</p>
                                     </div>
-                                    <div class="history-status ${statusClass}">${data.status.toUpperCase()}</div>
+                                    <div class="hist-status">
+                                        <h4 style="color:${isDep ? '#2ecc71' : '#333'}">${isDep ? '+' : '-'} ₹${val.amount}</h4>
+                                        <span class="status-tag ${val.status}">${val.status}</span>
+                                    </div>
                                 </div>`;
                         }
                     });
                 });
-                if(!hasData) hList.innerHTML = "<p style='text-align:center; padding:20px; color:#999;'>No history yet.</p>";
+                if(count === 0) container.innerHTML = "<p style='text-align:center; padding:20px; color:#ccc;'>No transaction history yet.</p>";
             });
         }
-
-        // Default open
-        toggle('deposit');
     </script>
 </body>
 </html>
