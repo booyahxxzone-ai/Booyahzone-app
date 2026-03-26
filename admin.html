@@ -30,6 +30,7 @@
 
         .container { padding: 20px; max-width: 1200px; margin: auto; }
 
+        /* Navigation */
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 80px; 
             background: var(--card); display: flex; justify-content: space-around; 
@@ -43,6 +44,7 @@
         .nav-item i { font-size: 24px; margin-bottom: 5px; }
         .nav-item.active { color: var(--primary); transform: translateY(-5px); text-shadow: 0 0 10px var(--primary); }
 
+        /* Content Sections */
         .tab-content { display: none; animation: slideIn 0.4s ease-out; }
         .tab-content.active { display: block; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -53,58 +55,54 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         h2 { font-family: 'Orbitron'; font-size: 16px; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-        h2 i { color: var(--primary); }
 
+        /* Tables */
         .table-wrap { overflow-x: auto; border-radius: 15px; background: #0b0f1a; border: 1px solid #232a3d; }
-        table { width: 100%; border-collapse: collapse; min-width: 850px; }
-        th { background: #1e293b; color: #94a3b8; padding: 18px; text-align: left; font-size: 13px; text-transform: uppercase; border-bottom: 2px solid #232a3d; }
-        td { padding: 16px; border-bottom: 1px solid #1e293b; font-size: 15px; vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background: #1e293b; color: #94a3b8; padding: 18px; text-align: left; font-size: 13px; text-transform: uppercase; }
+        td { padding: 16px; border-bottom: 1px solid #1e293b; font-size: 15px; }
 
-        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        /* Inputs & Buttons */
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         input, select { 
             background: #1e293b; border: 1px solid #334155; color: #fff; 
-            padding: 15px; border-radius: 12px; font-size: 16px; width: 100%; outline: none; transition: 0.3s;
+            padding: 12px; border-radius: 10px; font-size: 15px; outline: none; width: 100%;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0,255,204,0.2); }
-
         .btn { 
-            border: none; border-radius: 12px; font-family: 'Orbitron'; 
-            font-weight: 900; cursor: pointer; transition: 0.3s; 
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            border: none; border-radius: 10px; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-weight: 900;
         }
-        .btn:active { transform: scale(0.95); }
-        .btn-main { background: linear-gradient(45deg, var(--primary), #00ccff); color: #000; width: 100%; padding: 20px; font-size: 18px; box-shadow: 0 10px 20px rgba(0,255,204,0.3); }
-        .btn-sm { padding: 10px 15px; font-size: 11px; color: #fff; min-width: 90px; }
+        .btn-main { background: linear-gradient(45deg, var(--primary), #00ccff); color: #000; width: 100%; padding: 18px; font-size: 16px; }
+        .btn-sm { padding: 8px 12px; font-size: 11px; color: #fff; }
         .btn-green { background: var(--success); }
         .btn-red { background: var(--danger); }
         .btn-blue { background: var(--blue); }
         .btn-orange { background: var(--accent); color: #000; }
 
+        /* Modals */
         .modal { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
             display: none; align-items: center; justify-content: center; 
-            z-index: 5000; padding: 20px; backdrop-filter: blur(10px);
+            z-index: 5000; padding: 20px; backdrop-filter: blur(8px);
         }
         .modal-box { 
-            background: var(--card); padding: 35px; border-radius: 30px; 
-            width: 100%; max-width: 500px; border: 2px solid var(--primary); 
-            box-shadow: 0 0 50px rgba(0,255,204,0.3);
+            background: var(--card); padding: 30px; border-radius: 25px; 
+            width: 100%; max-width: 450px; border: 2px solid var(--primary); 
             max-height: 80vh; overflow-y: auto;
         }
 
         #alert { 
-            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); 
-            background: var(--primary); color: #000; padding: 15px 45px; 
-            border-radius: 15px; font-weight: 900; z-index: 6000; 
-            display: none; font-family: 'Orbitron'; box-shadow: 0 10px 40px #000;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+            background: var(--primary); color: #000; padding: 12px 30px; 
+            border-radius: 10px; font-weight: 900; z-index: 6000; display: none;
         }
 
-        .status-tag { padding: 5px 10px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="alert">SYSTEM UPDATED</div>
+    <div id="alert">Action Successful!</div>
 
     <div class="header">
         <h1>BOOYAH ZONE</h1>
@@ -115,7 +113,7 @@
         
         <div id="tab-add" class="tab-content active">
             <div class="card">
-                <h2><i class="fas fa-plus-circle"></i> CREATE NEW TOURNAMENT</h2>
+                <h2><i class="fas fa-plus-circle"></i> ADD TOURNAMENT</h2>
                 <div class="grid-inputs">
                     <input type="text" id="mTitle" placeholder="Match Title">
                     <select id="mMode">
@@ -123,7 +121,7 @@
                         <option value="Duo">Duo</option>
                         <option value="Squad">Squad</option>
                     </select>
-                    <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
+                    <input type="number" id="mEntry" placeholder="Entry (₹)">
                     <input type="number" id="mPrize" placeholder="Prize Pool (₹)">
                     <input type="datetime-local" id="mTime">
                     <input type="text" id="mMap" value="Bermuda">
@@ -134,8 +132,8 @@
 
         <div id="tab-matches" class="tab-content">
             <div class="card">
-                <h2><i class="fas fa-gamepad"></i> LIVE MATCH MANAGEMENT</h2>
-                <div style="display:flex; gap:12px; margin-bottom:20px;">
+                <h2><i class="fas fa-gamepad"></i> MATCH CONTROLS</h2>
+                <div style="display:flex; gap:10px; margin-bottom:15px; overflow-x: auto; padding-bottom: 5px;">
                     <button class="btn btn-sm btn-blue" onclick="syncMatches('upcoming')">UPCOMING</button>
                     <button class="btn btn-sm btn-red" onclick="syncMatches('live')">LIVE</button>
                     <button class="btn btn-sm btn-green" onclick="syncMatches('finished')">FINISHED</button>
@@ -144,11 +142,11 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Match Info</th>
+                                <th>Info</th>
                                 <th>Players</th>
-                                <th>Players List</th>
+                                <th>Joined List</th>
                                 <th>Action</th>
-                                <th>Del</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody id="matchContainer"></tbody>
@@ -159,19 +157,19 @@
 
         <div id="tab-cash" class="tab-content">
             <div class="card">
-                <h2><i class="fas fa-coins"></i> DEPOSIT APPROVALS</h2>
+                <h2><i class="fas fa-coins"></i> DEPOSITS</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>User Phone</th><th>Amount</th><th>UTR</th><th>Verify</th></tr></thead>
+                        <thead><tr><th>User</th><th>Amount</th><th>UTR</th><th>Action</th></tr></thead>
                         <tbody id="depositContainer"></tbody>
                     </table>
                 </div>
             </div>
             <div class="card">
-                <h2><i class="fas fa-wallet"></i> WITHDRAWAL REQUESTS</h2>
+                <h2><i class="fas fa-wallet"></i> WITHDRAWALS</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>User Phone</th><th>Amount</th><th>UPI ID</th><th>Status</th></tr></thead>
+                        <thead><tr><th>User</th><th>Amount</th><th>UPI ID</th><th>Action</th></tr></thead>
                         <tbody id="withdrawContainer"></tbody>
                     </table>
                 </div>
@@ -180,32 +178,33 @@
 
         <div id="tab-users" class="tab-content">
             <div class="card">
-                <h2><i class="fas fa-user-shield"></i> ALL USERS</h2>
-                <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search Phone...">
+                <h2><i class="fas fa-user-shield"></i> REGISTERED USERS</h2>
+                <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search by phone number..." style="margin-bottom:15px;">
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>Name</th><th>Phone</th><th>Password</th><th>Balance</th><th>Ban</th></tr></thead>
+                        <thead><tr><th>Name</th><th>Phone</th><th>Pass</th><th>Wallet</th><th>Ban</th></tr></thead>
                         <tbody id="userContainer"></tbody>
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="modal" id="roomModal">
         <div class="modal-box">
-            <h2>SET ROOM ACCESS</h2>
+            <h2>ROOM ACCESS 🔴</h2>
             <input type="text" id="roomId" placeholder="Room ID" style="margin: 15px 0;">
-            <input type="text" id="roomPass" placeholder="Room Pass" style="margin-bottom: 20px;">
-            <button class="btn btn-main" onclick="confirmLive()">PUSH TO LIVE 🔴</button>
+            <input type="text" id="roomPass" placeholder="Room Password" style="margin-bottom: 20px;">
+            <button class="btn btn-main" onclick="confirmLive()">GO LIVE NOW</button>
             <button class="btn btn-sm btn-red" style="width:100%; margin-top:10px;" onclick="closeModal('roomModal')">CANCEL</button>
         </div>
     </div>
 
     <div class="modal" id="playerModal">
         <div class="modal-box">
-            <h2 id="pMatchTitle">JOINED PLAYERS</h2>
-            <div id="playerListContent" style="margin-top:20px; color:var(--text);"></div>
+            <h2>JOINED PLAYERS 🎮</h2>
+            <div id="playerListContent" style="margin-top:15px;"></div>
             <button class="btn btn-main" style="margin-top:20px;" onclick="closeModal('playerModal')">CLOSE</button>
         </div>
     </div>
@@ -213,48 +212,53 @@
     <div class="modal" id="finishModal">
         <div class="modal-box">
             <h2>DECLARE WINNER 🏆</h2>
-            <p style="margin-bottom:15px; font-size:12px; color:var(--accent);">Enter details to end match.</p>
-            <input type="text" id="winName" placeholder="Winner Gamer Name">
-            <input type="number" id="winKills" placeholder="Total Kills">
-            <button class="btn btn-main" onclick="confirmFinish()">FINISH MATCH & SAVE</button>
+            <input type="text" id="winName" placeholder="Winner Name (Game Name)" style="margin: 15px 0;">
+            <input type="number" id="winKills" placeholder="Winner Kills" style="margin-bottom: 20px;">
+            <button class="btn btn-main" onclick="confirmFinish()">FINISH MATCH</button>
             <button class="btn btn-sm btn-red" style="width:100%; margin-top:10px;" onclick="closeModal('finishModal')">CANCEL</button>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" onclick="changeTab('tab-add', this)"><i class="fas fa-folder-plus"></i>ADD</div>
-        <div class="nav-item" onclick="changeTab('tab-matches', this)"><i class="fas fa-trophy"></i>GAMES</div>
-        <div class="nav-item" onclick="changeTab('tab-cash', this)"><i class="fas fa-hand-holding-usd"></i>CASH</div>
-        <div class="nav-item" onclick="changeTab('tab-users', this)"><i class="fas fa-users-cog"></i>USERS</div>
+        <div class="nav-item active" onclick="changeTab('tab-add', this)"><i class="fas fa-plus"></i>ADD</div>
+        <div class="nav-item" onclick="changeTab('tab-matches', this)"><i class="fas fa-gamepad"></i>GAMES</div>
+        <div class="nav-item" onclick="changeTab('tab-cash', this)"><i class="fas fa-money-bill-wave"></i>CASH</div>
+        <div class="nav-item" onclick="changeTab('tab-users', this)"><i class="fas fa-users"></i>USERS</div>
     </div>
 
     <script>
+        // --- CONFIG ---
         const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
 
+        let activeMatchId = "";
+
         function notify(msg) {
-            const box = document.getElementById('alert');
-            box.innerText = msg; box.style.display = 'block';
-            setTimeout(() => box.style.display = 'none', 3000);
+            const el = document.getElementById('alert');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        function changeTab(tabId, element) {
+        // --- TAB SYSTEM ---
+        function changeTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
+            el.classList.add('active');
+            
             if(tabId === 'tab-matches') syncMatches('upcoming');
             if(tabId === 'tab-cash') { syncDeposits(); syncWithdrawals(); }
             if(tabId === 'tab-users') syncUsers();
         }
 
+        // --- MATCHES ---
         function publishMatch() {
-            const mId = "M" + Date.now();
-            const payload = {
-                mId: mId, title: document.getElementById('mTitle').value,
+            const id = "M" + Date.now();
+            const data = {
+                mId: id, title: document.getElementById('mTitle').value,
                 mode: document.getElementById('mMode').value,
                 entry: document.getElementById('mEntry').value,
                 prize: document.getElementById('mPrize').value,
@@ -262,9 +266,9 @@
                 map: document.getElementById('mMap').value,
                 status: "upcoming"
             };
-            if(!payload.title) return notify("ENTER TITLE!");
-            db.ref('matches/' + mId).set(payload).then(() => {
-                notify("PUBLISHED!");
+            if(!data.title || !data.entry) return alert("Fill all fields!");
+            db.ref('matches/' + id).set(data).then(() => {
+                notify("Match Published!");
                 document.getElementById('mTitle').value = "";
             });
         }
@@ -275,41 +279,59 @@
                 container.innerHTML = "";
                 snap.forEach(child => {
                     const m = child.val();
-                    const pCount = m.players ? Object.keys(m.players).length : 0;
+                    const players = m.players ? Object.keys(m.players).length : 0;
                     container.innerHTML += `
                         <tr>
-                            <td><b>${m.title}</b><br><small style="color:var(--accent)">${m.winnerName ? 'Win: '+m.winnerName : ''}</small></td>
-                            <td><span class="status-tag" style="background:var(--blue)">${pCount} Players</span></td>
-                            <td><button class="btn btn-sm btn-orange" onclick="viewPlayers('${child.key}')">VIEW LIST</button></td>
+                            <td><b>${m.title}</b><br><small>${m.winnerName ? '🏆 '+m.winnerName : m.time}</small></td>
+                            <td><span class="status-tag" style="background:var(--blue)">${players} Joined</span></td>
+                            <td><button class="btn btn-sm btn-orange" onclick="viewPlayers('${m.mId}')">LIST</button></td>
                             <td>
-                                ${status === 'upcoming' ? `<button class="btn btn-green btn-sm" onclick="openRoomPopup('${m.mId}')">LIVE</button>` : ''}
-                                ${status === 'live' ? `<button class="btn btn-blue btn-sm" onclick="openFinishPopup('${m.mId}')">FINISH</button>` : ''}
-                                ${status === 'finished' ? `<span class="status-tag" style="background:gray">DONE</span>` : ''}
+                                ${status === 'upcoming' ? `<button class="btn btn-sm btn-green" onclick="openRoom('${m.mId}')">LIVE</button>` : ''}
+                                ${status === 'live' ? `<button class="btn btn-sm btn-blue" onclick="openFinish('${m.mId}')">FINISH</button>` : ''}
+                                ${status === 'finished' ? `<span class="status-tag" style="background:#444">CLOSED</span>` : ''}
                             </td>
-                            <td><button class="btn btn-red btn-sm" onclick="deleteEntry('matches/${m.mId}')">DEL</button></td>
+                            <td><button class="btn btn-sm btn-red" onclick="deleteItem('matches/${m.mId}')">DEL</button></td>
                         </tr>
                     `;
                 });
             });
         }
 
-        function viewPlayers(mId) {
-            db.ref('matches/' + mId + '/players').once('value', snap => {
-                const modal = document.getElementById('playerModal');
+        function viewPlayers(id) {
+            db.ref('matches/'+id+'/players').once('value', snap => {
                 const list = document.getElementById('playerListContent');
                 list.innerHTML = "";
-                if(!snap.exists()) { list.innerHTML = "<p>No players joined yet.</p>"; } 
+                if(!snap.exists()) list.innerHTML = "No players yet.";
                 else {
                     let i = 1;
-                    snap.forEach(player => {
-                        list.innerHTML += `<p style="padding:10px; border-bottom:1px solid #232a3d;">${i}. <b>${player.val().gameName || 'Gamer'}</b> (${player.key})</p>`;
+                    snap.forEach(p => {
+                        list.innerHTML += `<div style="padding:10px; border-bottom:1px solid #334155;">${i}. <b>${p.val().gameName}</b> (${p.key})</div>`;
                         i++;
                     });
                 }
-                modal.style.display = 'flex';
+                document.getElementById('playerModal').style.display = 'flex';
             });
         }
 
+        function openRoom(id) { activeMatchId = id; document.getElementById('roomModal').style.display = 'flex'; }
+        function confirmLive() {
+            const rid = document.getElementById('roomId').value;
+            const rps = document.getElementById('roomPass').value;
+            if(!rid) return alert("Enter Room ID!");
+            db.ref('matches/'+activeMatchId).update({ roomId: rid, roomPass: rps, status: 'live' })
+            .then(() => { closeModal('roomModal'); notify("Match is Live!"); });
+        }
+
+        function openFinish(id) { activeMatchId = id; document.getElementById('finishModal').style.display = 'flex'; }
+        function confirmFinish() {
+            const win = document.getElementById('winName').value;
+            const kills = document.getElementById('winKills').value;
+            if(!win) return alert("Enter winner name!");
+            db.ref('matches/'+activeMatchId).update({ status: 'finished', winnerName: win, winnerKills: kills })
+            .then(() => { closeModal('finishModal'); notify("Match Finished!"); });
+        }
+
+        // --- CASH ---
         function syncDeposits() {
             db.ref('deposits').on('value', snap => {
                 const container = document.getElementById('depositContainer');
@@ -317,20 +339,21 @@
                 snap.forEach(child => {
                     const d = child.val();
                     if(d.status === 'pending') {
-                        container.innerHTML += `<tr><td>${d.userUID}</td><td>₹${d.amount}</td><td>${d.utr}</td><td><button class="btn btn-green btn-sm" onclick="approveDeposit('${child.key}','${d.userUID}',${d.amount})">ADD</button></td></tr>`;
+                        container.innerHTML += `<tr><td>${d.userUID}</td><td>₹${d.amount}</td><td>${d.utr}</td>
+                        <td><button class="btn btn-sm btn-green" onclick="approveDep('${child.key}','${d.userUID}',${d.amount})">ADD</button></td></tr>`;
                     }
                 });
             });
         }
 
-        async function approveDeposit(depId, uid, amt) {
-            const userRef = db.ref('users/' + uid);
-            const userSnap = await userRef.once('value');
-            if(userSnap.exists()){
-                const currentBal = Number(userSnap.val().balance || 0);
-                await userRef.update({ balance: currentBal + Number(amt) });
-                await db.ref('deposits/' + depId).update({ status: 'approved' });
-                notify("DONE!");
+        async function approveDep(id, uid, amt) {
+            const user = db.ref('users/'+uid);
+            const snap = await user.once('value');
+            if(snap.exists()) {
+                let bal = Number(snap.val().balance || 0);
+                await user.update({ balance: bal + Number(amt) });
+                await db.ref('deposits/'+id).update({ status: 'approved' });
+                notify("Deposit Approved!");
             }
         }
 
@@ -341,59 +364,35 @@
                 snap.forEach(child => {
                     const w = child.val();
                     if(w.status === 'pending') {
-                        container.innerHTML += `<tr><td>${w.userUID}</td><td>₹${w.amount}</td><td>${w.upiID}</td><td><button class="btn btn-red btn-sm" onclick="markPaid('${child.key}')">PAID</button></td></tr>`;
+                        container.innerHTML += `<tr><td>${w.userUID}</td><td>₹${w.amount}</td><td>${w.upiID}</td>
+                        <td><button class="btn btn-sm btn-red" onclick="markPaid('${child.key}')">PAID</button></td></tr>`;
                     }
                 });
             });
         }
+        function markPaid(id) { db.ref('withdrawals/'+id).update({ status: 'paid' }).then(() => notify("Marked as Paid!")); }
 
-        function markPaid(id) { db.ref('withdrawals/' + id).update({ status: 'paid' }).then(() => notify("PAID!")); }
-
+        // --- USERS ---
         function syncUsers() {
             db.ref('users').on('value', snap => {
                 const container = document.getElementById('userContainer');
                 container.innerHTML = "";
                 snap.forEach(child => {
                     const u = child.val();
-                    container.innerHTML += `<tr><td>${u.name || 'Gamer'}</td><td>${child.key}</td><td style="color:var(--accent)">${u.password || '--'}</td><td style="color:var(--primary)">₹${u.balance || 0}</td><td><button class="btn btn-red btn-sm" onclick="deleteEntry('users/${child.key}')">BAN</button></td></tr>`;
+                    container.innerHTML += `<tr><td>${u.name || 'Gamer'}</td><td>${child.key}</td>
+                    <td style="color:var(--accent)">${u.password || '---'}</td><td style="color:var(--primary)">₹${u.balance || 0}</td>
+                    <td><button class="btn btn-sm btn-red" onclick="deleteItem('users/${child.key}')">BAN</button></td></tr>`;
                 });
             });
         }
 
-        let targetMatch = "";
-        function openRoomPopup(id) { targetMatch = id; document.getElementById('roomModal').style.display = 'flex'; }
-        
-        function confirmLive() {
-            const rid = document.getElementById('roomId').value;
-            const rps = document.getElementById('roomPass').value;
-            db.ref('matches/' + targetMatch).update({ roomId: rid, roomPass: rps, status: 'live' }).then(() => { closeModal('roomModal'); notify("LIVE!"); });
-        }
+        function deleteItem(path) { if(confirm("Confirm Delete?")) db.ref(path).remove().then(() => notify("Deleted!")); }
 
-        // --- FINISH LOGIC ---
-        function openFinishPopup(id) { targetMatch = id; document.getElementById('finishModal').style.display = 'flex'; }
-
-        function confirmFinish() {
-            const wName = document.getElementById('winName').value;
-            const wKills = document.getElementById('winKills').value;
-            if(!wName) return alert("Enter Winner Name!");
-
-            db.ref('matches/' + targetMatch).update({ 
-                status: 'finished',
-                winnerName: wName,
-                winnerKills: wKills || 0
-            }).then(() => { 
-                closeModal('finishModal'); 
-                notify("MATCH FINISHED & SAVED!"); 
-                document.getElementById('winName').value = "";
-                document.getElementById('winKills').value = "";
-            });
-        }
-
-        function deleteEntry(path) { if(confirm("DEL?")) db.ref(path).remove(); }
         function searchUsers() {
-            let filter = document.getElementById('userSearch').value.toUpperCase()let tr = document.getElementById('userContainer').getElementsByTagName('tr');
-            for (let i = 0; i < tr.length; i++) {
-                tr[i].style.display = (tr[i].innerText.toUpperCase().indexOf(filter) > -1) ? "" : "none";
+            let filter = document.getElementById('userSearch').value.toUpperCase();
+            let rows = document.getElementById('userContainer').getElementsByTagName('tr');
+            for (let row of rows) {
+                row.style.display = row.innerText.toUpperCase().includes(filter) ? "" : "none";
             }
         }
     </script>
