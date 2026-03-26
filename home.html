@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BOOYAH ZONE | ELITE ARENA</title>
+    <title>BOOYAH ZONE | PRO ARENA</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,277 +11,239 @@
     <style>
         :root {
             --primary: #ff9900;
-            --primary-dark: #e68a00;
-            --secondary: #1a1c20;
-            --bg-gradient: linear-gradient(160deg, #ffffff 0%, #fff5e6 50%, #ffe0b3 100%);
-            --card-glass: rgba(255, 255, 255, 0.9);
+            --secondary: #121212;
+            --white: #ffffff;
+            --accent-bg: #fffbf5;
             --text-main: #1a1c20;
-            --text-dim: #57606f;
-            --shadow-lux: 0 15px 35px rgba(255, 153, 0, 0.12);
-            --border-soft: 1px solid rgba(255, 153, 0, 0.15);
+            --shadow-premium: 0 12px 30px rgba(255, 153, 0, 0.15);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            outline: none;
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; outline: none; 
         }
-
+        
         body {
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text-main);
-            padding-bottom: 110px;
-            overflow-x: hidden;
+            background: linear-gradient(180deg, var(--white) 0%, #fff0da 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh; padding-bottom: 110px; overflow-x: hidden;
         }
 
-        /* --- TOP NAVIGATION --- */
+        /* --- LOGO & TOP BAR --- */
         .app-bar {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            height: 80px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px;
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(255, 153, 0, 0.1);
+            height: 85px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1.5px solid rgba(255, 153, 0, 0.1);
         }
 
-        .brand { display: flex; align-items: center; gap: 12px; }
         .logo-box {
-            width: 42px; height: 42px; background: var(--secondary);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            border: 2px solid var(--primary); transform: rotate(-5deg);
-        }
-        .logo-box img { width: 80%; object-fit: contain; }
-
-        .app-name {
-            font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
-            letter-spacing: 1px; color: var(--secondary);
-        }
-        .app-name span { color: var(--primary); }
-
-        /* --- PROFILE & WALLET --- */
-        .header-section {
-            padding: 25px 20px;
-            display: flex; flex-direction: column; gap: 20px;
+            width: 55px; height: 55px; background: var(--secondary); border-radius: 18px;
+            display: flex; align-items: center; justify-content: center; 
+            border: 2.5px solid var(--primary); cursor: pointer; position: relative;
+            animation: logoPulse 4s infinite ease-in-out;
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
         }
 
-        .user-card {
-            background: var(--card-glass);
-            border-radius: 30px; padding: 25px;
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .logo-box img { width: 80%; pointer-events: none; }
+
+        .app-title { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; letter-spacing: 1px; }
+        .app-title span { color: var(--primary); }
+
+        /* --- FIRING EFFECT (BULLETS) --- */
+        .bullet {
+            position: fixed; width: 20px; height: 3px; background: linear-gradient(90deg, #ffcc00, transparent);
+            border-radius: 2px; z-index: 9999; pointer-events: none;
+            box-shadow: 0 0 10px #ff9900;
+        }
+
+        /* --- MAIN SECTION --- */
+        .container { padding: 25px 20px; }
+
+        .profile-card {
+            background: var(--white); border-radius: 30px; padding: 25px;
             display: flex; justify-content: space-between; align-items: center;
-            border: var(--border-soft); box-shadow: var(--shadow-lux);
-            animation: slideIn 0.6s ease-out;
+            box-shadow: var(--shadow-premium); border: 1px solid rgba(255, 153, 0, 0.1);
+            margin-bottom: 30px;
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .user-meta h2 { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .user-meta #userName { font-family: 'Orbitron'; font-size: 20px; font-weight: 900; color: var(--secondary); }
 
-        .user-info h2 { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .user-info #userTitle { font-family: 'Orbitron'; font-size: 20px; font-weight: 800; color: var(--secondary); }
-
-        .wallet-pill {
-            background: var(--secondary);
-            padding: 12px 18px; border-radius: 20px;
-            color: #fff; text-align: right;
-            border-left: 4px solid var(--primary);
+        .balance-pill {
+            background: var(--secondary); padding: 12px 18px; border-radius: 22px;
+            color: var(--primary); text-align: center; border-left: 5px solid var(--primary);
         }
-        .wallet-pill small { display: block; font-size: 9px; opacity: 0.7; font-weight: 700; text-transform: uppercase; }
-        .wallet-pill .balance { font-family: 'Orbitron'; font-size: 18px; font-weight: 700; color: var(--primary); }
-
-        /* --- QUICK ACTIONS --- */
-        .status-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-        }
-        .status-card {
-            background: #fff; border-radius: 20px; padding: 18px 10px;
-            text-align: center; text-decoration: none; border: var(--border-soft);
-            transition: 0.3s; display: flex; flex-direction: column; gap: 8px;
-        }
-        .status-card:active { transform: scale(0.95); background: var(--primary); }
-        .status-card:active i, .status-card:active span { color: #fff; }
-        .status-card i { font-size: 24px; color: var(--primary); }
-        .status-card span { font-size: 11px; font-weight: 800; color: var(--secondary); text-transform: uppercase; }
+        .balance-pill small { display: block; font-size: 9px; font-weight: 800; opacity: 0.8; }
+        .balance-pill .amt { font-family: 'Orbitron'; font-size: 18px; font-weight: 800; }
 
         /* --- ARENA CARDS --- */
-        .section-label {
-            margin: 10px 0 15px; display: flex; align-items: center; gap: 10px;
+        .arena-label {
+            font-family: 'Orbitron'; font-size: 16px; font-weight: 900; 
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
         }
-        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
-        .section-label h3 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
-
-        .arena-list { display: flex; flex-direction: column; gap: 15px; }
+        .arena-label i { color: var(--primary); font-size: 18px; }
 
         .arena-card {
-            background: #fff; border-radius: 25px; padding: 15px;
-            display: flex; align-items: center; gap: 15px;
-            border: var(--border-soft); box-shadow: var(--shadow-lux);
-            position: relative; transition: 0.3s;
-        }
-        .arena-card:active { transform: translateX(10px); }
-
-        .mode-img {
-            width: 70px; height: 70px; background: #fff5e6;
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 30px; color: var(--primary); border: 1px solid #ffe0b3;
+            background: var(--white); border-radius: 28px; padding: 22px;
+            margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05); border: 1.5px solid #f1f1f1;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .mode-info { flex: 1; }
-        .mode-info h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--secondary); }
-        .mode-info p { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+        .arena-card:active { transform: scale(0.96); border-color: var(--primary); }
 
-        .btn-play {
-            width: 45px; height: 45px; background: var(--primary);
-            border-radius: 15px; display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 18px; box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
-        }
+        .arena-main { display: flex; align-items: center; gap: 18px; }
 
-        /* --- BOTTOM NAV --- */
-        .nav-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; height: 70px;
-            background: var(--secondary); border-radius: 25px;
-            display: flex; justify-content: space-around; align-items: center;
-            z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            padding: 0 10px;
-        }
-
-        .nav-item {
-            text-decoration: none; color: #7f8c8d;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            transition: 0.3s;
-        }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; }
-        .nav-item span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
-
-        .nav-profile-btn {
-            width: 60px; height: 60px; background: var(--primary);
-            border-radius: 50%; margin-top: -45px;
-            border: 5px solid var(--bg-gradient);
+        .arena-icon {
+            width: 65px; height: 65px; background: var(--accent-bg); border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 24px; box-shadow: 0 10px 20px rgba(255, 153, 0, 0.4);
+            font-size: 28px; color: var(--primary); border: 1px solid #ffe0b3;
         }
+
+        .arena-info h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--secondary); margin-bottom: 4px; }
+        .arena-info p { font-size: 12px; color: #777; font-weight: 700; text-transform: uppercase; }
+
+        .play-arrow {
+            width: 45px; height: 45px; background: var(--primary); color: #fff;
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
+        }
+
+        /* --- NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 80px;
+            background: var(--secondary); display: flex; justify-content: space-around;
+            align-items: center; border-radius: 30px 30px 0 0; z-index: 1000;
+        }
+
+        .nav-link { color: #666; text-decoration: none; text-align: center; transition: 0.3s; }
+        .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-link span { font-size: 10px; font-weight: 800; text-transform: uppercase; }
+
     </style>
 </head>
 <body>
 
-    <nav class="app-bar">
-        <div class="brand">
-            <div class="logo-box">
-                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="">
-            </div>
-            <div class="app-name">BOOYAH <span>ZONE</span></div>
+    <header class="app-bar">
+        <div class="logo-box" onclick="triggerFiring(this)">
+            <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
         </div>
-        <i class="fas fa-bell" style="font-size: 20px; color: var(--text-dim);"></i>
+        <div class="app-title">BOOYAH <span>ZONE</span></div>
+        <i class="fas fa-cog" style="font-size: 22px; color: #888;"></i>
+    </header>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="user-meta">
+                <h2>Elite Player</h2>
+                <div id="userName">AKASH KOHLI</div>
+            </div>
+            <div class="balance-pill">
+                <small>TOTAL BALANCE</small>
+                <div class="amt">₹<span id="userBal">0.00</span></div>
+            </div>
+        </div>
+
+        <div class="arena-label">
+            <i class="fas fa-crosshairs"></i> SELECT TOURNAMENT
+        </div>
+
+        <div class="arena-card" onclick="location.href='1v1.html'">
+            <div class="arena-main">
+                <div class="arena-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="arena-info">
+                    <h4>SOLO 1V1</h4>
+                    <p>Clash Squad Duel</p>
+                </div>
+            </div>
+            <div class="play-arrow"><i class="fas fa-play"></i></div>
+        </div>
+
+        <div class="arena-card" onclick="location.href='2v2.html'">
+            <div class="arena-main">
+                <div class="arena-icon"><i class="fas fa-user-friends"></i></div>
+                <div class="arena-info">
+                    <h4>DUO 2V2</h4>
+                    <p>Double Trouble Battle</p>
+                </div>
+            </div>
+            <div class="play-arrow"><i class="fas fa-play"></i></div>
+        </div>
+
+        <div class="arena-card" onclick="location.href='4v4.html'">
+            <div class="arena-main">
+                <div class="arena-icon"><i class="fas fa-users"></i></div>
+                <div class="arena-info">
+                    <h4>SQUAD 4V4</h4>
+                    <p>Team Survival War</p>
+                </div>
+            </div>
+            <div class="play-arrow"><i class="fas fa-play"></i></div>
+        </div>
+
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-link active"><i class="fas fa-th-large"></i><span>Home</span></a>
+        <a href="refer.html" class="nav-link"><i class="fas fa-coins"></i><span>Earn</span></a>
+        <a href="profile.html" class="nav-link" style="color:var(--primary); transform: translateY(-5px) scale(1.1);"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+        <a href="history.html" class="nav-link"><i class="fas fa-poll"></i><span>Stats</span></a>
+        <a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span>Wallet</span></a>
     </nav>
 
-    <div class="header-section">
-        <div class="user-card">
-            <div class="user-info">
-                <h2>Welcome Back,</h2>
-                <div id="userTitle">LOADING...</div>
-            </div>
-            <div class="wallet-pill">
-                <small>My Balance</small>
-                <div class="balance">₹<span id="userBalance">0.00</span></div>
-            </div>
-        </div>
-
-        <div class="status-grid">
-            <a href="upcoming.html" class="status-card">
-                <i class="fas fa-clock"></i>
-                <span>Upcoming</span>
-            </a>
-            <a href="ongoing.html" class="status-card">
-                <i class="fas fa-gamepad"></i>
-                <span>Ongoing</span>
-            </a>
-            <a href="finish.html" class="status-card">
-                <i class="fas fa-trophy"></i>
-                <span>Results</span>
-            </a>
-        </div>
-
-        <div class="section-label">
-            <div class="dot"></div>
-            <h3>MATCH ARENA</h3>
-        </div>
-
-        <div class="arena-list">
-            <div class="arena-card" onclick="location.href='1v1.html'">
-                <div class="mode-img"><i class="fas fa-user"></i></div>
-                <div class="mode-info">
-                    <h4>SOLO 1V1</h4>
-                    <p>Classic Clash Squad Duel</p>
-                </div>
-                <div class="btn-play"><i class="fas fa-chevron-right"></i></div>
-            </div>
-
-            <div class="arena-card" onclick="location.href='2v2.html'">
-                <div class="mode-img"><i class="fas fa-user-friends"></i></div>
-                <div class="mode-info">
-                    <h4>DUO 2V2</h4>
-                    <p>Team Synergy Battle</p>
-                </div>
-                <div class="btn-play"><i class="fas fa-chevron-right"></i></div>
-            </div>
-
-            <div class="arena-card" onclick="location.href='4v4.html'">
-                <div class="mode-img"><i class="fas fa-users"></i></div>
-                <div class="mode-info">
-                    <h4>SQUAD 4V4</h4>
-                    <p>Ultimate Tactical War</p>
-                </div>
-                <div class="btn-play"><i class="fas fa-chevron-right"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <a href="home.html" class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Lobby</span>
-        </a>
-        <a href="refer.html" class="nav-item">
-            <i class="fas fa-share-alt"></i>
-            <span>Earn</span>
-        </a>
-        <a href="profile.html" class="nav-profile-btn">
-            <i class="fas fa-user-ninja"></i>
-        </a>
-        <a href="history.html" class="nav-item">
-            <i class="fas fa-poll"></i>
-            <span>Stats</span>
-        </a>
-        <a href="wallet.html" class="nav-item">
-            <i class="fas fa-wallet"></i>
-            <span>Wallet</span>
-        </a>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
     <script>
-        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // --- FIRING EFFECT SYSTEM ---
+        let firingMode = false;
 
-        const userPhone = localStorage.getItem('gameID');
+        function triggerFiring(element) {
+            if (firingMode) return;
+            firingMode = true;
 
-        if (userPhone) {
-            database.ref('users/' + userPhone).on('value', (snap) => {
-                const data = snap.val();
-                if (data) {
-                    document.getElementById('userTitle').innerText = (data.name || "WARRIOR").toUpperCase();
-                    document.getElementById('userBalance').innerText = parseFloat(data.balance || 0).toFixed(2);
+            // Logo Shaking Effect
+            element.style.animation = "none";
+            element.style.transform = "scale(1.2) rotate(0deg)";
+            
+            let bulletCount = 0;
+            const fireInterval = setInterval(() => {
+                shootBullet();
+                bulletCount++;
+                if (bulletCount > 30) { // Approx 5 seconds
+                    clearInterval(fireInterval);
+                    firingMode = false;
+                    element.style.animation = "logoPulse 4s infinite ease-in-out";
                 }
-            });
-        } else {
-            window.location.href = "index.html";
+            }, 150);
         }
+
+        function shootBullet() {
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            
+            // Randomly fire from the left side at different heights
+            bullet.style.left = "-20px";
+            bullet.style.top = Math.random() * window.innerHeight + "px";
+            
+            document.body.appendChild(bullet);
+
+            const animation = bullet.animate([
+                { transform: 'translateX(0)', opacity: 1 },
+                { transform: `translateX(${window.innerWidth + 100}px)`, opacity: 0.8 }
+            ], {
+                duration: 500,
+                easing: 'linear'
+            });
+
+            animation.onfinish = () => bullet.remove();
+        }
+
+        // --- FIREBASE SYNC (Replace with your keys) ---
+        // (Isme tumhara purana firebase wala logic lagega logic)
     </script>
 </body>
 </html>
