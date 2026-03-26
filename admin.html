@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,12 +35,10 @@
 
         .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #eee; }
         
-        /* Table */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { text-align: left; padding: 12px; color: #b2bec3; font-size: 11px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 13px; }
 
-        /* Buttons */
         .btn { padding: 8px 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 10px; color: white; margin: 2px; }
         .btn-primary { background: var(--primary); width: 100%; padding: 15px; font-size: 14px; }
         .btn-approve { background: var(--success); }
@@ -51,9 +49,13 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 10px; font-weight: 600; }
 
-        /* Modal */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 400px; text-align: center; }
+        
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; text-transform: uppercase; color: white; }
+        .bg-pending { background: #ff9900; }
+        .bg-approved { background: #27ae60; }
+        .bg-rejected { background: #d63031; }
     </style>
 </head>
 <body>
@@ -106,30 +108,34 @@
 
         <div id="deposits" class="tab-content">
             <div class="card">
-                <h2>PENDING DEPOSITS</h2>
-                <table>
-                    <thead><tr><th>UID</th><th>Amount</th><th>Action</th></tr></thead>
-                    <tbody id="depositTable"></tbody>
-                </table>
+                <h2>DEPOSIT REQUESTS (Recent 50)</h2>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>User/Name</th><th>Amount</th><th>UTR Number</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="depositTable"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="withdrawals" class="tab-content">
             <div class="card">
                 <h2>WITHDRAWAL REQUESTS</h2>
-                <table>
-                    <thead><tr><th>UID</th><th>Amount</th><th>UPI ID</th><th>Action</th></tr></thead>
-                    <tbody id="withdrawTable"></tbody>
-                </table>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>User/Name</th><th>Amount</th><th>UPI ID</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="withdrawTable"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="user-list" class="tab-content">
             <div class="card">
-                <h2>USER DATABASE (FULL DETAILS)</h2>
+                <h2>USER DATABASE</h2>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>Name</th><th>UID/Phone</th><th>Password</th><th>Balance</th><th>Refer By</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Name</th><th>UID/Phone</th><th>Balance</th><th>Action</th></tr></thead>
                         <tbody id="userTable"></tbody>
                     </table>
                 </div>
@@ -148,23 +154,11 @@
         </div>
     </div>
 
-    <div class="modal" id="balModal">
-        <div class="modal-content">
-            <h3>EDIT USER BALANCE</h3>
-            <p id="targetUser" style="margin:10px 0; font-weight:bold;"></p>
-            <input type="number" id="newBal" placeholder="New Balance">
-            <button class="btn btn-approve" onclick="saveBal()">UPDATE</button>
-            <button class="btn btn-reject" onclick="closeModal('balModal')">CANCEL</button>
-        </div>
-    </div>
-
     <script>
-        // --- FIREBASE SETUP ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- TAB NAVIGATION ---
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -177,7 +171,7 @@
             if(id === 'user-list') loadUsers();
         }
 
-        // --- MATCHES LOGIC ---
+        // MATCH LOGIC
         function uploadMatch() {
             const mId = "MATCH_" + Date.now();
             const data = {
@@ -189,11 +183,7 @@
                 map: document.getElementById('mMap').value,
                 status: "upcoming", roomId: "", roomPass: ""
             };
-            if(!data.title || !data.entry) return alert("Fill all details!");
-            db.ref('matches/' + mId).set(data).then(() => {
-                alert("Match Created Successfully!");
-                location.reload();
-            });
+            db.ref('matches/' + mId).set(data).then(() => alert("Match Live!"));
         }
 
         function loadMatches(status) {
@@ -203,63 +193,49 @@
                 snap.forEach(child => {
                     const m = child.val();
                     const players = m.players ? Object.keys(m.players).length : 0;
-                    const roomInfo = m.roomId ? `ID: ${m.roomId} | P: ${m.roomPass}` : "Not Set";
-                    
                     body.innerHTML += `<tr>
                         <td>${m.title}</td>
-                        <td style="color:#6c5ce7; font-size:11px;">${roomInfo}</td>
+                        <td style="color:#6c5ce7;">${m.roomId || 'Wait'} / ${m.roomPass || 'Wait'}</td>
                         <td>${players} Joined</td>
                         <td>
-                            ${status === 'upcoming' ? `<button class="btn btn-room" onclick="openRoomModal('${m.mId}','${m.title}')">SET ROOM</button>` : ''}
-                            ${status === 'live' ? `<button class="btn btn-edit" onclick="openRoomModal('${m.mId}','${m.title}')">EDIT ROOM</button> <button class="btn btn-approve" onclick="finishM('${m.mId}')">FINISH</button>` : ''}
-                            <button class="btn btn-reject" onclick="deleteM('${m.mId}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-room" onclick="openRoomModal('${m.mId}','${m.title}')">SET ROOM</button>
+                            <button class="btn btn-reject" onclick="deleteM('${m.mId}')">DEL</button>
                         </td>
                     </tr>`;
                 });
             });
         }
 
-        let currentRoomId = "";
-        function openRoomModal(id, title) {
-            currentRoomId = id;
-            document.getElementById('roomMatchName').innerText = title;
-            document.getElementById('roomModal').style.display = 'flex';
-        }
-
-        function saveRoomDetails() {
-            const rid = document.getElementById('roomIdInput').value;
-            const rps = document.getElementById('roomPassInput').value;
-            db.ref('matches/' + currentRoomId).update({
-                roomId: rid, roomPass: rps, status: 'live'
-            }).then(() => {
-                alert("Room Details Sent to Users!");
-                closeModal('roomModal');
-            });
-        }
-
-        function finishM(id) {
-            const winner = prompt("Enter Winner UID (Phone):");
-            if(winner) db.ref('matches/'+id).update({status: 'finished', winner: winner}).then(()=>alert("Match Finished!"));
-        }
-
-        function deleteM(id) { if(confirm("Delete Match?")) db.ref('matches/'+id).remove(); }
-
-        // --- TRANSACTIONS LOGIC ---
+        // TRANSACTION LOGIC (FIXED)
         function loadTxn(path) {
-            db.ref(path).on('value', snap => {
+            db.ref(path).limitToLast(50).on('value', snap => {
                 const body = document.getElementById(path === 'deposits' ? 'depositTable' : 'withdrawTable');
                 body.innerHTML = "";
                 snap.forEach(child => {
                     const t = child.val();
-                    if(t.status === 'pending') {
-                        body.innerHTML += `<tr>
-                            <td>${t.userUID}</td><td>₹${t.amount}</td>
-                            ${path === 'withdrawals' ? `<td>${t.upiID}</td>` : ''}
-                            <td>
-                                <button class="btn btn-approve" onclick="approveTxn('${path}','${child.key}','${t.userUID}',${t.amount})">✔</button>
-                                <button class="btn btn-reject" onclick="rejectTxn('${path}','${child.key}','${t.userUID}',${t.amount})">✖</button>
-                            </td>
-                        </tr>`;
+                    const key = child.key;
+                    
+                    let actionBtns = t.status === 'pending' ? `
+                        <button class="btn btn-approve" onclick="approveTxn('${path}','${key}','${t.userUID}',${t.amount})">✔</button>
+                        <button class="btn btn-reject" onclick="rejectTxn('${path}','${key}','${t.userUID}',${t.amount})">✖</button>
+                    ` : `<i class="fas fa-check-double" style="color:#ccc"></i>`;
+
+                    if(path === 'deposits') {
+                        body.innerHTML = `<tr>
+                            <td>${t.userName}<br><small>${t.userUID}</small></td>
+                            <td>₹${t.amount}</td>
+                            <td style="color:blue;">${t.utr || 'N/A'}</td>
+                            <td><span class="status-badge bg-${t.status}">${t.status}</span></td>
+                            <td>${actionBtns}</td>
+                        </tr>` + body.innerHTML;
+                    } else {
+                        body.innerHTML = `<tr>
+                            <td>${t.userName}<br><small>${t.userUID}</small></td>
+                            <td>₹${t.amount}</td>
+                            <td>${t.upiID}</td>
+                            <td><span class="status-badge bg-${t.status}">${t.status}</span></td>
+                            <td>${actionBtns}</td>
+                        </tr>` + body.innerHTML;
                     }
                 });
             });
@@ -267,27 +243,27 @@
 
         async function approveTxn(path, id, uid, amt) {
             const uRef = db.ref('users/'+uid);
-            const snap = await uRef.once('value');
             if(path === 'deposits') {
-                const newBal = (Number(snap.val().balance) || 0) + Number(amt);
+                const snap = await uRef.child('balance').once('value');
+                const newBal = (Number(snap.val()) || 0) + Number(amt);
                 await uRef.update({ balance: newBal });
             }
             await db.ref(path+'/'+id).update({ status: 'approved' });
-            alert("Approved!");
+            alert("Approved Successfully!");
         }
 
         async function rejectTxn(path, id, uid, amt) {
             if(path === 'withdrawals') {
                 const uRef = db.ref('users/'+uid);
-                const snap = await uRef.once('value');
-                const newBal = (Number(snap.val().balance) || 0) + Number(amt);
-                await uRef.update({ balance: newBal }); // Refund
+                const snap = await uRef.child('balance').once('value');
+                const newBal = (Number(snap.val()) || 0) + Number(amt);
+                await uRef.update({ balance: newBal });
             }
             await db.ref(path+'/'+id).update({ status: 'rejected' });
-            alert("Rejected!");
+            alert("Request Rejected!");
         }
 
-        // --- USER DATABASE LOGIC ---
+        // USER LIST
         function loadUsers() {
             db.ref('users').on('value', snap => {
                 const body = document.getElementById('userTable');
@@ -295,38 +271,30 @@
                 snap.forEach(child => {
                     const u = child.val();
                     body.innerHTML += `<tr>
-                        <td>${u.name || 'N/A'}</td>
-                        <td>${u.uid}</td>
-                        <td><code style="background:#eee;padding:2px 5px;">${u.password || '****'}</code></td>
-                        <td style="color:var(--success)">₹${u.balance || 0}</td>
-                        <td>${u.referredBy || 'Direct'}</td>
-                        <td>
-                            <button class="btn btn-edit" onclick="openBalModal('${u.uid}',${u.balance || 0})"><i class="fas fa-coins"></i></button>
-                            <button class="btn btn-reject" onclick="deleteUser('${u.uid}')"><i class="fas fa-user-slash"></i></button>
-                        </td>
+                        <td>${u.name}</td><td>${u.uid}</td>
+                        <td style="color:green">₹${u.balance || 0}</td>
+                        <td><button class="btn btn-reject" onclick="deleteUser('${u.uid}')">BAN</button></td>
                     </tr>`;
                 });
             });
         }
 
-        let editUID = "";
-        function openBalModal(uid, bal) {
-            editUID = uid;
-            document.getElementById('targetUser').innerText = "UID: " + uid;
-            document.getElementById('newBal').value = bal;
-            document.getElementById('balModal').style.display = 'flex';
+        // UTILS
+        let currentRoomId = "";
+        function openRoomModal(id, title) {
+            currentRoomId = id;
+            document.getElementById('roomMatchName').innerText = title;
+            document.getElementById('roomModal').style.display = 'flex';
         }
-
-        function saveBal() {
-            const amt = document.getElementById('newBal').value;
-            db.ref('users/'+editUID).update({ balance: Number(amt) }).then(() => {
-                alert("Balance Updated!");
-                closeModal('balModal');
-            });
+        function saveRoomDetails() {
+            const rid = document.getElementById('roomIdInput').value;
+            const rps = document.getElementById('roomPassInput').value;
+            db.ref('matches/' + currentRoomId).update({ roomId: rid, roomPass: rps, status: 'live' })
+            .then(() => { alert("Room Updated!"); closeModal('roomModal'); });
         }
-
-        function deleteUser(uid) { if(confirm("Ban User?")) db.ref('users/'+uid).remove(); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function deleteM(id) { if(confirm("Delete Match?")) db.ref('matches/'+id).remove(); }
+        function deleteUser(uid) { if(confirm("Ban User?")) db.ref('users/'+uid).remove(); }
     </script>
 </body>
 </html>
