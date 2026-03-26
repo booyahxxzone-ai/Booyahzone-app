@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOYAH MASTER | SUPER ADMIN</title>
+    <title>BOOYAH CONTROL | ADMIN v2</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,122 +13,123 @@
 
     <style>
         :root {
-            --primary: #ff9900; --bg: #f4f7f6; --white: #ffffff;
-            --text: #2d3436; --shadow: 0 10px 30px rgba(0,0,0,0.05);
-            --success: #27ae60; --danger: #d63031; --ongoing: #0984e3; --dark: #1a1a1a;
+            --primary: #ff9900; --bg: #f8f9fa; --white: #ffffff;
+            --dark: #1a1a1a; --success: #27ae60; --danger: #e74c3c;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+        body { background: var(--bg); color: #333; display: flex; min-height: 100vh; }
 
-        .sidebar { width: 260px; background: var(--white); height: 100vh; position: fixed; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; z-index: 100; }
-        .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; }
-        .side-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
-        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; border-left: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
-
-        .main { margin-left: 260px; flex: 1; padding: 30px; }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid #eee; }
+        /* Sidebar Modernized */
+        .sidebar { width: 280px; background: var(--dark); height: 100vh; position: fixed; color: #fff; display: flex; flex-direction: column; }
+        .side-header { padding: 40px 20px; text-align: center; background: #000; border-bottom: 2px solid var(--primary); }
+        .side-header h1 { font-family: 'Orbitron'; font-size: 20px; color: var(--primary); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        th { text-align: left; padding: 12px; color: #b2bec3; font-size: 12px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 13px; }
+        .nav-item { padding: 18px 25px; display: flex; align-items: center; gap: 15px; color: #bbb; text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: #222; color: var(--primary); border-right: 4px solid var(--primary); }
 
-        .btn { padding: 8px 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 10px; }
-        .btn-primary { background: var(--primary); color: #fff; width: 100%; padding: 15px; font-size: 14px; }
-        .btn-status { margin: 2px; color: #fff; }
+        .main { margin-left: 280px; flex: 1; padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 10px; color: white; text-transform: uppercase; font-family: 'Orbitron'; }
-        .bg-approved { background: var(--success); }
-        .bg-rejected { background: var(--danger); }
-        .bg-pending { background: var(--primary); }
-        .bg-live { background: var(--ongoing); }
+        .card { background: var(--white); border-radius: 24px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-bottom: 30px; border: 1px solid #eee; }
+        h2 { font-family: 'Orbitron'; font-size: 22px; margin-bottom: 25px; color: var(--dark); border-left: 5px solid var(--primary); padding-left: 15px; }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 10px; font-weight: 600; }
+        /* Table Design */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 15px; color: #888; text-transform: uppercase; font-size: 12px; border-bottom: 2px solid #f4f4f4; }
+        td { padding: 15px; border-bottom: 1px solid #f9f9f9; font-weight: 700; font-size: 14px; }
+
+        /* Form Inputs */
+        .grid-input { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, select { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-weight: 700; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .btn { padding: 10px 15px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; font-size: 11px; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: #fff; width: 100%; padding: 18px; font-size: 15px; margin-top: 10px; }
+        .btn-view { background: #6c5ce7; color: #fff; }
+        .btn-live { background: #0984e3; color: #fff; }
+        .btn-del { background: #d63031; color: #fff; }
+
+        /* Player List Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-box { background: #fff; width: 90%; max-width: 500px; border-radius: 25px; padding: 30px; max-height: 80vh; overflow-y: auto; }
+
+        .player-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="side-header"><h1>BOOYAH ZONE</h1></div>
-        <div class="nav-item active" onclick="showTab('add-match', this)"><i class="fas fa-plus-circle"></i> <span>Add Match</span></div>
-        <div class="nav-item" onclick="showTab('live-matches', this)"><i class="fas fa-gamepad"></i> <span>Manage Matches</span></div>
-        <div class="nav-item" onclick="showTab('deposits', this)"><i class="fas fa-hand-holding-usd"></i> <span>Deposits</span></div>
-        <div class="nav-item" onclick="showTab('withdrawals', this)"><i class="fas fa-wallet"></i> <span>Withdrawals</span></div>
-        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> <span>Users DB</span></div>
+        <div class="side-header"><h1>BOOYAH ADMIN</h1></div>
+        <div class="nav-item active" onclick="showTab('add', this)"><i class="fas fa-plus"></i> Add Match</div>
+        <div class="nav-item" onclick="showTab('manage', this)"><i class="fas fa-tasks"></i> Manage Matches</div>
+        <div class="nav-item" onclick="showTab('users', this)"><i class="fas fa-users"></i> Users Data</div>
+        <div class="nav-item" onclick="showTab('money', this)"><i class="fas fa-wallet"></i> Transactions</div>
     </div>
 
     <div class="main">
-        <div id="add-match" class="tab-content active">
+        
+        <div id="add" class="tab-content active">
             <div class="card">
-                <h2 style="font-family:'Orbitron'; margin-bottom:20px;">DEPLOY TOURNAMENT</h2>
-                <div class="grid-2">
-                    <input type="text" id="mTitle" placeholder="Match Title (e.g. Solo Battle #1)">
+                <h2>CREATE NEW MATCH</h2>
+                <div class="grid-input">
+                    <input type="text" id="mTitle" placeholder="Match Name (e.g. 1V1 PRO BATTLE)">
                     <select id="mMode">
-                        <option value="SOLO">1 V 1 (Solo)</option>
-                        <option value="DUO">2 V 2 (Duo)</option>
-                        <option value="SQUAD">4 V 4 (Squad)</option>
+                        <option value="1v1">1 V 1 (Solo Arena)</option>
+                        <option value="2v2">2 V 2 (Duo)</option>
+                        <option value="4v4">4 V 4 (Squad)</option>
                     </select>
                     <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
-                    <input type="number" id="mPrize" placeholder="Total Prize Pool (₹)">
+                    <input type="number" id="mPrize" placeholder="Prize Pool (₹)">
                     <input type="datetime-local" id="mTime">
                     <input type="text" id="mMap" value="Bermuda">
-                    <button class="btn btn-primary" style="grid-column: span 2;" onclick="uploadMatch()">CREATE MATCH</button>
                 </div>
+                <button class="btn btn-main" onclick="publishMatch()">PUBLISH TO APP</button>
             </div>
         </div>
 
-        <div id="live-matches" class="tab-content">
+        <div id="manage" class="tab-content">
             <div class="card">
-                <h2 style="font-family:'Orbitron';">MANAGE ALL MATCHES</h2>
+                <h2>LIVE TOURNAMENTS</h2>
                 <table>
-                    <thead><tr><th>Title</th><th>Entry</th><th>Status</th><th>Action</th></tr></thead>
-                    <tbody id="matchTableBody"></tbody>
+                    <thead><tr><th>Match Title</th><th>Mode</th><th>Entry</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="matchList"></tbody>
                 </table>
             </div>
         </div>
 
-        <div id="deposits" class="tab-content">
+        <div id="users" class="tab-content">
             <div class="card">
-                <h2 style="font-family:'Orbitron'; color:var(--primary);">DEPOSIT REQUESTS</h2>
+                <h2>USER DATABASE</h2>
                 <table>
-                    <thead><tr><th>User UID</th><th>Amount</th><th>TXN ID</th><th>Action</th></tr></thead>
-                    <tbody id="depositTableBody"></tbody>
+                    <thead><tr><th>Name</th><th>Phone/UID</th><th>Wallet</th><th>Password</th></tr></thead>
+                    <tbody id="userList"></tbody>
                 </table>
             </div>
         </div>
 
-        <div id="withdrawals" class="tab-content">
+        <div id="money" class="tab-content">
             <div class="card">
-                <h2 style="font-family:'Orbitron'; color:var(--danger);">PENDING WITHDRAWALS</h2>
-                <table>
-                    <thead><tr><th>User UID</th><th>Amount</th><th>UPI ID</th><th>Action</th></tr></thead>
-                    <tbody id="withdrawTableBody"></tbody>
-                </table>
+                <h2>PENDING REQUESTS</h2>
+                <div id="transactionArea">Loading requests...</div>
             </div>
         </div>
+    </div>
 
-        <div id="user-list" class="tab-content">
-            <div class="card">
-                <h2 style="font-family:'Orbitron';">USER DATABASE (ALL DETAILS)</h2>
-                <table>
-                    <thead><tr><th>Name</th><th>UID</th><th>Password</th><th>Balance</th><th>Action</th></tr></thead>
-                    <tbody id="userTableBody"></tbody>
-                </table>
-            </div>
+    <div class="modal" id="playerModal">
+        <div class="modal-box">
+            <h2 id="modalMatchTitle">PLAYERS LIST</h2>
+            <div id="playerContainer"></div>
+            <button class="btn btn-main" onclick="closeModal()">CLOSE</button>
         </div>
     </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -137,134 +138,97 @@
             el.classList.add('active');
         }
 
-        // --- MATCH MANAGEMENT LOGIC ---
-        function uploadMatch() {
-            const title = document.getElementById('mTitle').value;
-            const mode = document.getElementById('mMode').value;
-            const entry = document.getElementById('mEntry').value;
-            const prize = document.getElementById('mPrize').value;
-            const time = document.getElementById('mTime').value;
-            const map = document.getElementById('mMap').value;
+        // --- Create Match ---
+        function publishMatch() {
+            const mId = "M" + Date.now();
+            const data = {
+                mId: mId,
+                title: document.getElementById('mTitle').value,
+                mode: document.getElementById('mMode').value, // '1v1' jayega yahan se
+                entry: Number(document.getElementById('mEntry').value),
+                prize: Number(document.getElementById('mPrize').value),
+                time: document.getElementById('mTime').value,
+                map: document.getElementById('mMap').value,
+                status: "upcoming"
+            };
 
-            if(!title || !entry || !time) return alert("Fill all details!");
+            if(!data.title || !data.entry) return alert("Details bharo!");
 
-            const mId = "MATCH_" + Date.now();
-            database.ref('matches/' + mId).set({
-                mId, title, mode, entry, prize, time, map, status: "upcoming"
-            }).then(() => {
-                alert("Match Created!");
+            db.ref('matches/' + mId).set(data).then(() => {
+                alert("Match Live Ho Gaya!");
                 location.reload();
             });
         }
 
-        database.ref('matches').on('value', snap => {
-            const tbody = document.getElementById('matchTableBody');
-            tbody.innerHTML = "";
+        // --- Manage Matches ---
+        db.ref('matches').on('value', snap => {
+            const list = document.getElementById('matchList');
+            list.innerHTML = "";
             snap.forEach(child => {
                 const m = child.val();
-                let statusColor = m.status === 'live' ? 'bg-live' : (m.status === 'finished' ? 'bg-rejected' : 'bg-pending');
-                
-                tbody.innerHTML += `<tr>
-                    <td>${m.title}</td>
-                    <td>₹${m.entry}</td>
-                    <td><span class="badge ${statusColor}">${m.status}</span></td>
-                    <td>
-                        <button class="btn btn-status bg-live" onclick="updateMatchStatus('${m.mId}', 'live')">LIVE</button>
-                        <button class="btn btn-status bg-approved" onclick="updateMatchStatus('${m.mId}', 'finished')">FINISH</button>
-                        <button class="btn btn-status bg-rejected" onclick="deleteMatch('${m.mId}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            });
-        });
-
-        function updateMatchStatus(id, stat) {
-            database.ref('matches/' + id).update({ status: stat });
-        }
-        function deleteMatch(id) {
-            if(confirm("Delete this match?")) database.ref('matches/' + id).remove();
-        }
-
-        // --- DEPOSITS WITH REVERSAL LOGIC ---
-        database.ref('admin_requests/deposits').on('value', snap => {
-            const tbody = document.getElementById('depositTableBody');
-            tbody.innerHTML = "";
-            snap.forEach(child => {
-                const d = child.val();
-                const isApproved = d.status === 'approved';
-                
-                tbody.innerHTML += `<tr>
-                    <td>${d.uid}</td>
-                    <td style="color:${isApproved ? 'var(--success)' : 'var(--primary)'}">₹${d.amount}</td>
-                    <td>${d.txnID}</td>
-                    <td>
-                        ${!isApproved ? 
-                            `<button class="btn btn-status bg-approved" onclick="approveDeposit('${child.key}', '${d.uid}', ${d.amount})">APPROVE</button>
-                             <button class="btn btn-status bg-rejected" onclick="updateReqStatus('deposits', '${child.key}', 'rejected')">REJECT</button>` 
-                            : 
-                            `<button class="btn btn-status bg-rejected" onclick="reverseDeposit('${child.key}', '${d.uid}', ${d.amount})">REVERSE (Mistake)</button>`
-                        }
-                    </td>
-                </tr>`;
-            });
-        });
-
-        function approveDeposit(reqId, uid, amt) {
-            database.ref('users/' + uid + '/balance').transaction(curr => (curr || 0) + amt, (err, comm) => {
-                if(comm) database.ref('admin_requests/deposits/' + reqId).update({ status: 'approved' });
-            });
-        }
-
-        // Galti se approve ho jaye toh reverse karne ke liye:
-        function reverseDeposit(reqId, uid, amt) {
-            if(!confirm("⚠️ Reversed? User ke wallet se ₹" + amt + " wapis kat jayenge!")) return;
-            database.ref('users/' + uid + '/balance').transaction(curr => (curr || 0) - amt, (err, comm) => {
-                if(comm) database.ref('admin_requests/deposits/' + reqId).update({ status: 'pending' });
-            });
-        }
-
-        // --- WITHDRAWALS ---
-        database.ref('admin_requests/withdrawals').on('value', snap => {
-            const tbody = document.getElementById('withdrawTableBody');
-            tbody.innerHTML = "";
-            snap.forEach(child => {
-                const w = child.val();
-                if(w.status === 'pending') {
-                    tbody.innerHTML += `<tr>
-                        <td>${w.uid}</td>
-                        <td>₹${w.amount}</td>
-                        <td>${w.upiID}</td>
+                list.innerHTML += `
+                    <tr>
+                        <td>${m.title}</td>
+                        <td style="color:var(--primary)">${m.mode.toUpperCase()}</td>
+                        <td>₹${m.entry}</td>
+                        <td><span style="color:${m.status=='live'?'green':'orange'}">${m.status.toUpperCase()}</span></td>
                         <td>
-                            <button class="btn btn-status bg-approved" onclick="updateReqStatus('withdrawals', '${child.key}', 'approved')">MARK PAID</button>
-                            <button class="btn btn-status bg-rejected" onclick="updateReqStatus('withdrawals', '${child.key}', 'rejected')">REJECT</button>
+                            <button class="btn btn-view" onclick="viewPlayers('${child.key}', '${m.title}')">VIEW PLAYERS</button>
+                            <button class="btn btn-live" onclick="updateStatus('${child.key}', 'live')">LIVE</button>
+                            <button class="btn btn-del" onclick="deleteMatch('${child.key}')"><i class="fas fa-trash"></i></button>
                         </td>
-                    </tr>`;
-                }
+                    </tr>
+                `;
             });
         });
 
-        function updateReqStatus(path, id, stat) {
-            database.ref('admin_requests/' + path + '/' + id).update({ status: stat });
+        // --- View Joined Players (The Feature you asked for) ---
+        function viewPlayers(mId, title) {
+            const container = document.getElementById('playerContainer');
+            document.getElementById('modalMatchTitle').innerText = title;
+            container.innerHTML = "Fetching players...";
+            document.getElementById('playerModal').style.display = 'flex';
+
+            db.ref(`matches/${mId}/players`).once('value', snap => {
+                container.innerHTML = "";
+                if(!snap.exists()) {
+                    container.innerHTML = "<p>Kisi ne join nahi kiya abhi.</p>";
+                    return;
+                }
+                snap.forEach(child => {
+                    const p = child.val();
+                    container.innerHTML += `
+                        <div class="player-row">
+                            <span><b>Name:</b> ${p.name || 'User'}</span>
+                            <span><b>UID:</b> <code style="color:blue">${p.gameUID}</code></span>
+                        </div>
+                    `;
+                });
+            });
         }
 
-        // --- USER DB WITH PASSWORDS ---
-        database.ref('users').on('value', snap => {
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = "";
+        function closeModal() { document.getElementById('playerModal').style.display = 'none'; }
+
+        function updateStatus(id, stat) { db.ref('matches/'+id).update({status: stat}); }
+        function deleteMatch(id) { if(confirm("Match delete karein?")) db.ref('matches/'+id).remove(); }
+
+        // --- Users List ---
+        db.ref('users').on('value', snap => {
+            const list = document.getElementById('userList');
+            list.innerHTML = "";
             snap.forEach(child => {
                 const u = child.val();
-                tbody.innerHTML += `<tr>
-                    <td>${u.name}</td>
-                    <td>${u.uid}</td>
-                    <td><code style="background:#eee; padding:2px 5px;">${u.password}</code></td>
-                    <td style="color:var(--success)">₹${u.balance || 0}</td>
-                    <td><button class="btn btn-status bg-rejected" onclick="deleteUser('${u.uid}')">BAN</button></td>
-                </tr>`;
+                list.innerHTML += `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.uid}</td>
+                        <td style="color:green">₹${u.balance || 0}</td>
+                        <td><code>${u.password}</code></td>
+                    </tr>
+                `;
             });
         });
 
-        function deleteUser(uid) {
-            if(confirm("Ban this user? All data will be lost.")) database.ref('users/' + uid).remove();
-        }
     </script>
 </body>
 </html>
