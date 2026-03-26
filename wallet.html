@@ -14,7 +14,6 @@
     <style>
         :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --bg: #fffbf5; --success: #2ecc71; --error: #e74c3c; --gray: #95a5a6; }
         
-        /* 🚫 Stop Blue Highlight & Selection */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body { 
@@ -22,32 +21,27 @@
             color: var(--dark); min-height: 100vh; padding-bottom: 50px;
         }
 
-        /* 🏆 Professional Header with Back Arrow */
+        /* Header */
         .header {
             background: var(--white); padding: 18px 20px; display: flex; align-items: center;
             position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .back-btn { font-size: 22px; color: var(--dark); cursor: pointer; padding-right: 15px; transition: 0.2s; }
-        .back-btn:active { color: var(--primary); transform: scale(0.9); }
+        .back-btn { font-size: 22px; color: var(--dark); cursor: pointer; padding-right: 15px; }
         .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; }
 
-        /* 💰 Elegant Balance Card */
+        /* Balance Card */
         .balance-card {
             background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
             margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff;
             text-align: center; position: relative; overflow: hidden;
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
-        .balance-card::after {
-            content: ''; position: absolute; top: -20px; right: -20px; width: 80px; height: 80px;
-            background: var(--primary); opacity: 0.1; border-radius: 50%;
-        }
         .balance-card p { font-size: 11px; font-weight: 800; opacity: 0.6; text-transform: uppercase; letter-spacing: 2px; }
         .balance-card h1 { font-family: 'Orbitron'; font-size: 42px; margin-top: 8px; color: var(--primary); }
 
         .container { padding: 0 20px; max-width: 500px; margin: 0 auto; }
 
-        /* 🔘 Action Tabs */
+        /* Tabs */
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab-btn {
             flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #eee;
@@ -58,23 +52,19 @@
         .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.3); }
         .tab-btn.active i { color: #fff; }
 
-        /* 📦 Section Styling */
+        /* Sections */
         .section { display: none; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
 
         .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1px solid #f0f0f0; margin-bottom: 25px; }
         
-        /* 📱 UPI Intent Button */
         .upi-intent-btn {
             background: #000; color: #fff; border: none; width: 100%; padding: 18px;
             border-radius: 18px; font-family: 'Orbitron'; font-size: 12px; font-weight: 900;
-            display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;
-            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; cursor: pointer;
         }
-        .upi-intent-btn:active { transform: scale(0.97); background: #222; }
 
-        /* ⌨️ Form Elements */
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 11px; font-weight: 900; color: #888; margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
         .input-group input { 
@@ -86,34 +76,28 @@
         .main-btn {
             background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px;
             border-radius: 18px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
-            box-shadow: 0 12px 25px rgba(255,153,0,0.25); cursor: pointer; transition: 0.2s;
+            box-shadow: 0 12px 25px rgba(255,153,0,0.25); cursor: pointer;
         }
-        .main-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-        /* 🔔 Modern Custom Notice */
+        /* Custom Notice Overlay */
         #notice-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 5000;
             backdrop-filter: blur(6px);
         }
-        .notice-card { 
-            width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
+        .notice-card { width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center; }
         .notice-card i { font-size: 60px; margin-bottom: 20px; }
         .notice-card h3 { font-family: 'Orbitron'; font-size: 20px; margin-bottom: 12px; }
         .notice-card p { font-size: 14px; color: #555; font-weight: 700; line-height: 1.6; margin-bottom: 25px; }
 
-        /* 📜 History Items */
+        /* History */
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.5px solid #f9f9f9; }
         .hist-info h4 { font-size: 15px; font-weight: 800; color: #333; }
-        .hist-info p { font-size: 11px; color: #999; font-weight: 700; margin-top: 2px; }
-        .hist-status { text-align: right; }
+        .hist-info p { font-size: 11px; color: #999; font-weight: 700; }
         .status-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
         .pending { background: #fff4e5; color: #ff9800; }
         .approved { background: #e8f5e9; color: #2ecc71; }
         .rejected { background: #ffebee; color: #e74c3c; }
-
     </style>
 </head>
 <body>
@@ -122,8 +106,8 @@
         <div class="notice-card">
             <i id="n-icon" class="fas fa-check-circle"></i>
             <h3 id="n-title">TITLE</h3>
-            <p id="n-msg">This is a custom message for the user.</p>
-            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-weight:900; font-family:'Orbitron'; font-size:12px; cursor:pointer;">DISMISS</button>
+            <p id="n-msg">Message</p>
+            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-weight:900; font-family:'Orbitron'; font-size:12px;">DISMISS</button>
         </div>
     </div>
 
@@ -150,18 +134,18 @@
                     <i class="fas fa-bolt"></i> PAY VIA UPI APPS
                 </button>
                 <p style="font-size:11px; font-weight:900; color:#ccc; margin-bottom:20px;">- OR SCAN QR MANUALLY -</p>
-                <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=8968146117@okbizaxis%26pn=BOOYAH%20ZONE" style="width:160px; border-radius:15px; padding:10px; border:2px dashed #ddd;">
-                <p style="font-size:12px; font-weight:800; margin-top:12px; color:var(--dark);">BOOYAH ZONE OFFICIAL</p>
+                <img src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:180px; border-radius:15px; border:1px solid #ddd;">
+                <p style="font-size:12px; font-weight:800; margin-top:12px; color:var(--dark);">UPI ID: 8968146117@ybl</p>
             </div>
             
             <div class="ui-box">
                 <div class="input-group">
                     <label>Amount to Add (₹)</label>
-                    <input type="number" id="dep-amt-input" placeholder="Min ₹10">
+                    <input type="number" id="dep-amt-input" placeholder="Enter amount">
                 </div>
                 <div class="input-group">
-                    <label>12-Digit Transaction UTR</label>
-                    <input type="text" id="dep-utr-input" placeholder="Enter Ref Number">
+                    <label>12-Digit UTR Number</label>
+                    <input type="text" id="dep-utr-input" placeholder="Paste UTR here">
                 </div>
                 <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT RECHARGE</button>
             </div>
@@ -171,42 +155,36 @@
             <div class="ui-box">
                 <div class="input-group">
                     <label>Withdrawal Amount (₹)</label>
-                    <input type="number" id="wd-amt-input" placeholder="Min ₹50">
+                    <input type="number" id="wd-amt-input" placeholder="Enter amount">
                 </div>
                 <div class="input-group">
                     <label>Transfer to UPI ID</label>
-                    <input type="text" id="wd-upi-input" placeholder="example@ybl">
+                    <input type="text" id="wd-upi-input" placeholder="yourname@upi">
                 </div>
                 <button class="main-btn" style="background:#000;" onclick="handleWithdrawSubmit()">REQUEST CASH-OUT</button>
-                <div style="margin-top:20px; background:#fff9f0; padding:15px; border-radius:12px; font-size:12px; font-weight:700; color:#d68910;">
-                    ⚠️ Note: Withdrawal requests are processed within 2-24 hours directly to your UPI ID.
-                </div>
             </div>
         </div>
 
         <div id="hist-sec" class="section">
             <div class="ui-box" id="logs-container">
-                <p style="text-align:center; padding:30px; color:#bbb;">No transaction history found.</p>
+                <p style="text-align:center; padding:30px; color:#bbb;">Loading Logs...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const myUID = localStorage.getItem('gameID') || "GUEST_USER";
-        const myName = localStorage.getItem('userName') || "Anonymous Player";
+        const myUID = localStorage.getItem('gameID') || "GUEST";
+        const myName = localStorage.getItem('userName') || "Player";
 
-        // --- 2. LIVE BALANCE UPDATER ---
+        // Live Balance
         db.ref('users/' + myUID + '/balance').on('value', snap => {
-            const currentBal = snap.val() || 0;
-            document.getElementById('user-balance').innerText = "₹" + currentBal;
+            document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
 
-        // --- 3. UI TAB SWITCHER ---
         function switchTab(targetID, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -215,7 +193,6 @@
             if(targetID === 'hist-sec') fetchHistory();
         }
 
-        // --- 4. CUSTOM NOTIFICATION SYSTEM ---
         function showNotice(title, msg, isSuccess = true) {
             document.getElementById('n-title').innerText = title;
             document.getElementById('n-msg').innerText = msg;
@@ -224,76 +201,56 @@
             icon.style.color = isSuccess ? '#2ecc71' : '#e74c3c';
             document.getElementById('notice-overlay').style.display = 'flex';
         }
+
         function closeNotice() { document.getElementById('notice-overlay').style.display = 'none'; }
 
-        // --- 5. UPI INTENT (PAY VIA APPS) ---
+        // PAY VIA APPS (8968146117@ybl)
         function openUPIIntent() {
             const amt = document.getElementById('dep-amt-input').value;
-            if(!amt || amt < 1) {
-                showNotice("AMOUNT MISSING", "Please enter recharge amount first to pay via apps.", false);
-                return;
-            }
-            // Intent URL for PhonePe, GPay, Paytm etc.
-            const intentURL = `upi://pay?pa=8968146117@okbizaxis&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
-            window.location.href = intentURL;
+            if(!amt || amt <= 0) { showNotice("ERROR", "Enter amount first!", false); return; }
+            window.location.href = `upi://pay?pa=8968146117@ybl&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
         }
 
-        // --- 6. DEPOSIT LOGIC ---
         function handleDepositSubmit() {
             const amt = document.getElementById('dep-amt-input').value;
             const utr = document.getElementById('dep-utr-input').value;
-
-            if(!amt || utr.length < 8) {
-                showNotice("INVALID DATA", "Please enter valid amount and 12-digit UTR number.", false);
-                return;
-            }
+            if(!amt || !utr) { showNotice("ERROR", "Fill all details!", false); return; }
 
             db.ref('admin_requests/deposits').push({
                 uid: myUID, name: myName, amount: parseFloat(amt), txnID: utr, status: "pending", date: new Date().toLocaleString()
             }).then(() => {
-                showNotice("SUBMITTED", "Recharge request sent! Balance will update after admin verification.");
+                showNotice("SENT", "Deposit request submitted!");
                 document.getElementById('dep-amt-input').value = "";
                 document.getElementById('dep-utr-input').value = "";
             });
         }
 
-        // --- 7. WITHDRAW LOGIC (AUTO-DEDUCT) ---
         function handleWithdrawSubmit() {
             const amt = parseFloat(document.getElementById('wd-amt-input').value);
             const upi = document.getElementById('wd-upi-input').value;
 
-            if(!amt || amt < 50 || !upi.includes('@')) {
-                showNotice("ERROR", "Min withdrawal is ₹50 with a valid UPI ID.", false);
-                return;
-            }
+            if(!amt || !upi.includes('@')) { showNotice("ERROR", "Invalid Details!", false); return; }
 
             db.ref('users/' + myUID + '/balance').get().then(snap => {
-                const currentBal = snap.val() || 0;
-                if(amt > currentBal) {
-                    showNotice("INSUFFICIENT", "You don't have enough balance to withdraw.", false);
-                    return;
-                }
+                const bal = snap.val() || 0;
+                if(amt > bal) { showNotice("FAILED", "Insufficient Balance!", false); return; }
 
-                // MAGIC: Immediately minus balance
-                db.ref('users/' + myUID + '/balance').set(currentBal - amt).then(() => {
+                // Deduction logic
+                db.ref('users/' + myUID + '/balance').set(bal - amt).then(() => {
                     db.ref('admin_requests/withdrawals').push({
                         uid: myUID, name: myName, amount: amt, upiID: upi, status: "pending", date: new Date().toLocaleString()
                     });
-                    showNotice("REQUESTED", `₹${amt} deducted from wallet. Money will be sent to your UPI within 24h.`);
+                    showNotice("SUCCESS", "₹" + amt + " deducted. Request sent.");
                     document.getElementById('wd-amt-input').value = "";
                 });
             });
         }
 
-        // --- 8. TRANSACTION LOGS FETCHER ---
         function fetchHistory() {
             const container = document.getElementById('logs-container');
-            container.innerHTML = "<p style='text-align:center; padding:20px;'>Loading Logs...</p>";
-
             db.ref('admin_requests').once('value', snap => {
                 container.innerHTML = "";
                 let count = 0;
-
                 snap.forEach(typeSnap => {
                     typeSnap.forEach(itemSnap => {
                         const val = itemSnap.val();
@@ -314,7 +271,7 @@
                         }
                     });
                 });
-                if(count === 0) container.innerHTML = "<p style='text-align:center; padding:20px; color:#ccc;'>No transaction history yet.</p>";
+                if(count === 0) container.innerHTML = "<p style='text-align:center;'>No history yet.</p>";
             });
         }
     </script>
