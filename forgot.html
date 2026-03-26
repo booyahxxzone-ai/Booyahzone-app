@@ -19,7 +19,6 @@
             font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center;
         }
 
-        /* Animated Background Elements */
         .bg-glow { position: absolute; width: 300px; height: 300px; background: var(--orange); filter: blur(150px); opacity: 0.2; z-index: -1; border-radius: 50%; }
 
         .app-card {
@@ -42,7 +41,6 @@
         .title { font-family: 'Orbitron'; font-size: 1.5rem; color: #111; margin-bottom: 8px; letter-spacing: 1px; }
         .subtitle { font-size: 14px; color: #666; font-weight: 700; margin-bottom: 30px; }
 
-        /* Input Gooli Style */
         .input-group { margin-bottom: 18px; text-align: left; }
         .input-label { font-size: 11px; font-family: 'Orbitron'; color: #888; margin-left: 20px; margin-bottom: 5px; display: block; }
         
@@ -64,7 +62,14 @@
             cursor: pointer; transition: 0.4s; margin-top: 10px;
             box-shadow: 0 10px 25px rgba(255,153,0,0.3);
         }
-        .btn-recover:hover { letter-spacing: 1px; background: #e68a00; }
+
+        /* English Note Styling */
+        .admin-note {
+            margin-top: 20px; padding: 12px; background: #fff5e6; 
+            border: 1px dashed var(--orange); border-radius: 12px;
+            font-size: 12px; color: #555; font-weight: 700; line-height: 1.4;
+        }
+        .admin-note i { color: var(--orange); margin-right: 5px; }
 
         .back-link {
             display: inline-block; margin-top: 25px; font-size: 13px; color: #888; 
@@ -102,6 +107,11 @@
 
         <button class="btn-recover" id="btn-text" onclick="requestRecovery()">VERIFY & REQUEST</button>
         
+        <div class="admin-note">
+            <i class="fas fa-info-circle"></i> 
+            Note: Admin will send your password to your registered email within 24 hours.
+        </div>
+
         <div id="status">SENT SUCCESSFULLY!</div>
 
         <a href="index.html" class="back-link">RETURN TO <span>LOGIN</span></a>
@@ -112,7 +122,6 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Updated Naya Bot Token
         const botToken = "8649335408:AAHKOAM_q_hP7eZB5aQ1LkQ7WNoFlhgB54o"; 
         const adminId = "7852788120"; 
 
@@ -133,7 +142,6 @@
             if(snap.exists()) {
                 const user = snap.val();
                 
-                // Telegram Message Formatting (Professional)
                 const msg = `<b>🛡️ RECOVERY REQUEST RECEIVED</b>\n\n` +
                             `👤 <b>Name:</b> ${user.name}\n` +
                             `🆔 <b>UID:</b> <code>${uid}</code>\n` +
@@ -141,14 +149,12 @@
                             `🔑 <b>Current Password:</b> <code>${user.password}</code>\n` +
                             `📞 <b>Phone:</b> ${user.phone}\n\n` +
                             `⚠️ <b>ACTION REQUIRED:</b>\n` +
-                            `Bhai, agar email sahi hai toh user ko password de do.\n\n` +
-                            `🔗 <b>Change Email Link:</b>\n` +
-                            `<code>https://console.firebase.google.com/</code>`;
+                            `Bhai, is email par 24hr mein pass bhej dena: ${email}`;
 
                 await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
                 
                 document.getElementById('status').style.display = "block";
-                alert("Verification sent to Admin! Admin will check your Email and contact you.");
+                alert("Request Sent! Check your email within 24 hours.");
                 location.href = 'index.html';
             } else {
                 alert("UID not found in our records!");
