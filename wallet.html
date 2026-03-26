@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --bg: #fffbf5; --success: #2ecc71; --error: #e74c3c; --gray: #95a5a6; }
+        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --bg: #fff5e6; --success: #2ecc71; --error: #e74c3c; --gray: #95a5a6; }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
 
@@ -21,80 +21,88 @@
             color: var(--dark); min-height: 100vh; padding-bottom: 50px;
         }
 
-        /* 🏆 Header */
+        /* Header */
         .header {
             background: var(--white); padding: 18px 20px; display: flex; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(255,153,0,0.1);
         }
-        .back-btn { font-size: 22px; color: var(--dark); cursor: pointer; padding-right: 15px; }
-        .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; }
+        .back-btn { font-size: 22px; color: var(--primary); cursor: pointer; padding-right: 15px; }
+        .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; color: var(--dark); }
 
-        /* 💰 Balance Card */
+        /* Balance Card */
         .balance-card {
-            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            background: linear-gradient(135deg, #ff9900, #ff5e00);
             margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff;
             text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(255, 153, 0, 0.3);
         }
-        .balance-card p { font-size: 11px; font-weight: 800; opacity: 0.6; text-transform: uppercase; letter-spacing: 2px; }
-        .balance-card h1 { font-family: 'Orbitron'; font-size: 42px; margin-top: 8px; color: var(--primary); }
+        .balance-card p { font-size: 11px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 2px; }
+        .balance-card h1 { font-family: 'Orbitron'; font-size: 42px; margin-top: 8px; text-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
 
         .container { padding: 0 20px; max-width: 500px; margin: 0 auto; }
 
-        /* 🔘 Tabs */
+        /* Main Tabs */
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab-btn {
-            flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #eee;
+            flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #ffd8a8;
             background: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gray);
         }
-        .tab-btn i { font-size: 20px; color: var(--gray); }
+        .tab-btn i { font-size: 20px; }
         .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.3); }
         .tab-btn.active i { color: #fff; }
 
-        /* 📦 Sections */
+        /* History Category Filter */
+        .history-filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .filter-chip { 
+            padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; 
+            background: #fff; border: 1px solid #ffd8a8; cursor: pointer; color: var(--primary);
+        }
+        .filter-chip.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+        /* UI Box */
         .section { display: none; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1px solid #f0f0f0; margin-bottom: 25px; }
+        .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(255,153,0,0.05); border: 1px solid #ffe8cc; margin-bottom: 25px; }
         
         .upi-intent-btn {
-            background: #000; color: #fff; border: none; width: 100%; padding: 18px;
+            background: var(--dark); color: #fff; border: none; width: 100%; padding: 18px;
             border-radius: 18px; font-family: 'Orbitron'; font-size: 12px; font-weight: 900;
             display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; cursor: pointer;
         }
 
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 900; color: #888; margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
+        .input-group label { display: block; font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
         .input-group input { 
-            width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid #f5f5f5;
-            background: #fafafa; font-weight: 700; font-size: 16px; transition: 0.3s;
+            width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid #fff3e6;
+            background: #fffcfa; font-weight: 700; font-size: 16px; transition: 0.3s;
         }
         .input-group input:focus { border-color: var(--primary); background: #fff; }
 
         .main-btn {
             background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px;
             border-radius: 18px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
-            box-shadow: 0 12px 25px rgba(255,153,0,0.25); cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255,153,0,0.2); cursor: pointer;
         }
 
-        /* 🔔 Custom Notice */
+        /* Notice Overlay */
         #notice-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 5000;
-            backdrop-filter: blur(6px);
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 5000;
+            backdrop-filter: blur(4px);
         }
-        .notice-card { width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center; }
+        .notice-card { width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center; border-bottom: 5px solid var(--primary); }
         .notice-card i { font-size: 60px; margin-bottom: 20px; }
-        .notice-card h3 { font-family: 'Orbitron'; font-size: 20px; margin-bottom: 12px; }
-        .notice-card p { font-size: 14px; color: #555; font-weight: 700; line-height: 1.6; margin-bottom: 25px; }
+        .notice-card h3 { font-family: 'Orbitron'; font-size: 18px; margin-bottom: 10px; }
+        .notice-card p { font-size: 14px; color: #666; font-weight: 700; line-height: 1.5; margin-bottom: 25px; }
 
-        /* 📜 History Items */
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.5px solid #f9f9f9; }
+        /* History Items */
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.2px solid #fff5e6; }
         .hist-info h4 { font-size: 15px; font-weight: 800; color: #333; }
-        .hist-info p { font-size: 11px; color: #999; font-weight: 700; }
-        .status-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .hist-info p { font-size: 11px; color: #aaa; font-weight: 700; }
+        .status-tag { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 5px; text-transform: uppercase; margin-top: 5px; display: inline-block; }
         .pending { background: #fff4e5; color: #ff9800; }
         .approved { background: #e8f5e9; color: #2ecc71; }
         .rejected { background: #ffebee; color: #e74c3c; }
@@ -113,89 +121,100 @@
 
     <div class="header">
         <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
-        <h2><i class="fas fa-shield-alt"></i> BOOYAH WALLET</h2>
+        <h2><i class="fas fa-wallet"></i> WALLET</h2>
     </div>
 
     <div class="balance-card">
-        <p>AVAILABLE BALANCE</p>
+        <p>WALLET BALANCE</p>
         <h1 id="user-balance">₹0</h1>
     </div>
 
     <div class="container">
         <div class="tabs">
-            <div class="tab-btn active" onclick="switchTab('dep-sec', this)"><i class="fas fa-wallet"></i> DEPOSIT</div>
-            <div class="tab-btn" onclick="switchTab('wd-sec', this)"><i class="fas fa-receipt"></i> WITHDRAW</div>
-            <div class="tab-btn" onclick="switchTab('hist-sec', this)"><i class="fas fa-history"></i> LOGS</div>
+            <div class="tab-btn active" onclick="switchTab('dep-sec', this)"><i class="fas fa-plus-circle"></i> DEPOSIT</div>
+            <div class="tab-btn" onclick="switchTab('wd-sec', this)"><i class="fas fa-minus-circle"></i> WITHDRAW</div>
+            <div class="tab-btn" onclick="switchTab('hist-sec', this)"><i class="fas fa-list-ul"></i> LOGS</div>
         </div>
 
         <div id="dep-sec" class="section active">
             <div class="ui-box" style="text-align: center;">
                 <button class="upi-intent-btn" onclick="openUPIIntent()">
-                    <i class="fas fa-bolt"></i> PAY VIA UPI APPS
+                    <i class="fas fa-bolt"></i> OPEN UPI APPS
                 </button>
-                <p style="font-size:11px; font-weight:900; color:#ccc; margin-bottom:20px;">- OR SCAN QR MANUALLY -</p>
-                <img id="qr-img" src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:180px; border-radius:15px; border:2px solid #eee; padding:5px;">
-                <p style="font-size:13px; font-weight:800; margin-top:12px; color:var(--dark);">UPI ID: 8968146117@ybl</p>
+                <p style="font-size:10px; font-weight:900; color:var(--gray); margin-bottom:15px;">SCAN TO PAY MANUALLY</p>
+                <img src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:180px; border-radius:20px; border:3px solid #fff3e6; padding:5px;">
+                <p style="font-size:13px; font-weight:800; margin-top:12px; color:var(--primary);">8968146117@ybl</p>
             </div>
             
             <div class="ui-box">
                 <div class="input-group">
-                    <label>Amount to Add (₹)</label>
-                    <input type="number" id="dep-amt-input" placeholder="Enter amount">
+                    <label>Amount (₹)</label>
+                    <input type="number" id="dep-amt-input" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Transaction UTR (12-Digits)</label>
-                    <input type="text" id="dep-utr-input" placeholder="Paste Reference No.">
+                    <label>12-Digit Ref/UTR No.</label>
+                    <input type="text" id="dep-utr-input" placeholder="Enter Ref Number">
                 </div>
-                <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT RECHARGE</button>
+                <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT REQUEST</button>
             </div>
         </div>
 
         <div id="wd-sec" class="section">
             <div class="ui-box">
                 <div class="input-group">
-                    <label>Withdrawal Amount (₹)</label>
-                    <input type="number" id="wd-amt-input" placeholder="Enter amount">
+                    <label>Amount to Withdraw (₹)</label>
+                    <input type="number" id="wd-amt-input" placeholder="0.00">
                 </div>
                 <div class="input-group">
                     <label>Your UPI ID</label>
-                    <input type="text" id="wd-upi-input" placeholder="example@ybl">
+                    <input type="text" id="wd-upi-input" placeholder="yourname@upi">
                 </div>
-                <button class="main-btn" style="background:#000;" onclick="handleWithdrawSubmit()">REQUEST CASH-OUT</button>
-                <div style="margin-top:20px; background:#fff9f0; padding:15px; border-radius:12px; font-size:12px; font-weight:700; color:#d68910;">
-                    ⚠️ Note: Money will be sent to your UPI ID after admin verification.
-                </div>
+                <button class="main-btn" style="background:var(--dark);" onclick="handleWithdrawSubmit()">CASH OUT NOW</button>
+                <p style="margin-top:15px; font-size:11px; text-align:center; color:#999; font-weight:700;">*Verified within 24 hours</p>
             </div>
         </div>
 
         <div id="hist-sec" class="section">
+            <div class="history-filters">
+                <div class="filter-chip active" onclick="filterLogs('all', this)">ALL</div>
+                <div class="filter-chip" onclick="filterLogs('deposits', this)">DEPOSIT</div>
+                <div class="filter-chip" onclick="filterLogs('withdrawals', this)">WITHDRAW</div>
+            </div>
             <div class="ui-box" id="logs-container">
-                <p style="text-align:center; padding:30px; color:#bbb;">Fetching your logs...</p>
+                <p style="text-align:center; padding:20px; color:#bbb;">Fetching...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. FIREBASE SETUP ---
+        // Firebase Config
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const myUID = localStorage.getItem('gameID') || "GUEST_USER";
-        const myName = localStorage.getItem('userName') || "Anonymous Player";
+        const myUID = localStorage.getItem('gameID') || "GUEST";
+        const myName = localStorage.getItem('userName') || "User";
 
-        // --- 2. LIVE BALANCE ---
+        let currentFilter = 'all';
+
+        // Balance Sync
         db.ref('users/' + myUID + '/balance').on('value', snap => {
             document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
 
-        // --- 3. UI LOGIC ---
         function switchTab(targetID, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(targetID).classList.add('active');
             btn.classList.add('active');
             if(targetID === 'hist-sec') fetchHistory();
+        }
+
+        function filterLogs(type, chip) {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentFilter = type;
+            fetchHistory();
         }
 
         function showNotice(title, msg, isSuccess = true) {
@@ -208,85 +227,74 @@
         }
         function closeNotice() { document.getElementById('notice-overlay').style.display = 'none'; }
 
-        // --- 4. DEPOSIT LOGIC ---
         function openUPIIntent() {
             const amt = document.getElementById('dep-amt-input').value;
-            if(!amt || amt <= 0) { showNotice("ERROR", "Please enter amount first!", false); return; }
-            // TERA UPI ID SET HAI YAHA
+            if(!amt || amt <= 0) { showNotice("ERROR", "Enter amount first!", false); return; }
             window.location.href = `upi://pay?pa=8968146117@ybl&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
         }
 
         function handleDepositSubmit() {
             const amt = document.getElementById('dep-amt-input').value;
             const utr = document.getElementById('dep-utr-input').value;
-
-            if(!amt || !utr) { showNotice("ERROR", "Amount and UTR are required!", false); return; }
+            if(!amt || !utr) { showNotice("ALERT", "Fill all details!", false); return; }
 
             db.ref('admin_requests/deposits').push({
                 uid: myUID, name: myName, amount: parseFloat(amt), txnID: utr, status: "pending", date: new Date().toLocaleString()
             }).then(() => {
-                showNotice("SUCCESS", "Request sent! Admin will verify your payment.");
+                showNotice("SUCCESS", "Recharge request submitted!");
                 document.getElementById('dep-amt-input').value = "";
                 document.getElementById('dep-utr-input').value = "";
             });
         }
 
-        // --- 5. WITHDRAW LOGIC (WITH BALANCE CHECK) ---
         function handleWithdrawSubmit() {
             const amt = parseFloat(document.getElementById('wd-amt-input').value);
             const upi = document.getElementById('wd-upi-input').value;
 
-            if(!amt || amt <= 0 || !upi.includes('@')) {
-                showNotice("INVALID", "Enter valid amount and UPI ID.", false);
-                return;
-            }
+            if(!amt || !upi.includes('@')) { showNotice("ERROR", "Invalid input!", false); return; }
 
             db.ref('users/' + myUID + '/balance').get().then(snap => {
-                const currentBal = snap.val() || 0;
-                // Balance Check Logic
-                if(amt > currentBal) {
-                    showNotice("INSUFFICIENT", "You don't have enough balance!", false);
-                    return;
-                }
+                const bal = snap.val() || 0;
+                if(amt > bal) { showNotice("FAILED", "Low balance!", false); return; }
 
-                // Paisa kaat lo aur admin ko bhejo
-                db.ref('users/' + myUID + '/balance').set(currentBal - amt).then(() => {
+                db.ref('users/' + myUID + '/balance').set(bal - amt).then(() => {
                     db.ref('admin_requests/withdrawals').push({
                         uid: myUID, name: myName, amount: amt, upiID: upi, status: "pending", date: new Date().toLocaleString()
                     });
-                    showNotice("REQUESTED", "₹" + amt + " deducted. Payment will arrive soon.");
+                    showNotice("DONE", "₹" + amt + " deducted. Wait for approval.");
                     document.getElementById('wd-amt-input').value = "";
                 });
             });
         }
 
-        // --- 6. LOGS FETCHER ---
         function fetchHistory() {
             const container = document.getElementById('logs-container');
             db.ref('admin_requests').once('value', snap => {
                 container.innerHTML = "";
                 let count = 0;
                 snap.forEach(typeSnap => {
+                    if(currentFilter !== 'all' && typeSnap.key !== currentFilter) return;
+                    
                     typeSnap.forEach(itemSnap => {
                         const val = itemSnap.val();
                         if(val.uid === myUID) {
                             count++;
                             const isDep = typeSnap.key === 'deposits';
-                            container.innerHTML += `
+                            container.innerHTML = `
                                 <div class="history-item">
                                     <div class="hist-info">
-                                        <h4>${isDep ? 'DEPOSIT' : 'WITHDRAW'}</h4>
+                                        <h4>${isDep ? 'CREDIT (DEPOSIT)' : 'DEBIT (WITHDRAWAL)'}</h4>
                                         <p>${val.date}</p>
                                     </div>
                                     <div class="hist-status">
-                                        <h4 style="color:${isDep ? '#2ecc71' : '#333'}">${isDep ? '+' : '-'} ₹${val.amount}</h4>
+                                        <h4 style="color:${isDep ? '#2ecc71' : '#e74c3c'}">${isDep ? '+' : '-'} ₹${val.amount}</h4>
                                         <span class="status-tag ${val.status}">${val.status}</span>
                                     </div>
-                                </div>`;
+                                </div>` + container.innerHTML;
                         }
                     });
                 });
-                if(count === 0) container.innerHTML = "<p style='text-align:center; padding:20px; color:#ccc;'>No transaction history.</p>";
+                if(count === 0) container.innerHTML = "<p style='text-align:center; padding:20px; color:#ccc;'>No Logs Found.</p>";
             });
         }
     </script>
