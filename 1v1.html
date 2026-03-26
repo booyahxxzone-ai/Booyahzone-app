@@ -11,86 +11,146 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff6a00; --primary-light: #ff8c00; --dark: #0f172a; --dark-card: #1e293b; --success: #10b981; }
+        :root { --primary: #ff7b00; --primary-light: #ff9d40; --dark: #1e293b; --success: #10b981; --error: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { background: linear-gradient(135deg, #ffffff 0%, #ffebd6 50%, #ffe4cc 100%); min-height: 100vh; color: #333; padding-bottom: 30px; }
+        /* Orange & White Mixed Background */
+        body { 
+            background: linear-gradient(135deg, #ffffff 0%, #fff0e0 100%); 
+            min-height: 100vh; color: #333; padding-bottom: 30px;
+        }
 
-        .page-header { background: #fff; padding: 18px 20px; box-shadow: 0 4px 15px rgba(255,106,0,0.15); display: flex; align-items: center; gap: 12px; position: sticky; top:0; z-index: 100; border-bottom: 3px solid var(--primary); }
-        .page-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); }
+        /* Top Header */
+        .page-header { background: #fff; padding: 18px 20px; box-shadow: 0 4px 15px rgba(255,123,0,0.08); display: flex; align-items: center; gap: 12px; position: sticky; top:0; z-index: 100; border-bottom: 2px solid #fff5eb; }
+        .page-header h1 { font-family: 'Orbitron'; font-size: 17px; color: var(--dark); letter-spacing: 0.5px; }
 
-        .m-card { background: #fff; margin: 25px 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(255,106,0,0.15); border: 2px solid #fff; }
-        .card-header { background: var(--dark); color: #fff; padding: 12px 20px; font-family: 'Orbitron'; font-size: 11px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--primary); }
-        .timer-badge { background: rgba(255,106,0,0.2); color: var(--primary-light); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; }
-
-        .card-body { padding: 20px; text-align: center; }
-        .m-title { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); margin-bottom: 15px; text-transform: uppercase; }
+        /* Premium Match Card */
+        .m-card { background: #fff; margin: 20px 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); border: 1px solid #ffeedb; }
+        .card-header { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; padding: 12px 20px; font-family: 'Orbitron'; font-size: 11px; display: flex; justify-content: space-between; letter-spacing: 1px; }
+        .card-body { padding: 25px 20px; text-align: center; }
+        .m-title { font-family: 'Orbitron'; font-size: 19px; color: var(--dark); margin-bottom: 15px; }
         
-        .match-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        .meta-box { background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: left; }
-        .meta-box span { font-size: 10px; color: #64748b; font-weight: 800; display: block; }
-        .meta-box b { font-size: 14px; color: var(--dark); }
+        /* VS Section */
+        .vs-container { display: flex; justify-content: center; align-items: center; gap: 30px; margin: 25px 0; }
+        .player-icon { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .player-icon i { font-size: 32px; color: #cbd5e1; background: #f8fafc; padding: 15px; border-radius: 50%; border: 2px solid #f1f5f9; }
+        .player-icon p { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+        .vs-circle { background: #fff; color: var(--primary); border: 3px solid var(--primary); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-weight: 900; box-shadow: 0 5px 15px rgba(255,123,0,0.2); z-index: 2; position: absolute; }
 
-        .btn-main { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; border: none; width: 100%; padding: 16px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; }
-        .btn-main.joined { background: #10b981; }
+        /* Match Details Grid (No Dashed Borders) */
+        .match-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .meta-box { background: #fff8f0; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #ffebd6; }
+        .meta-box span { display: block; font-size: 10px; color: #64748b; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; }
+        .meta-box b { font-size: 15px; color: var(--primary); font-family: 'Orbitron'; }
 
+        /* Buttons */
+        .btn-main { background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: #fff; border: none; width: 100%; padding: 16px; border-radius: 14px; font-family: 'Orbitron'; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 8px 20px rgba(255,123,0,0.25); transition: 0.2s; letter-spacing: 1px; }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-main:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
+
+        /* Join Overlay Page */
         .join-overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .overlay-head { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; }
-        .content { padding: 25px; flex: 1; overflow-y: auto; }
+
+        .overlay-head { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; background: #fff; }
+        .overlay-head h2 { font-family: 'Orbitron'; font-size: 16px; color: var(--dark); }
+
+        .content { padding: 25px; flex: 1; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #fffaf5 100%); }
+
+        /* Room ID Box */
+        .room-info { background: var(--dark); color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .room-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; border-bottom: 1px solid #334155; padding-bottom: 10px; font-family: 'Orbitron'; }
+        .copy-btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 800; font-family: 'Plus Jakarta Sans'; }
+
+        /* Inputs & Notices */
+        .input-box { margin-bottom: 20px; }
+        .input-box label { display: block; font-weight: 800; margin-bottom: 8px; color: #475569; font-size: 12px; text-transform: uppercase; }
+        .input-box input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 700; color: var(--dark); transition: 0.3s; background: #fff; }
+        .input-box input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(255,123,0,0.1); }
+
+        .notice-text { display: flex; gap: 10px; background: #fff0e6; padding: 15px; border-radius: 12px; font-size: 13px; font-weight: 700; color: #c2410c; margin-bottom: 25px; border: 1px solid #ffebd6; }
         
-        .room-info { background: var(--dark); color: #fff; padding: 20px; border-radius: 16px; margin-bottom: 20px; display: none; }
-        .input-box input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; margin-top: 8px; }
+        /* Billing */
+        .bill-card { background: #fff; border-radius: 15px; padding: 18px; border: 1px solid #e2e8f0; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .bill-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 14px; color: #475569; }
+        .total-row { border-top: 2px dashed #e2e8f0; margin-top: 12px; padding-top: 12px; color: var(--dark); font-size: 18px; font-weight: 800; }
 
-        .check-container { display: flex; align-items: flex-start; gap: 10px; margin: 15px 0; background: #fff0e6; padding: 12px; border-radius: 10px; }
-        .check-container input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .check-container { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; margin-bottom: 30px; }
+        .check-container input { width: 20px; height: 20px; accent-color: var(--primary); margin-top: 2px; }
+        .check-container span { font-size: 12px; font-weight: 600; color: #64748b; line-height: 1.5; }
 
-        #customToast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 700; z-index: 9999; display: none; }
+        /* CUSTOM TOAST NOTIFICATION (Replaces alert) */
+        #customToast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: var(--dark); color: #fff; padding: 12px 24px; border-radius: 30px;
+            font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px;
+            opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); white-space: nowrap;
+        }
+        #customToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        #customToast.bg-err { background: var(--error); }
+        #customToast.bg-suc { background: var(--success); }
+
     </style>
 </head>
 <body>
 
-    <div id="customToast">Message</div>
+    <div id="customToast"><i class="fas fa-info-circle"></i> <span id="toastMsg">Message</span></div>
 
     <div class="page-header">
-        <i class="fas fa-trophy" style="color:var(--primary);"></i>
+        <i class="fas fa-gamepad" style="color:var(--primary); font-size: 20px;"></i>
         <h1>1V1 ELITE ARENA</h1>
     </div>
 
     <div id="matchList">
-        <p style="text-align:center; padding: 40px;">Fetching matches...</p>
+        <p style="text-align:center; padding: 40px; color: #888; font-weight: 700;">Loading matches...</p>
     </div>
 
     <div class="join-overlay" id="joinUI">
         <div class="overlay-head">
-            <i class="fas fa-arrow-left" onclick="closeJoin()"></i>
-            <h2 id="mHeader" style="font-family:'Orbitron'; font-size:16px;">CHECKOUT</h2>
+            <i class="fas fa-arrow-left" style="font-size: 18px; cursor: pointer;" onclick="closeJoin()"></i>
+            <h2 id="mHeader">MATCH CHECKOUT</h2>
         </div>
+
         <div class="content">
             <div class="room-info" id="roomBox">
-                <p style="color:var(--success); font-weight:900; margin-bottom:10px; text-align:center;">🟢 ROOM DETAILS OPENED</p>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">ID: <b id="rID">...</b> <button onclick="copyText('rID')">COPY</button></div>
-                <div style="display:flex; justify-content:space-between;">PASS: <b id="rPass">...</b> <button onclick="copyText('rPass')">COPY</button></div>
+                <p style="font-size:11px; color:var(--primary-light); font-weight:900; margin-bottom:15px; text-align: center; letter-spacing: 1px;">🟢 YOU ARE JOINED</p>
+                <div class="room-row">
+                    <span>ID: <b id="rID" style="color:#fff">XXXXXXX</b></span>
+                    <button class="copy-btn" onclick="copyIt('rID')">COPY</button>
+                </div>
+                <div class="room-row" style="border:none; margin-bottom:0; padding-bottom:0;">
+                    <span>PASS: <b id="rPass" style="color:#fff">XXXXXXX</b></span>
+                    <button class="copy-btn" onclick="copyIt('rPass')">COPY</button>
+                </div>
             </div>
 
-            <div id="joinFields">
-                <div class="input-box">
-                    <label style="font-weight: 800; font-size: 11px;">ENTER PLAYER UID</label>
-                    <input type="number" id="gameUID" placeholder="Ex: 56784321">
-                </div>
-
-                <div class="check-container">
-                    <input type="checkbox" id="ruleCheck">
-                    <label for="ruleCheck" style="font-size: 11px; font-weight: 700;">I agree to follow all tournament rules. No hacks/cheats allowed.</label>
-                </div>
-
-                <div style="background: #f1f5f9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="display:flex; justify-content:space-between;"><span>Total Payable:</span><b id="txtEntry" style="color:var(--primary)">₹0</b></div>
-                </div>
-                <button class="btn-main" id="mainPayBtn" onclick="confirmPayment()">CONFIRM & JOIN</button>
+            <div class="input-box">
+                <label>YOUR FREE FIRE UID</label>
+                <input type="number" id="gameUID" placeholder="Enter Game ID...">
             </div>
+
+            <div class="notice-text">
+                <i class="fas fa-info-circle" style="font-size: 16px; margin-top: 2px;"></i> 
+                Room ID aur Password match start hone se theek 15 minute pehle yahan update ho jayega.
+            </div>
+
+            <div class="bill-card">
+                <div class="bill-item"><span>Entry Fee</span><span id="txtEntry">₹0</span></div>
+                <div class="bill-item"><span>Platform Fee</span><span>₹0</span></div>
+                <div class="total-row bill-item"><span>Total Amount</span><span id="txtTotal">₹0</span></div>
+            </div>
+
+            <label class="check-container">
+                <input type="checkbox" id="agree">
+                <span>Main rules se sehmat hoon. Cheating ya hack use karne par ID ban ho sakti hai aur amount non-refundable hai.</span>
+            </label>
+
+            <button class="btn-main" id="mainPayBtn" onclick="confirmPayment()">PAY & JOIN MATCH</button>
             
-            <p id="statusMsg" style="display:none; text-align:center; color: var(--success); font-weight: 800; margin-top:15px;">✅ YOU HAVE ALREADY JOINED THIS MATCH</p>
+            <div id="statusMsg" style="display:none; text-align:center; background: #ecfdf5; color: var(--success); padding: 15px; border-radius: 12px; font-weight: 800; border: 1px solid #a7f3d0; margin-top: 10px;">
+                <i class="fas fa-check-circle"></i> MATCH JOINED SUCCESSFULLY
+            </div>
         </div>
     </div>
 
@@ -99,137 +159,152 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Check user login (Make sure 'userPhone' exists in localStorage)
-        const myPhone = localStorage.getItem('userPhone'); 
+        const myPhone = localStorage.getItem('gameID') || "USER_01"; // Tumhara login system
         let activeMatch = null, activeFee = 0, activeTitle = "";
 
-        function showToast(msg) {
+        // Toast Popup Logic
+        function showToast(msg, type = 'success') {
             const t = document.getElementById('customToast');
-            t.innerText = msg; t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 3000);
+            document.getElementById('toastMsg').innerText = msg;
+            t.className = type === 'success' ? 'bg-suc show' : 'bg-err show';
+            setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
+        // Fetch Matches (Strictly 1v1)
         db.ref('matches').on('value', snap => {
             const list = document.getElementById('matchList');
             list.innerHTML = "";
+            let found = false;
+            
             snap.forEach(child => {
                 const m = child.val();
-                if(m.mode === "Solo" || m.mode === "1v1") {
-                    let joined = false;
-                    if(m.players) Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) joined = true; });
-
+                // STRICT CHECK: Sirf 1v1 aaye (Case insensitive taaki '1v1' aur '1V1' dono chal jaye)
+                if(m.mode && m.mode.toLowerCase() === "1v1" && m.status !== "finished") {
+                    found = true;
                     list.innerHTML += `
                         <div class="m-card">
-                            <div class="card-header">
-                                <span>SOLO BATTLE</span>
-                                <span class="timer-badge" data-time="${m.time}">WAITING</span>
-                            </div>
+                            <div class="card-header"><span>FREE FIRE 1V1</span><span>${m.time}</span></div>
                             <div class="card-body">
                                 <h2 class="m-title">${m.title}</h2>
-                                <div class="match-meta">
-                                    <div class="meta-box"><span>📅 TIME</span><b>${m.time}</b></div>
-                                    <div class="meta-box"><span>🗺️ MAP</span><b>${m.map}</b></div>
-                                    <div class="meta-box"><span>💰 ENTRY</span><b>₹${m.entry}</b></div>
-                                    <div class="meta-box"><span>🏆 PRIZE</span><b>₹${m.prize}</b></div>
+                                <div class="vs-container">
+                                    <div class="player-icon"><i class="fas fa-user-ninja"></i><p>PLAYER 1</p></div>
+                                    <div class="vs-circle">VS</div>
+                                    <div class="player-icon"><i class="fas fa-user-ninja"></i><p>PLAYER 2</p></div>
                                 </div>
-                                <button class="btn-main ${joined ? 'joined' : ''}" onclick="openJoin('${child.key}', ${m.entry}, '${m.title}')">
-                                    ${joined ? 'VIEW ROOM DETAILS' : 'JOIN NOW'}
-                                </button>
+                                <div class="match-meta">
+                                    <div class="meta-box"><span>ENTRY</span><b>₹${m.entry}</b></div>
+                                    <div class="meta-box"><span>WIN</span><b>₹${m.prize}</b></div>
+                                    <div class="meta-box"><span>MAP</span><b>${m.map}</b></div>
+                                </div>
+                                <button class="btn-main" onclick="openJoin('${child.key}', ${m.entry}, '${m.title}')">VIEW DETAILS / JOIN</button>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                 }
             });
+            if(!found) list.innerHTML = "<p style='text-align:center; padding: 40px; color: #888; font-weight: 700;'>Abhi koi 1v1 match nahi hai.</p>";
         });
 
-        // Timer Logic: "4m 3s left"
-        setInterval(() => {
-            document.querySelectorAll('.timer-badge').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
-                const dist = target - new Date().getTime();
-                if(dist < 0) { el.innerHTML = "🔴 LIVE"; return; }
-                const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((dist % (1000 * 60)) / 1000);
-                el.innerHTML = `⏱️ ${m}m ${s}s left`;
-            });
-        }, 1000);
-
         function openJoin(id, fee, title) {
-            activeMatch = id; activeFee = Number(fee); activeTitle = title;
+            activeMatch = id; activeFee = fee; activeTitle = title;
             document.getElementById('mHeader').innerText = title;
             document.getElementById('txtEntry').innerText = "₹" + fee;
+            document.getElementById('txtTotal').innerText = "₹" + fee;
             document.getElementById('joinUI').style.display = 'flex';
+            
+            // Reset Button state
+            const btn = document.getElementById('mainPayBtn');
+            btn.innerText = "PAY & JOIN MATCH";
+            btn.disabled = false;
 
-            db.ref(`matches/${id}`).on('value', snap => {
-                const m = snap.val();
-                let myData = null;
-                if(m.players) Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) myData = p; });
+            checkJoinedStatus(id);
+        }
 
-                if(myData) {
-                    document.getElementById('joinFields').style.display = 'none';
-                    document.getElementById('roomBox').style.display = 'block';
-                    document.getElementById('statusMsg').style.display = 'block';
-                    document.getElementById('rID').innerText = m.roomId || "WAITING...";
-                    document.getElementById('rPass').innerText = m.roomPass || "WAITING...";
+        function checkJoinedStatus(id) {
+            db.ref(`matches/${id}/players`).once('value', s => {
+                let joined = false;
+                s.forEach(p => { if(p.val().userUID === myPhone) joined = true; });
+
+                if(joined) {
+                    setJoinedUI();
+                    db.ref(`matches/${id}`).on('value', snap => {
+                        const m = snap.val();
+                        document.getElementById('rID').innerText = m.roomID || "WAITING...";
+                        document.getElementById('rPass').innerText = m.roomPass || "WAITING...";
+                    });
                 } else {
-                    document.getElementById('joinFields').style.display = 'block';
-                    document.getElementById('roomBox').style.display = 'none';
-                    document.getElementById('statusMsg').style.display = 'none';
+                    setUnjoinedUI();
                 }
             });
         }
 
         async function confirmPayment() {
             const uid = document.getElementById('gameUID').value;
-            const agree = document.getElementById('ruleCheck').checked;
-            if(!uid) return showToast("Enter Game UID!");
-            if(!agree) return showToast("Agree to rules first!");
-            if(!myPhone) return showToast("Please Login!");
-
+            const agree = document.getElementById('agree').checked;
             const btn = document.getElementById('mainPayBtn');
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
+
+            if(!uid || uid.length < 5) return showToast("Sahi Free Fire UID daalo!", "error");
+            if(!agree) return showToast("Rules box ko tick karo bhai!", "error");
+
+            // UI Feedback (Button Processing State)
+            btn.innerText = "PROCESSING...";
+            btn.disabled = true;
 
             try {
-                const userRef = db.ref(`users/${myPhone}`);
-                const uSnap = await userRef.once('value');
-                const userData = uSnap.val();
-                
-                const bal = Number(userData.balance || 0);
+                const uRef = db.ref(`users/${myPhone}`);
+                const uSnap = await uRef.once('value');
+                const bal = (uSnap.val() && uSnap.val().balance) ? Number(uSnap.val().balance) : 0;
 
                 if(bal < activeFee) {
-                    btn.innerText = "CONFIRM & JOIN"; btn.disabled = false;
-                    return showToast("Insufficient Balance!");
+                    btn.innerText = "PAY & JOIN MATCH";
+                    btn.disabled = false;
+                    return showToast("Wallet mein paise nahi hain!", "error");
                 }
 
-                // 1. Deduct Balance
-                await userRef.update({ balance: bal - activeFee });
-
-                // 2. Add to Match Players
-                await db.ref(`matches/${activeMatch}/players`).push({ 
-                    userPhone: myPhone, 
-                    gameUID: uid, 
-                    name: userData.name || "Player" 
-                });
-
-                // 3. ADD TO HISTORY (This is what you asked for)
+                // Process Join
+                await uRef.update({ balance: bal - activeFee });
+                await db.ref(`matches/${activeMatch}/players`).push({ userUID: myPhone, gameUID: uid });
+                
                 await db.ref(`users/${myPhone}/history`).push({
-                    title: activeTitle,
-                    amount: "-" + activeFee,
-                    date: new Date().toLocaleString(),
-                    type: "Match Join",
-                    status: "Success"
+                    match: activeTitle, amount: "-" + activeFee, date: new Date().toLocaleString(), type: "1v1 Match Joined"
                 });
 
-                showToast("Tournament Joined!");
+                showToast("Match joined successfully!", "success");
+                setJoinedUI();
+
             } catch(e) {
-                showToast("Network Error!");
+                showToast("Network Error!", "error");
+                btn.innerText = "PAY & JOIN MATCH";
                 btn.disabled = false;
             }
         }
 
+        function setJoinedUI() {
+            document.getElementById('roomBox').style.display = 'block';
+            document.getElementById('mainPayBtn').style.display = 'none';
+            document.getElementById('statusMsg').style.display = 'block';
+            document.getElementById('gameUID').disabled = true;
+            document.getElementById('agree').disabled = true;
+        }
+
+        function setUnjoinedUI() {
+            document.getElementById('roomBox').style.display = 'none';
+            document.getElementById('mainPayBtn').style.display = 'block';
+            document.getElementById('statusMsg').style.display = 'none';
+            document.getElementById('gameUID').disabled = false;
+            document.getElementById('agree').disabled = false;
+            document.getElementById('gameUID').value = "";
+            document.getElementById('agree').checked = false;
+        }
+
         function closeJoin() { document.getElementById('joinUI').style.display = 'none'; }
-        function copyText(id) {
-            navigator.clipboard.writeText(document.getElementById(id).innerText);
-            showToast("Copied!");
+        
+        function copyIt(id) {
+            const text = document.getElementById(id).innerText;
+            if(text.includes('WAITING') || text.includes('XXXX')) return showToast("Abhi ID/Pass nahi aaya hai!", "error");
+            
+            navigator.clipboard.writeText(text);
+            showToast("Copied to clipboard!", "success");
         }
     </script>
 </body>
