@@ -7,6 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
@@ -19,14 +20,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* Sidebar Styling */
+        /* Sidebar */
         .sidebar { width: 260px; background: var(--white); height: 100vh; position: fixed; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; z-index: 100; }
         .side-header { padding: 30px; border-bottom: 1px solid #f0f0f0; text-align: center; }
         .side-header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
         .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #636e72; text-decoration: none; cursor: pointer; font-weight: 700; transition: 0.3s; border-left: 4px solid transparent; }
         .nav-item:hover, .nav-item.active { background: #fff9f0; color: var(--primary); border-left-color: var(--primary); }
 
-        /* Main Content Area */
+        /* Main Content */
         .main { margin-left: 260px; flex: 1; padding: 30px; }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
@@ -34,40 +35,36 @@
 
         .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #eee; }
         
-        /* Table Styling */
+        /* Table */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; padding: 12px; color: #b2bec3; font-size: 12px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
+        th { text-align: left; padding: 12px; color: #b2bec3; font-size: 11px; border-bottom: 2px solid #f9f9f9; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #f9f9f9; font-weight: 600; font-size: 13px; }
 
-        /* Button Styling */
-        .btn { padding: 8px 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 10px; color: white; }
+        /* Buttons */
+        .btn { padding: 8px 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 10px; color: white; margin: 2px; }
         .btn-primary { background: var(--primary); width: 100%; padding: 15px; font-size: 14px; }
         .btn-approve { background: var(--success); }
         .btn-reject { background: var(--danger); }
-        .btn-pending { background: #f39c12; }
-        .btn-edit { background: #6c5ce7; }
-
-        .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; }
-        .badge-pending { background: #ffeaa7; color: #d35400; }
-        .badge-success { background: #55efc4; color: #00b894; }
+        .btn-room { background: #6c5ce7; }
+        .btn-edit { background: #0984e3; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         input, select { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 10px; font-weight: 600; }
 
-        /* Modal Popup */
+        /* Modal */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 95%; max-width: 400px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="side-header"><h1>BOOYAH ZONE</h1></div>
+        <div class="side-header"><h1>RISE UP ADMIN</h1></div>
         <div class="nav-item active" onclick="showTab('add-match', this)"><i class="fas fa-plus-circle"></i> <span>Add Match</span></div>
         <div class="nav-item" onclick="showTab('live-matches', this)"><i class="fas fa-gamepad"></i> <span>Manage Matches</span></div>
         <div class="nav-item" onclick="showTab('deposits', this)"><i class="fas fa-hand-holding-usd"></i> <span>Deposits</span></div>
         <div class="nav-item" onclick="showTab('withdrawals', this)"><i class="fas fa-wallet"></i> <span>Withdrawals</span></div>
-        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> <span>Users Database</span></div>
+        <div class="nav-item" onclick="showTab('user-list', this)"><i class="fas fa-users"></i> <span>User Database</span></div>
     </div>
 
     <div class="main">
@@ -75,11 +72,11 @@
             <div class="card">
                 <h2 style="font-family:'Orbitron'; margin-bottom:20px;">DEPLOY TOURNAMENT</h2>
                 <div class="grid-2">
-                    <input type="text" id="mTitle" placeholder="Match Name (e.g. Duo Combat #50)">
+                    <input type="text" id="mTitle" placeholder="Match Name">
                     <select id="mMode">
-                        <option value="1v1">Solo (1v1)</option>
-                        <option value="2v2">Duo (2v2)</option>
-                        <option value="4v4">Squad (4v4)</option>
+                        <option value="Solo">Solo (1v1)</option>
+                        <option value="Duo">Duo (2v2)</option>
+                        <option value="Squad">Squad (4v4)</option>
                     </select>
                     <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
                     <input type="number" id="mPrize" placeholder="Total Prize (₹)">
@@ -92,16 +89,18 @@
 
         <div id="live-matches" class="tab-content">
             <div class="card">
-                <h2 style="font-family:'Orbitron';">MANAGE MATCHES</h2>
+                <h2 style="font-family:'Orbitron';">MATCH MANAGEMENT</h2>
                 <div style="display:flex; gap:10px; margin: 15px 0;">
                     <button class="btn btn-primary" style="width:auto;" onclick="loadMatches('upcoming')">UPCOMING</button>
-                    <button class="btn btn-pending" style="width:auto;" onclick="loadMatches('live')">ONGOING</button>
+                    <button class="btn btn-room" style="width:auto;" onclick="loadMatches('live')">ONGOING</button>
                     <button class="btn btn-approve" style="width:auto;" onclick="loadMatches('finished')">FINISHED</button>
                 </div>
-                <table>
-                    <thead><tr><th>Match</th><th>Mode</th><th>Players</th><th>Action</th></tr></thead>
-                    <tbody id="matchTableBody"></tbody>
-                </table>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Title</th><th>Room Details</th><th>Players</th><th>Action</th></tr></thead>
+                        <tbody id="matchTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -109,7 +108,7 @@
             <div class="card">
                 <h2>PENDING DEPOSITS</h2>
                 <table>
-                    <thead><tr><th>UID</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+                    <thead><tr><th>UID</th><th>Amount</th><th>Action</th></tr></thead>
                     <tbody id="depositTable"></tbody>
                 </table>
             </div>
@@ -127,35 +126,51 @@
 
         <div id="user-list" class="tab-content">
             <div class="card">
-                <h2>USER DATABASE (FULL)</h2>
-                <table style="font-size: 11px;">
-                    <thead><tr><th>Name</th><th>UID/Phone</th><th>Pass</th><th>Bal</th><th>Refer By</th><th>Action</th></tr></thead>
-                    <tbody id="userTable"></tbody>
-                </table>
+                <h2>USER DATABASE (FULL DETAILS)</h2>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Name</th><th>UID/Phone</th><th>Password</th><th>Balance</th><th>Refer By</th><th>Action</th></tr></thead>
+                        <tbody id="userTable"></tbody>
+                    </table>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal" id="roomModal">
+        <div class="modal-content">
+            <h3 style="font-family:'Orbitron';">SET ROOM ACCESS</h3>
+            <p id="roomMatchName" style="margin:10px 0; color:var(--primary); font-weight:bold;"></p>
+            <input type="text" id="roomIdInput" placeholder="Enter Room ID">
+            <input type="text" id="roomPassInput" placeholder="Enter Room Password">
+            <button class="btn btn-approve" onclick="saveRoomDetails()">SAVE & GO LIVE</button>
+            <button class="btn btn-reject" onclick="closeModal('roomModal')">CANCEL</button>
         </div>
     </div>
 
     <div class="modal" id="balModal">
         <div class="modal-content">
-            <h3>EDIT BALANCE</h3>
+            <h3>EDIT USER BALANCE</h3>
             <p id="targetUser" style="margin:10px 0; font-weight:bold;"></p>
-            <input type="number" id="newBal" placeholder="Enter Amount">
+            <input type="number" id="newBal" placeholder="New Balance">
             <button class="btn btn-approve" onclick="saveBal()">UPDATE</button>
-            <button class="btn btn-reject" onclick="closeModal()">CANCEL</button>
+            <button class="btn btn-reject" onclick="closeModal('balModal')">CANCEL</button>
         </div>
     </div>
 
     <script>
+        // --- FIREBASE SETUP ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // --- TAB NAVIGATION ---
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
+
             if(id === 'live-matches') loadMatches('upcoming');
             if(id === 'deposits') loadTxn('deposits');
             if(id === 'withdrawals') loadTxn('withdrawals');
@@ -172,10 +187,13 @@
                 prize: document.getElementById('mPrize').value,
                 time: document.getElementById('mTime').value,
                 map: document.getElementById('mMap').value,
-                status: "upcoming"
+                status: "upcoming", roomId: "", roomPass: ""
             };
-            if(!data.title || !data.entry) return alert("Poori details bharo!");
-            db.ref('matches/' + mId).set(data).then(() => alert("Match Live Ho Gaya!"));
+            if(!data.title || !data.entry) return alert("Fill all details!");
+            db.ref('matches/' + mId).set(data).then(() => {
+                alert("Match Created Successfully!");
+                location.reload();
+            });
         }
 
         function loadMatches(status) {
@@ -185,11 +203,15 @@
                 snap.forEach(child => {
                     const m = child.val();
                     const players = m.players ? Object.keys(m.players).length : 0;
+                    const roomInfo = m.roomId ? `ID: ${m.roomId} | P: ${m.roomPass}` : "Not Set";
+                    
                     body.innerHTML += `<tr>
-                        <td>${m.title}</td><td>${m.mode}</td><td>${players} Joined</td>
+                        <td>${m.title}</td>
+                        <td style="color:#6c5ce7; font-size:11px;">${roomInfo}</td>
+                        <td>${players} Joined</td>
                         <td>
-                            ${status === 'upcoming' ? `<button class="btn btn-pending" onclick="updateM('${m.mId}','live')">LIVE</button>` : ''}
-                            ${status === 'live' ? `<button class="btn btn-approve" onclick="finishM('${m.mId}')">SET WINNER</button>` : ''}
+                            ${status === 'upcoming' ? `<button class="btn btn-room" onclick="openRoomModal('${m.mId}','${m.title}')">SET ROOM</button>` : ''}
+                            ${status === 'live' ? `<button class="btn btn-edit" onclick="openRoomModal('${m.mId}','${m.title}')">EDIT ROOM</button> <button class="btn btn-approve" onclick="finishM('${m.mId}')">FINISH</button>` : ''}
                             <button class="btn btn-reject" onclick="deleteM('${m.mId}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
@@ -197,15 +219,32 @@
             });
         }
 
-        function finishM(id) {
-            const winner = prompt("Winner ka Phone Number (UID) daalo:");
-            if(winner) db.ref('matches/' + id).update({ status: 'finished', winner: winner }).then(() => alert("Winner Selected!"));
+        let currentRoomId = "";
+        function openRoomModal(id, title) {
+            currentRoomId = id;
+            document.getElementById('roomMatchName').innerText = title;
+            document.getElementById('roomModal').style.display = 'flex';
         }
 
-        function updateM(id, st) { db.ref('matches/'+id).update({status: st}); }
-        function deleteM(id) { if(confirm("Match Delete Kar Du?")) db.ref('matches/'+id).remove(); }
+        function saveRoomDetails() {
+            const rid = document.getElementById('roomIdInput').value;
+            const rps = document.getElementById('roomPassInput').value;
+            db.ref('matches/' + currentRoomId).update({
+                roomId: rid, roomPass: rps, status: 'live'
+            }).then(() => {
+                alert("Room Details Sent to Users!");
+                closeModal('roomModal');
+            });
+        }
 
-        // --- DEPOSITS & WITHDRAWALS ---
+        function finishM(id) {
+            const winner = prompt("Enter Winner UID (Phone):");
+            if(winner) db.ref('matches/'+id).update({status: 'finished', winner: winner}).then(()=>alert("Match Finished!"));
+        }
+
+        function deleteM(id) { if(confirm("Delete Match?")) db.ref('matches/'+id).remove(); }
+
+        // --- TRANSACTIONS LOGIC ---
         function loadTxn(path) {
             db.ref(path).on('value', snap => {
                 const body = document.getElementById(path === 'deposits' ? 'depositTable' : 'withdrawTable');
@@ -215,7 +254,7 @@
                     if(t.status === 'pending') {
                         body.innerHTML += `<tr>
                             <td>${t.userUID}</td><td>₹${t.amount}</td>
-                            ${path === 'withdrawals' ? `<td>${t.upiID}</td>` : '<td>PENDING</td>'}
+                            ${path === 'withdrawals' ? `<td>${t.upiID}</td>` : ''}
                             <td>
                                 <button class="btn btn-approve" onclick="approveTxn('${path}','${child.key}','${t.userUID}',${t.amount})">✔</button>
                                 <button class="btn btn-reject" onclick="rejectTxn('${path}','${child.key}','${t.userUID}',${t.amount})">✖</button>
@@ -234,7 +273,7 @@
                 await uRef.update({ balance: newBal });
             }
             await db.ref(path+'/'+id).update({ status: 'approved' });
-            alert("Done!");
+            alert("Approved!");
         }
 
         async function rejectTxn(path, id, uid, amt) {
@@ -245,10 +284,10 @@
                 await uRef.update({ balance: newBal }); // Refund
             }
             await db.ref(path+'/'+id).update({ status: 'rejected' });
-            alert("Rejected & Refunded!");
+            alert("Rejected!");
         }
 
-        // --- USER DB ---
+        // --- USER DATABASE LOGIC ---
         function loadUsers() {
             db.ref('users').on('value', snap => {
                 const body = document.getElementById('userTable');
@@ -256,33 +295,38 @@
                 snap.forEach(child => {
                     const u = child.val();
                     body.innerHTML += `<tr>
-                        <td>${u.name}</td><td>${u.uid}</td><td>${u.password}</td>
-                        <td style="color:var(--success)">₹${u.balance}</td><td>${u.referredBy || 'Direct'}</td>
+                        <td>${u.name || 'N/A'}</td>
+                        <td>${u.uid}</td>
+                        <td><code style="background:#eee;padding:2px 5px;">${u.password || '****'}</code></td>
+                        <td style="color:var(--success)">₹${u.balance || 0}</td>
+                        <td>${u.referredBy || 'Direct'}</td>
                         <td>
-                            <button class="btn btn-edit" onclick="openBal('${u.uid}',${u.balance})">₹</button>
-                            <button class="btn btn-reject" onclick="deleteUser('${u.uid}')">BAN</button>
+                            <button class="btn btn-edit" onclick="openBalModal('${u.uid}',${u.balance || 0})"><i class="fas fa-coins"></i></button>
+                            <button class="btn btn-reject" onclick="deleteUser('${u.uid}')"><i class="fas fa-user-slash"></i></button>
                         </td>
                     </tr>`;
                 });
             });
         }
 
-        let currentEditUID = "";
-        function openBal(uid, bal) { 
-            currentEditUID = uid; 
+        let editUID = "";
+        function openBalModal(uid, bal) {
+            editUID = uid;
             document.getElementById('targetUser').innerText = "UID: " + uid;
             document.getElementById('newBal').value = bal;
-            document.getElementById('balModal').style.display = 'flex'; 
+            document.getElementById('balModal').style.display = 'flex';
         }
-        function closeModal() { document.getElementById('balModal').style.display = 'none'; }
+
         function saveBal() {
             const amt = document.getElementById('newBal').value;
-            db.ref('users/'+currentEditUID).update({ balance: Number(amt) }).then(() => {
-                alert("Balance Updated!"); closeModal();
+            db.ref('users/'+editUID).update({ balance: Number(amt) }).then(() => {
+                alert("Balance Updated!");
+                closeModal('balModal');
             });
         }
 
-        function deleteUser(uid) { if(confirm("Ban this user?")) db.ref('users/'+uid).remove(); }
+        function deleteUser(uid) { if(confirm("Ban User?")) db.ref('users/'+uid).remove(); }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     </script>
 </body>
 </html>
