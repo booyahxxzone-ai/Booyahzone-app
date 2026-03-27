@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -99,12 +99,6 @@
             position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .welcome-box::before {
-            content: ''; position: absolute; top: -50%; right: -20%;
-            width: 150px; height: 150px; background: var(--primary);
-            opacity: 0.05; border-radius: 50%;
-        }
-
         .user-meta h4 { font-size: 12px; color: #8c8c8c; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
         .user-meta h1 { font-family: 'Orbitron'; font-size: 24px; color: #1a1a1a; margin-top: 3px; }
         .user-meta p { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 5px; }
@@ -142,8 +136,8 @@
         .mode-item {
             background: #fff; border-radius: 25px; padding: 20px;
             margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-            border: var(--border); box-shadow: var(--shadow); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
+            border: var(--border); box-shadow: var(--shadow); transition: 0.4s;
+            position: relative; overflow: hidden; cursor: pointer;
         }
         .mode-item:active { transform: scale(0.97); }
         .mode-item::after {
@@ -192,7 +186,6 @@
         }
         .fab-profile:active { transform: scale(0.9) translateY(5px); }
 
-        /* Floating UI Elements */
         .live-count {
             background: #ff0000; color: #fff; font-size: 9px; font-weight: 900;
             padding: 2px 8px; border-radius: 10px; animation: blink 1.5s infinite;
@@ -278,15 +271,6 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="location.href='scrims.html'">
-            <div style="display: flex; align-items: center;">
-                <div class="mode-img"><i class="fas fa-trophy"></i></div>
-                <div class="mode-info">
-                    <h3>SCRIMS</h3>
-                    <span class="tag">Pro League</span>
-                </div>
-            </div>
-        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -314,12 +298,13 @@
     <script>
         // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const gameID = localStorage.getItem('gameID');
+        // FIX: Hamesha userPhone use karna hai sync ke liye
+        const userPhone = localStorage.getItem('userPhone');
 
-        // Page Load Logic
+        // Page Loader Logic
         window.addEventListener('load', () => {
             const loader = document.getElementById('preloader');
             setTimeout(() => {
@@ -328,46 +313,30 @@
             }, 800);
         });
 
-        // Security & Data Fetching
-        if (!gameID) {
+        // Login Check & Real-time Sync
+        if (!userPhone) {
             window.location.href = "index.html";
         } else {
-            // Real-time Data Sync
-            const userRef = database.ref('users/' + gameID);
-            userRef.on('value', (snapshot) => {
+            // Real-time Data Sync logic
+            database.ref('users/' + userPhone).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Update UI elements
-                    document.getElementById('userName').innerText = data.name.toUpperCase();
-                    document.getElementById('userUid').innerText = "UID: " + data.uid;
+                    // Name aur UID update
+                    document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
+                    document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
                     
-                    // Format Balance
-                    const balance = parseFloat(data.balance || 0);
-                    document.getElementById('userBalance').innerText = "₹" + balance.toLocaleString('en-IN', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-
-                    // Update Local Storage name for other pages
-                    localStorage.setItem('userName', data.name);
+                    // Balance Formatting (₹0.00 style)
+                    const bal = parseFloat(data.balance || 0);
+                    document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
                 } else {
-                    // Force logout if user deleted from database
+                    // Agar database se delete ho gaya ho user
                     localStorage.clear();
                     window.location.href = "index.html";
                 }
             }, (error) => {
                 console.error("Firebase Error:", error);
-                alert("Connection lost! Check internet.");
             });
         }
-
-        // Handle Active Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function() {
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
     </script>
 </body>
 </html>
