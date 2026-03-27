@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        /* 1. White & Orange Theme */
         :root { 
             --primary: #ff6a00; 
             --primary-dark: #e65c00;
@@ -26,15 +25,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text-dark); padding-bottom: 50px; }
 
-        /* Header */
         .header { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 12px; position: sticky; top:0; z-index: 100; box-shadow: 0 2px 15px rgba(255,106,0,0.1); border-bottom: 3px solid var(--primary); }
         .header h1 { font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: 1px; }
 
-        /* Match Cards */
         #matchList { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .m-card { background: var(--white); border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); border: 1px solid #f1f1f1; overflow: hidden; position: relative; }
+        .m-card { background: var(--white); border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); border: 1px solid #f1f1f1; overflow: hidden; position: relative; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
         
-        /* Top Status Bar in Card */
         .status-bar { background: #fffaf5; border-bottom: 1px solid #ffedd5; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: var(--primary); }
         .live-tag { background: #fee2e2; color: #dc2626; padding: 3px 8px; border-radius: 4px; animation: pulse 1.5s infinite; font-weight: 800; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -42,45 +39,31 @@
         .card-body { padding: 20px; }
         .m-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; }
         
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-box { background: var(--bg); padding: 12px; border-radius: 10px; text-align: center; }
         .stat-box span { display: block; font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
         .stat-box b { font-size: 16px; font-weight: 800; color: var(--text-dark); }
 
-        /* Buttons */
         .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
         .btn-primary { background: var(--primary); color: var(--white); box-shadow: 0 4px 15px rgba(255,106,0,0.3); }
-        .btn-primary:active { transform: scale(0.98); }
         .btn-joined { background: var(--success); color: var(--white); box-shadow: 0 4px 15px rgba(16,185,129,0.3); }
         .btn-full { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
 
-        /* Full Page UI (Overlay) */
-        .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        
-        .o-head { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        .o-head i { font-size: 20px; color: var(--text-dark); cursor: pointer; }
+        .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; }
+        .o-head { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; }
 
-        /* Form Inputs */
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-weight: 600; font-size: 12px; color: var(--text-gray); margin-bottom: 8px; }
-        .input-group input { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 600; outline: none; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); }
+        .input-group input { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 600; outline: none; }
 
-        /* Room Details Box (Joined State) */
         .room-box { background: var(--white); border: 2px solid var(--primary); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
         .room-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-        .room-row:last-child { border: none; padding-bottom: 0; }
-        .copy-btn { background: #fff1e6; color: var(--primary); border: none; padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer; }
         
-        /* Custom Toast Notification */
-        .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
-        .toast { background: var(--text-dark); color: var(--white); padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: toastAnim 0.3s ease; }
-        @keyframes toastAnim { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; }
+        .toast { background: var(--text-dark); color: var(--white); padding: 14px 20px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        .info-alert { background: #fff1e6; color: var(--primary-dark); padding: 12px; border-radius: 8px; font-size: 11px; font-weight: 600; display: flex; gap: 8px; margin-bottom: 20px; line-height: 1.4; border: 1px solid #ffd8b3; }
+        .info-alert { background: #fff1e6; color: var(--primary-dark); padding: 12px; border-radius: 8px; font-size: 11px; font-weight: 600; display: flex; gap: 8px; margin-bottom: 20px; border: 1px solid #ffd8b3; }
     </style>
 </head>
 <body>
@@ -88,286 +71,207 @@
     <div class="toast-container" id="toastBox"></div>
 
     <header class="header">
-        <i class="fas fa-gamepad" style="color: var(--primary); font-size: 20px;"></i>
+        <i class="fas fa-fire-alt" style="color: var(--primary); font-size: 20px;"></i>
         <h1>1V1 ELITE ARENA</h1>
     </header>
 
     <div id="matchList">
-        <p style="text-align:center; padding-top:50px; color:var(--text-gray); font-weight:600;">Fetching Arena Matches...</p>
+        <div style="text-align:center; padding-top:100px;">
+            <i class="fas fa-spinner fa-spin" style="font-size:30px; color:var(--primary);"></i>
+            <p style="margin-top:15px; color:var(--text-gray);">Connecting to Server...</p>
+        </div>
     </div>
 
     <div class="overlay" id="fullPageUI">
         <div class="o-head">
-            <i class="fas fa-arrow-left" onclick="closePage()"></i>
+            <i class="fas fa-arrow-left" onclick="closePage()" style="font-size:20px;"></i>
             <h2 id="pageTitle" style="font-size:16px; font-weight:800;">Match Details</h2>
         </div>
         
         <div class="o-body">
             <div id="joinedView" style="display:none;">
                 <div class="info-alert">
-                    <i class="fas fa-info-circle" style="font-size: 14px; margin-top: 2px;"></i>
-                    <span>Room ID and Password will be provided exactly 15 minutes before the match starts. Be ready!</span>
+                    <i class="fas fa-clock"></i>
+                    <span>Room ID & Pass match shuru hone se 15 min pehle yahan dikhenge.</span>
                 </div>
-                
                 <div class="room-box">
                     <div style="text-align:center; margin-bottom:15px;">
-                        <span style="font-size:10px; font-weight:800; color:var(--text-gray); text-transform:uppercase;">Your Registered UID</span>
-                        <h3 id="myEnteredUID" style="color:var(--text-dark);">...</h3>
+                        <span style="font-size:10px; color:var(--text-gray);">YOUR REGISTERED UID</span>
+                        <h3 id="myEnteredUID">---</h3>
                     </div>
                     <div class="room-row">
-                        <div>
-                            <span style="font-size:10px; font-weight:600; color:var(--text-gray);">ROOM ID</span>
-                            <div id="rID" style="font-weight:800; font-size:15px;">WAITING...</div>
-                        </div>
-                        <button class="copy-btn" onclick="copyText('rID')">COPY</button>
+                        <div><span style="font-size:10px; color:var(--text-gray);">ROOM ID</span><div id="rID" style="font-weight:800;">WAITING...</div></div>
+                        <button onclick="copyText('rID')" style="border:none; background:#fff1e6; color:var(--primary); padding:5px 10px; border-radius:5px; font-weight:800; cursor:pointer;">COPY</button>
                     </div>
                     <div class="room-row">
-                        <div>
-                            <span style="font-size:10px; font-weight:600; color:var(--text-gray);">PASSWORD</span>
-                            <div id="rPass" style="font-weight:800; font-size:15px;">WAITING...</div>
-                        </div>
-                        <button class="copy-btn" onclick="copyText('rPass')">COPY</button>
+                        <div><span style="font-size:10px; color:var(--text-gray);">PASSWORD</span><div id="rPass" style="font-weight:800;">WAITING...</div></div>
+                        <button onclick="copyText('rPass')" style="border:none; background:#fff1e6; color:var(--primary); padding:5px 10px; border-radius:5px; font-weight:800; cursor:pointer;">COPY</button>
                     </div>
                 </div>
             </div>
 
             <div id="joinFormView" style="display:none;">
-                <div class="info-alert">
-                    <i class="fas fa-shield-alt" style="font-size: 14px; margin-top: 2px;"></i>
-                    <span>Room ID & Pass will be visible here 15 mins before match. Only joined players can see details.</span>
-                </div>
-                
                 <div class="input-group">
-                    <label>ENTER YOUR IN-GAME UID</label>
-                    <input type="number" id="gameUID" placeholder="E.g. 1234567890">
+                    <label>ENTER FREE FIRE UID</label>
+                    <input type="number" id="gameUID" placeholder="Ex: 1002938475">
                 </div>
-                
-                <div style="background:var(--white); padding:15px; border-radius:12px; margin-bottom:25px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:600; font-size:14px; color:var(--text-gray);">Entry Fee Deduction</span>
-                    <span style="font-weight:800; font-size:18px; color:var(--primary);">₹<span id="feeTag">0</span></span>
+                <div style="background:#fff; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid #eee; display:flex; justify-content:space-between;">
+                    <span style="font-weight:600;">Entry Fee</span>
+                    <span style="font-weight:800; color:var(--primary);">₹<span id="feeTag">0</span></span>
                 </div>
-                
-                <button class="btn btn-primary" id="confirmJoinBtn" onclick="processJoin()">Pay & Join Match</button>
+                <button class="btn btn-primary" id="confirmJoinBtn" onclick="processJoin()">Join Now</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- FIREBASE CONFIGURATION ---
+        // 1. Firebase Setup
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- BOT CONFIG ---
+        const myPhone = localStorage.getItem('userPhone');
         const BOT_TOKEN = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const CHAT_ID = "6345864319";
-        
-        // GET USER PHONE (Requirement from previous logic)
-        const myPhone = localStorage.getItem('userPhone');
 
-        // Global Variables
         let activeMatchId = null;
         let activeEntryFee = 0;
         let activeMatchTitle = "";
 
-        // 12. Custom Notification Function
-        function showToast(msg, icon = "fa-info-circle", color = "var(--primary)") {
+        // 2. Notifications
+        function showToast(msg) {
             const box = document.getElementById('toastBox');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas ${icon}" style="color:${color}"></i> <span>${msg}</span>`;
-            box.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3500);
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+            box.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
 
-        // --- FETCH MATCHES ---
+        // 3. Fetch Data from Admin Panel (Matches Node)
         db.ref('matches').on('value', snap => {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
-            let hasMatches = false;
+            let found = false;
+
+            if(!snap.exists()) {
+                container.innerHTML = "<p style='text-align:center; margin-top:50px;'>No Matches in Database</p>";
+                return;
+            }
 
             snap.forEach(child => {
                 const m = child.val();
-                
-                // 6 & 11. Filter: Only '1v1' AND NOT 'finish'
-                if(m.mode === "1v1" && m.status !== "finish") {
-                    hasMatches = true;
-                    const matchId = child.key;
+                const mid = child.key;
+
+                // Simple Check: Only show if not finished
+                if(m.status !== "finish") {
+                    found = true;
                     
-                    // Count Players & Check if I Joined
-                    let playersCount = 0;
-                    let iHaveJoined = false;
+                    let pCount = m.players ? Object.keys(m.players).length : 0;
+                    let iJoined = false;
                     if(m.players) {
-                        playersCount = Object.keys(m.players).length;
-                        Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) iHaveJoined = true; });
+                        Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) iJoined = true; });
                     }
+
+                    const isFull = pCount >= 2;
+                    let btn = `<button class="btn btn-primary" onclick="openPage('${mid}', ${m.entry}, '${m.title}')">Join Match</button>`;
                     
-                    // 5. 1V1 Match Full Logic
-                    const isFull = playersCount >= 2;
-
-                    // 6. Live Tag Logic based on Match Time
-                    const matchTime = new Date(m.time).getTime();
-                    const now = new Date().getTime();
-                    let timeHTML = `<span style="color:var(--text-gray);"><i class="far fa-clock"></i> ${m.time}</span>`;
-                    if(now >= matchTime) {
-                        timeHTML = `<span class="live-tag"><i class="fas fa-circle" style="font-size:8px;"></i> LIVE NOW</span>`;
-                    }
-
-                    // 9. Button UI State
-                    let btnHTML = "";
-                    if(iHaveJoined) {
-                        btnHTML = `<button class="btn btn-joined" onclick="openPage('${matchId}', ${m.entry}, '${m.title}')">Joined - View Details</button>`;
+                    if(iJoined) {
+                        btn = `<button class="btn btn-joined" onclick="openPage('${mid}', ${m.entry}, '${m.title}')">Joined - Details</button>`;
                     } else if(isFull) {
-                        btnHTML = `<button class="btn btn-full" disabled>Match Full</button>`;
-                    } else {
-                        btnHTML = `<button class="btn btn-primary" onclick="openPage('${matchId}', ${m.entry}, '${m.title}')">Join & View Details</button>`;
+                        btn = `<button class="btn btn-full" disabled>Match Full</button>`;
                     }
 
-                    // Render Card
                     container.innerHTML += `
                         <div class="m-card">
                             <div class="status-bar">
-                                ${timeHTML}
-                                <span><i class="fas fa-map-marker-alt"></i> ${m.map || 'Bermuda'}</span>
+                                <span><i class="far fa-clock"></i> ${m.time || 'TBA'}</span>
+                                ${pCount >= 2 ? '<span class="live-tag">LIVE</span>' : '<span>1VS1</span>'}
                             </div>
                             <div class="card-body">
-                                <h2 class="m-title">${m.title}</h2>
+                                <h2 class="m-title">${m.title || 'Untitled Match'}</h2>
                                 <div class="stats-grid">
-                                    <div class="stat-box"><span>Winning Prize</span><b>₹${m.prize}</b></div>
-                                    <div class="stat-box"><span>Entry Fee</span><b>₹${m.entry}</b></div>
+                                    <div class="stat-box"><span>Prize</span><b>₹${m.prize || 0}</b></div>
+                                    <div class="stat-box"><span>Entry</span><b>₹${m.entry || 0}</b></div>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:15px; color:var(--text-gray);">
-                                    <span>Mode: 1VS1</span>
-                                    <span>Players: <b style="color:${isFull ? 'red' : 'var(--success)'}">${playersCount}/2</b></span>
-                                </div>
-                                ${btnHTML}
+                                ${btn}
                             </div>
                         </div>`;
                 }
             });
-
-            if(!hasMatches) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:50px 20px;">
-                        <i class="fas fa-box-open" style="font-size:40px; color:#cbd5e1; margin-bottom:15px;"></i>
-                        <h3 style="color:var(--text-gray); font-size:16px;">No 1V1 Matches Currently</h3>
-                    </div>`;
-            }
+            if(!found) container.innerHTML = "<p style='text-align:center; margin-top:50px;'>No 1v1 Matches Available</p>";
         });
 
-        // --- OPEN FULL PAGE (Req 3) ---
-        function openPage(matchId, entryFee, title) {
-            if(!myPhone) return showToast("Please login first to join!", "fa-exclamation-triangle", "#ef4444");
-            
-            activeMatchId = matchId;
-            activeEntryFee = entryFee;
+        // 4. Open Match Page
+        function openPage(id, fee, title) {
+            if(!myPhone) { showToast("Login first!"); return; }
+            activeMatchId = id;
+            activeEntryFee = fee;
             activeMatchTitle = title;
             
             document.getElementById('pageTitle').innerText = title;
-            document.getElementById('feeTag').innerText = entryFee;
+            document.getElementById('feeTag').innerText = fee;
             document.getElementById('fullPageUI').style.display = 'flex';
 
-            // Realtime listener for this specific match details
-            db.ref(`matches/${matchId}`).on('value', snap => {
-                const m = snap.val();
-                if(!m) return;
-
+            db.ref(`matches/${id}`).on('value', s => {
+                const match = s.val();
                 let myUID = null;
-                if(m.players) {
-                    Object.values(m.players).forEach(p => { 
-                        if(p.userPhone === myPhone) myUID = p.gameUID; 
-                    });
+                if(match.players) {
+                    Object.values(match.players).forEach(p => { if(p.userPhone === myPhone) myUID = p.gameUID; });
                 }
 
                 if(myUID) {
-                    // USER HAS JOINED -> Show Room Details
-                    document.getElementById('joinFormView').style.display = 'none';
                     document.getElementById('joinedView').style.display = 'block';
-                    
+                    document.getElementById('joinFormView').style.display = 'none';
                     document.getElementById('myEnteredUID').innerText = myUID;
-                    document.getElementById('rID').innerText = m.roomId || "WAITING...";
-                    document.getElementById('rPass').innerText = m.roomPass || "WAITING...";
+                    document.getElementById('rID').innerText = match.roomId || "WAITING...";
+                    document.getElementById('rPass').innerText = match.roomPass || "WAITING...";
                 } else {
-                    // USER HAS NOT JOINED -> Show Form
-                    document.getElementById('joinFormView').style.display = 'block';
                     document.getElementById('joinedView').style.display = 'none';
+                    document.getElementById('joinFormView').style.display = 'block';
                 }
             });
         }
 
-        // --- JOIN MATCH PROCESS (Req 8 & 10) ---
+        // 5. Joining Logic
         async function processJoin() {
-            const uidInput = document.getElementById('gameUID').value;
-            if(uidInput.length < 5) return showToast("Enter a valid Game UID!", "fa-times", "#ef4444");
+            const uid = document.getElementById('gameUID').value;
+            if(!uid || uid.length < 5) { showToast("Enter Valid UID"); return; }
 
             const btn = document.getElementById('confirmJoinBtn');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
-            btn.disabled = true;
+            btn.disabled = true; btn.innerText = "Processing...";
 
-            try {
-                // Fetch User Details
-                const userRef = db.ref(`users/${myPhone}`);
-                const userSnap = await userRef.get();
-                
-                if(!userSnap.exists()) throw new Error("User Data Not Found");
-                
-                const userData = userSnap.val();
-                const bal = parseFloat(userData.balance || 0);
+            const userRef = db.ref(`users/${myPhone}`);
+            const snap = await userRef.get();
+            const userData = snap.val();
+            const bal = parseFloat(userData.balance || 0);
 
-                // Check Balance
-                if(bal < activeEntryFee) {
-                    showToast("Insufficient Balance! Recharge your wallet.", "fa-wallet", "#ef4444");
-                    btn.innerText = "Pay & Join Match"; btn.disabled = false;
-                    return;
-                }
-
-                // 8. Auto Deduct Balance & Create History Log
-                const newBal = bal - activeEntryFee;
-                await userRef.update({ balance: newBal });
-                
-                await userRef.child('history').push({
-                    title: `Joined 1V1: ${activeMatchTitle}`,
-                    amount: "-" + activeEntryFee,
-                    date: new Date().toLocaleString(),
-                    type: "Debit",
-                    status: "Success"
-                });
-
-                // Add User to Match
-                await db.ref(`matches/${activeMatchId}/players`).push({
-                    userPhone: myPhone,
-                    gameUID: uidInput,
-                    joinedAt: new Date().getTime()
-                });
-
-                // 10. Telegram Notification
-                const msg = `⚔️ *NEW 1V1 JOIN* \n\n📱 *Phone:* ${myPhone} \n🆔 *Game UID:* ${uidInput} \n🎮 *Match:* ${activeMatchTitle} \n💰 *Fee Deducted:* ₹${activeEntryFee} \n💳 *Rem. Bal:* ₹${newBal}`;
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`).catch(()=>console.log("TG err"));
-
-                showToast("Match Joined Successfully!", "fa-check-circle", "var(--success)");
-
-            } catch(e) {
-                console.error(e);
-                showToast("System Error. Try again.", "fa-exclamation-triangle", "#ef4444");
-                btn.innerText = "Pay & Join Match";
-                btn.disabled = false;
+            if(bal < activeEntryFee) {
+                showToast("Low Balance!"); btn.disabled = false; btn.innerText = "Join Now";
+                return;
             }
+
+            // Deduct & Join
+            await userRef.update({ balance: bal - activeEntryFee });
+            await userRef.child('history').push({ title: "Joined 1v1", amount: "-"+activeEntryFee, date: new Date().toLocaleString() });
+            await db.ref(`matches/${activeMatchId}/players`).push({ userPhone: myPhone, gameUID: uid });
+
+            // Telegram
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=New 1v1 Join: ${myPhone} UID: ${uid}`);
+
+            showToast("Joined!");
         }
 
-        // --- UTILS ---
-        function closePage() {
-            document.getElementById('fullPageUI').style.display = 'none';
-            db.ref(`matches/${activeMatchId}`).off(); // Remove listener when closed
-            activeMatchId = null;
-            document.getElementById('gameUID').value = ""; // Clear input
+        function closePage() { 
+            document.getElementById('fullPageUI').style.display = 'none'; 
+            db.ref(`matches/${activeMatchId}`).off();
         }
 
-        function copyText(elementId) {
-            const text = document.getElementById(elementId).innerText;
-            if(text === "WAITING...") return showToast("Detail not available yet!", "fa-clock", "#f59e0b");
-            
-            navigator.clipboard.writeText(text);
-            showToast("Copied to clipboard!", "fa-copy", "var(--primary)");
+        function copyText(id) {
+            const t = document.getElementById(id).innerText;
+            if(t.includes("WAITING")) return;
+            navigator.clipboard.writeText(t);
+            showToast("Copied!");
         }
     </script>
 </body>
