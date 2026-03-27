@@ -386,4 +386,15 @@
 
         function closeOverlay() {
             document.getElementById('mainOverlay').style.display = 'none';
-            if(activeMID) db.ref(`
+            if(activeMID) db.ref(`matches/${activeMID}`).off();
+        }
+
+        function copyValue(id) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return showToast("Abhi wait karein...");
+            navigator.clipboard.writeText(val);
+            showToast("Copied to Clipboard!");
+        }
+    </script>
+</body>
+</html>
