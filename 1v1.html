@@ -37,9 +37,9 @@
         .stat-box span { display: block; font-size: 9px; color: #ff6a00; font-weight: 800; }
         .stat-box b { font-family: 'Orbitron'; font-size: 16px; }
 
-        .btn-join { width: 100%; padding: 16px; border: none; border-radius: 14px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; cursor: pointer; background: linear-gradient(90deg, var(--primary), #ff8c00); color: #fff; transition: 0.3s; }
+        .btn-join { width: 100%; padding: 16px; border: none; border-radius: 14px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; cursor: pointer; background: linear-gradient(90deg, var(--primary), #ff8c00); color: #fff; transition: 0.3s; border: none; outline: none; }
         .btn-full { background: #e2e8f0 !important; color: #94a3b8 !important; cursor: not-allowed; }
-        .btn-joined { background: #fff; color: var(--success); border: 2px solid var(--success); }
+        .btn-joined { background: #fff; color: var(--success); border: 2px solid var(--success) !important; }
 
         .overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -52,13 +52,14 @@
 
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-weight: 800; font-size: 11px; color: #64748b; margin-bottom: 8px; }
-        .input-group input { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 700; }
+        .input-group input { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 700; outline: none; }
+        .input-group input:focus { border-color: var(--primary); }
 
         .check-box { display: flex; gap: 10px; margin-bottom: 20px; align-items: flex-start; }
         .check-box input { width: 18px; height: 18px; accent-color: var(--primary); margin-top: 2px; }
         .check-box label { font-size: 12px; font-weight: 700; color: #64748b; line-height: 1.4; }
 
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 12px 25px; border-radius: 50px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; padding: 12px 25px; border-radius: 50px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -80,26 +81,37 @@
             <h2 id="mTitle" style="font-family:'Orbitron'; font-size:14px;">CHECKOUT</h2>
         </div>
         <div class="o-body">
+            
             <div id="roomSec" style="display:none;">
                 <div class="room-card">
                     <p style="font-size:10px; color:var(--primary); margin-bottom:15px; letter-spacing:2px; font-family:'Orbitron';">ENTRY CONFIRMED</p>
-                    <div class="room-row"><span>ID: <b id="rID">WAITING</b></span><button onclick="copy('rID')" style="background:var(--primary); border:none; color:#fff; padding:4px 10px; border-radius:5px; font-size:10px;">COPY</button></div>
-                    <div class="room-row" style="border:none;"><span>PASS: <b id="rPass">WAITING</b></span><button onclick="copy('rPass')" style="background:var(--primary); border:none; color:#fff; padding:4px 10px; border-radius:5px; font-size:10px;">COPY</button></div>
+                    <div class="room-row">
+                        <span>ROOM ID: <b id="rID" style="color:#fff">WAITING</b></span>
+                        <button onclick="copy('rID')" style="background:var(--primary); border:none; color:#fff; padding:6px 12px; border-radius:5px; font-size:10px; font-weight:900;">COPY</button>
+                    </div>
+                    <div class="room-row" style="border:none;">
+                        <span>PASSWORD: <b id="rPass" style="color:#fff">WAITING</b></span>
+                        <button onclick="copy('rPass')" style="background:var(--primary); border:none; color:#fff; padding:6px 12px; border-radius:5px; font-size:10px; font-weight:900;">COPY</button>
+                    </div>
+                </div>
+                <div style="background:#fff; padding:15px; border-radius:15px; font-size:12px; font-weight:600; color:#666;">
+                    • Room details match start hone se 15 min pehle milenge.<br>
+                    • Recording on rakhen prize claim ke liye.
                 </div>
             </div>
 
             <div id="formSec">
                 <div class="input-group">
                     <label>FREE FIRE PLAYER ID (UID)</label>
-                    <input type="number" id="gameUID" placeholder="Ex: 123456789">
+                    <input type="number" id="gameUID" placeholder="Enter your 10 digit UID">
                 </div>
                 <div class="check-box">
                     <input type="checkbox" id="ruleCheck">
-                    <label for="ruleCheck">I accept all the tournament rules. No hacks, no teaming. I will record my gameplay for prize claims.</label>
+                    <label for="ruleCheck">I accept all rules. No hacking/teaming. If caught, I will be banned without refund.</label>
                 </div>
                 <div style="background:#fff; border:1px solid #eee; padding:15px; border-radius:15px; margin-bottom:20px;">
                     <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px;">
-                        <span>Payable Amount</span><span style="color:var(--primary);">₹<span id="feeTag">0</span></span>
+                        <span>Total Payable</span><span style="color:var(--primary);">₹<span id="feeTag">0</span></span>
                     </div>
                 </div>
                 <button class="btn-join" id="payBtn" onclick="processJoin()">CONFIRM & JOIN MATCH</button>
@@ -108,14 +120,16 @@
     </div>
 
     <script>
+        // --- CONFIG ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         const BOT_TOKEN = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const CHAT_ID = "6345864319";
-        const myPhone = localStorage.getItem('userPhone') || "USER_01";
-        let activeMatch = null;
+        
+        // IMPORTANT: Ensure this is set in your login page
+        const myPhone = localStorage.getItem('userPhone');
 
         function showToast(m) {
             const t = document.getElementById('toast');
@@ -123,17 +137,32 @@
             setTimeout(() => t.style.display = 'none', 3000);
         }
 
+        if(!myPhone) {
+            showToast("Login session expired! Redirecting...");
+            // window.location.href = "login.html"; 
+        }
+
+        let activeMatch = null;
+
         // --- FETCH MATCHES ---
         db.ref('matches').on('value', snap => {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
+            let hasMatches = false;
+
             snap.forEach(child => {
                 const m = child.val();
                 if((m.mode === "1v1" || m.mode === "Solo") && m.status !== "finish") {
+                    hasMatches = true;
                     const players = m.players ? Object.keys(m.players).length : 0;
                     const isFull = players >= 2;
                     let joined = false;
-                    if(m.players) Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) joined = true; });
+                    
+                    if(m.players) {
+                        Object.values(m.players).forEach(p => { 
+                            if(p.userPhone === myPhone) joined = true; 
+                        });
+                    }
 
                     container.innerHTML += `
                         <div class="m-card">
@@ -144,13 +173,13 @@
                             <div class="card-body">
                                 <h2 class="m-title">${m.title}</h2>
                                 <div class="vs-box">
-                                    <div class="player-slot">P1</div>
+                                    <div class="player-slot">${players >= 1 ? '👤' : 'VS'}</div>
                                     <div style="font-family:'Orbitron'; font-weight:900; color:#ddd;">VS</div>
-                                    <div class="player-slot">P2</div>
+                                    <div class="player-slot">${players >= 2 ? '👤' : 'VS'}</div>
                                 </div>
                                 <div class="stats-row">
-                                    <div class="stat-box"><span>PRIZE</span><b>₹${m.prize}</b></div>
-                                    <div class="stat-box"><span>ENTRY</span><b>₹${m.entry}</b></div>
+                                    <div class="stat-box"><span>WIN PRIZE</span><b>₹${m.prize}</b></div>
+                                    <div class="stat-box"><span>ENTRY FEE</span><b>₹${m.entry}</b></div>
                                 </div>
                                 <button class="btn-join ${joined ? 'btn-joined' : (isFull ? 'btn-full' : '')}" 
                                         onclick="openJoin('${child.key}', ${m.entry}, '${m.title}')" ${(!joined && isFull) ? 'disabled' : ''}>
@@ -160,9 +189,10 @@
                         </div>`;
                 }
             });
+            if(!hasMatches) container.innerHTML = "<p style='text-align:center; padding-top:100px; color:#999;'>NO ACTIVE MATCHES</p>";
         });
 
-        // --- TIMER LOGIC ---
+        // --- TIMER ---
         setInterval(() => {
             document.querySelectorAll('.timer').forEach(el => {
                 const diff = new Date(el.getAttribute('data-time')).getTime() - new Date().getTime();
@@ -180,6 +210,7 @@
             
             db.ref(`matches/${id}`).on('value', s => {
                 const m = s.val();
+                if(!m) return;
                 let myData = null;
                 if(m.players) Object.values(m.players).forEach(p => { if(p.userPhone === myPhone) myData = p; });
 
@@ -200,53 +231,78 @@
             const check = document.getElementById('ruleCheck').checked;
             const btn = document.getElementById('payBtn');
 
-            if(uid.length < 5) return showToast("Enter valid UID!");
-            if(!check) return showToast("Accept the rules first!");
+            if(!myPhone) return showToast("User ID missing. Re-login!");
+            if(uid.length < 5) return showToast("Enter valid Player UID!");
+            if(!check) return showToast("Accept tournament rules!");
 
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
+            btn.innerText = "VERIFYING..."; btn.disabled = true;
 
             try {
+                // 1. Fetch User
                 const uRef = db.ref(`users/${myPhone}`);
-                const uSnap = await uRef.once('value');
+                const uSnap = await uRef.get();
+                
+                if(!uSnap.exists()) {
+                    showToast("User not found in DB!");
+                    throw new Error("User missing");
+                }
+
                 const user = uSnap.val();
                 const bal = parseFloat(user.balance || 0);
 
+                // 2. Balance Check
                 if(bal < activeMatch.entry) {
-                    showToast("Insufficient Balance!");
+                    showToast("Insufficient Balance! Recharge now.");
                     btn.innerText = "CONFIRM & JOIN MATCH"; btn.disabled = false;
                     return;
                 }
 
-                await uRef.update({ balance: bal - activeMatch.entry });
+                // 3. Update DB (Atomic Update)
+                const newBal = bal - activeMatch.entry;
+                
+                await uRef.update({ balance: newBal });
+                
+                // Add History
                 await uRef.child('history').push({
-                    title: `1V1 Join: ${activeMatch.title}`,
+                    title: `Joined: ${activeMatch.title}`,
                     amount: "-" + activeMatch.entry,
                     date: new Date().toLocaleString(),
-                    type: "Debit"
+                    type: "Debit",
+                    remark: "1v1 Match Entry"
                 });
 
+                // Add Player to Match
                 await db.ref(`matches/${activeMatch.id}/players`).push({
                     userPhone: myPhone,
                     gameUID: uid,
-                    userName: user.name || "Player"
+                    userName: user.name || "Elite Player"
                 });
 
-                const msg = `🔥 *New 1V1 Join* \n\n👤 Player: ${user.name} \n🆔 UID: ${uid} \n🏆 Match: ${activeMatch.title} \n💰 Entry: ₹${activeMatch.entry}`;
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+                // 4. Telegram Notify
+                const msg = `🎮 *1V1 JOIN ALERT* \n\n👤 Name: ${user.name || 'N/A'} \n📱 Phone: ${myPhone} \n🆔 UID: ${uid} \n🏆 Match: ${activeMatch.title} \n💰 Fee: ₹${activeMatch.entry} \n💳 Balance: ₹${newBal}`;
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`).catch(e => console.log("TG Error"));
 
-                showToast("Joined Successfully! 🔥");
+                showToast("Registration Success! 🔥");
+                btn.innerText = "JOINED SUCCESSFULLY";
+
             } catch(e) {
-                showToast("System Error!");
+                console.error("Join Error: ", e);
+                showToast("System Error! Check Connection.");
+                btn.innerText = "CONFIRM & JOIN MATCH";
                 btn.disabled = false;
             }
         }
 
-        function closeUI() { document.getElementById('joinUI').style.display = 'none'; }
+        function closeUI() { 
+            document.getElementById('joinUI').style.display = 'none'; 
+            activeMatch = null;
+        }
+
         function copy(id) {
             const v = document.getElementById(id).innerText;
-            if(v === "WAITING...") return showToast("Details not ready!");
+            if(v === "WAITING...") return showToast("Details not shared yet!");
             navigator.clipboard.writeText(v);
-            showToast("Copied!");
+            showToast("Copied to Clipboard!");
         }
     </script>
 </body>
