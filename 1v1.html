@@ -1,11 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>1V1 Elite Arena | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
@@ -13,336 +13,295 @@
 
     <style>
         :root {
-            --primary: #ff6a00;
-            --primary-grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
-            --bg: #f8fafc;
+            --orange: #ff6a00;
+            --orange-light: #fff5eb;
+            --grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
             --white: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --success: #10b981;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --bg-mix: linear-gradient(180deg, #ffffff 0%, #fff9f5 100%);
+            --text: #1e293b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text-main); }
+        
+        body { 
+            background: var(--bg-mix); 
+            color: var(--text); 
+            min-height: 100vh;
+        }
 
-        /* HEADER */
+        /* Header */
         .header {
             background: var(--white); height: 70px; display: flex; align-items: center;
             padding: 0 20px; position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); gap: 15px;
+            box-shadow: 0 2px 15px rgba(255, 106, 0, 0.1); gap: 15px;
         }
         .header .back-btn {
-            width: 40px; height: 40px; border-radius: 12px; background: #f1f5f9;
-            display: flex; align-items: center; justify-content: center; color: var(--text-main);
+            width: 40px; height: 40px; border-radius: 12px; background: var(--orange-light);
+            display: flex; align-items: center; justify-content: center; color: var(--orange);
             text-decoration: none; font-size: 18px;
         }
-        .header h1 { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header h1 { font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: var(--orange); letter-spacing: 1px; }
 
-        /* CONTENT */
-        .content-area { padding: 20px; max-width: 600px; margin: 0 auto; }
+        /* Filters */
+        .filters {
+            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+            position: sticky; top: 70px; z-index: 999;
+        }
+        .filter-btn {
+            padding: 8px 18px; border-radius: 50px; background: var(--white);
+            font-size: 11px; font-weight: 700; color: #64748b; border: 1px solid #eee;
+            white-space: nowrap; cursor: pointer; transition: 0.3s;
+        }
+        .filter-btn.active {
+            background: var(--grad); color: white; border: none;
+            box-shadow: 0 4px 12px rgba(255, 106, 0, 0.3);
+        }
+
+        /* Match Cards */
+        .content { padding: 20px; max-width: 500px; margin: 0 auto; }
         
         .m-card {
-            background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px;
-            box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); position: relative;
+            background: var(--white); border-radius: 24px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(255, 106, 0, 0.08); border: 1px solid var(--orange-light);
+            position: relative; overflow: hidden;
         }
-        .m-tag {
-            position: absolute; top: 20px; right: 20px; background: #fff1e6;
-            color: var(--primary); font-size: 10px; font-weight: 800; padding: 5px 12px;
-            border-radius: 50px; text-transform: uppercase;
+        .m-status-tag {
+            position: absolute; top: 0; right: 0; padding: 6px 15px;
+            font-size: 10px; font-weight: 800; border-bottom-left-radius: 15px;
         }
-        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 12px; width: 75%; }
-        
-        .timer-box {
-            background: #f1f5f9; border-radius: 12px; padding: 10px 15px;
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
-        }
-        .timer-box i { color: var(--primary); }
-        .timer-box span { font-size: 13px; font-weight: 700; }
+        .status-upcoming { background: #fff1e6; color: var(--orange); }
+        .status-live { background: #ff4b2b; color: white; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.7; } }
 
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-item { text-align: center; background: #fffcf9; padding: 10px; border-radius: 15px; border: 1px solid #fff5eb; }
-        .stat-item small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .stat-item b { font-size: 14px; color: var(--text-main); font-weight: 800; }
+        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; color: #0f172a; }
+
+        .timer-box {
+            background: var(--orange-light); border-radius: 12px; padding: 10px;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
+        }
+        .timer-box i { color: var(--orange); font-size: 14px; }
+        .timer-box span { font-size: 13px; font-weight: 700; color: var(--orange); }
+
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .s-item { text-align: center; background: #fafafa; padding: 8px; border-radius: 12px; }
+        .s-item small { display: block; font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; }
+        .s-item b { font-size: 13px; font-weight: 800; color: #334155; }
 
         .btn-join {
-            width: 100%; padding: 16px; border: none; border-radius: 18px;
-            background: var(--primary-grad); color: white; font-weight: 800;
-            font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.2);
+            width: 100%; padding: 15px; border: none; border-radius: 15px;
+            background: var(--grad); color: white; font-weight: 800;
+            font-size: 13px; text-transform: uppercase; cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 106, 0, 0.2);
         }
-        .btn-join.joined { background: var(--success); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); }
-        .btn-join.full { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        .btn-join.joined { background: #10b981; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2); }
 
-        /* OVERLAY */
+        /* Overlay */
         .overlay {
-            position: fixed; inset: 0; background: var(--bg); z-index: 2000;
-            display: none; flex-direction: column; animation: slideIn 0.3s ease-out;
+            position: fixed; inset: 0; background: var(--bg-mix); z-index: 2000;
+            display: none; flex-direction: column; animation: slideUp 0.3s ease;
         }
-        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .o-header { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
+        .o-head { padding: 20px; display: flex; align-items: center; gap: 15px; background: white; border-bottom: 1px solid #eee; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; }
 
-        .input-card { background: var(--white); padding: 25px; border-radius: 25px; box-shadow: var(--card-shadow); margin-bottom: 20px; }
-        .input-card label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; }
+        .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .input-card input {
-            width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 15px;
-            font-size: 16px; font-weight: 700; outline: none; background: #f8fafc;
+            width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px;
+            margin: 15px 0; font-weight: 700; outline: none; background: #f8fafc;
         }
-        
-        /* CHECKBOX RULES */
-        .rules-container { margin: 20px 0; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
-        .rules-container input { width: 18px; height: 18px; accent-color: var(--primary); }
-        .rules-container span { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
-
-        /* ID PASS BOX */
-        .room-info { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .room-info b { font-family: 'Orbitron'; letter-spacing: 1px; }
-        .copy-btn { background: var(--primary); color: white; border: none; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
         #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px;
-            font-size: 12px; font-weight: 600; display: none; z-index: 9999;
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: #334155; color: white; padding: 12px 25px; border-radius: 50px;
+            font-size: 12px; z-index: 9999; display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="toast">Message here</div>
+    <div id="toast"></div>
 
     <header class="header">
         <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
         <h1>1V1 ELITE ARENA</h1>
     </header>
 
-    <div class="content-area">
-        <div id="matchList">
-            <p style="text-align:center; padding-top:50px; color:var(--text-muted);">Loading Matches...</p>
-        </div>
+    <div class="filters">
+        <div class="filter-btn active" onclick="applyFilter('all', this)">ALL</div>
+        <div class="filter-btn" onclick="applyFilter('upcoming', this)">UPCOMING</div>
+        <div class="filter-btn" onclick="applyFilter('live', this)">LIVE</div>
     </div>
 
-    <div class="overlay" id="joinOverlay">
-        <div class="o-header">
-            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:18px;"></i>
-            <h2 id="overlayTitle" style="font-size:15px; font-weight:800;">Match Details</h2>
+    <div class="content" id="matchList">
+        </div>
+
+    <div class="overlay" id="matchOverlay">
+        <div class="o-head">
+            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:18px; color:var(--orange);"></i>
+            <h2 id="oTitle" style="font-size:15px; font-weight:800;">Match Details</h2>
         </div>
         <div class="o-body">
-            <div id="formView">
+            <div id="joinView">
                 <div class="input-card">
-                    <label>FREE FIRE UID (REQUIRED)</label>
-                    <input type="number" id="playerUID" placeholder="Ex: 1029384756">
-                    
-                    <div style="margin-top:20px; padding:15px; background:#fff8f1; border-radius:12px; display:flex; justify-content:space-between;">
-                        <span style="font-weight:600; font-size:13px;">Entry Fee</span>
-                        <b style="color:var(--primary);" id="feeShow">₹0</b>
-                    </div>
-
-                    <label class="rules-container">
-                        <input type="checkbox" id="ruleCheck">
-                        <span>I have read all the rules. No hacks allowed. Teaming is banned. Screen recording must be ON.</span>
-                    </label>
-
-                    <button class="btn-join" id="finalJoinBtn" onclick="confirmJoin()">Join & Pay Now</button>
+                    <p style="font-size:12px; color:#64748b; font-weight:600;">ENTER PLAYER UID</p>
+                    <input type="number" id="playerUID" placeholder="Ex: 102938475">
+                    <button class="btn-join" id="payBtn" onclick="confirmJoin()">PAY & JOIN NOW</button>
                 </div>
             </div>
-
             <div id="detailsView" style="display:none;">
-                <div class="input-card" style="text-align:center; border:2px solid var(--primary);">
-                    <p style="font-size:10px; color:var(--text-muted); margin-bottom:5px;">YOUR REGISTERED UID</p>
-                    <h2 id="savedUID" style="font-family:'Orbitron'; color:var(--text-main); margin-bottom:20px;">---</h2>
-                    
-                    <div class="room-info">
-                        <div><small style="display:block; font-size:9px; color:var(--text-muted); text-align:left;">ROOM ID</small><b id="rID">WAITING</b></div>
-                        <button class="copy-btn" onclick="copyText('rID')">COPY</button>
+                <div class="input-card" style="text-align:center;">
+                    <small style="color:#94a3b8;">REGISTERED UID</small>
+                    <h2 id="myUID" style="font-family:'Orbitron'; margin:10px 0 20px 0; color:var(--orange);">---</h2>
+                    <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
+                        <span>ROOM ID:</span> <b id="rID">WAITING</b>
                     </div>
-                    <div class="room-info">
-                        <div><small style="display:block; font-size:9px; color:var(--text-muted); text-align:left;">PASSWORD</small><b id="rPass">WAITING</b></div>
-                        <button class="copy-btn" onclick="copyText('rPass')">COPY</button>
+                    <div style="background:#f8fafc; padding:15px; border-radius:12px; display:flex; justify-content:space-between;">
+                        <span>PASSWORD:</span> <b id="rPass">WAITING</b>
                     </div>
-
-                    <p style="margin-top:20px; font-size:11px; color:var(--primary); font-weight:700;">
-                        <i class="fas fa-info-circle"></i> ID/Password will be updated 15 minutes before the match start time.
-                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Firebase Config
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
-        let activeMatchId = null;
-        let activeFee = 0;
+        let allMatches = {};
+        let currentFilter = 'all';
+        let activeMatch = null;
 
-        function showToast(msg) {
+        function showToast(m) {
             const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
+            t.innerText = m; t.style.display = 'block';
+            setTimeout(()=> t.style.display = 'none', 3000);
         }
 
-        // 2. Load Matches
-        database.ref('matches').on('value', (snapshot) => {
-            const container = document.getElementById('matchList');
-            container.innerHTML = "";
-            
-            if(!snapshot.exists()) {
-                container.innerHTML = "<p style='text-align:center;'>No Active Matches</p>";
-                return;
-            }
+        function applyFilter(f, el) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            currentFilter = f;
+            renderMatches();
+        }
 
-            snapshot.forEach((child) => {
-                const m = child.val();
-                const mid = child.key;
-
-                if(m.status === "upcoming") {
-                    let pCount = m.players ? Object.keys(m.players).length : 0;
-                    let iJoined = false;
-                    if(m.players) {
-                        Object.values(m.players).forEach(p => { if(p.phone === userPhone) iJoined = true; });
-                    }
-
-                    let btn = `<button class="btn-join" onclick="openMatch('${mid}', ${m.entry}, '${m.title}')">Join Match</button>`;
-                    if(iJoined) {
-                        btn = `<button class="btn-join joined" onclick="openMatch('${mid}', ${m.entry}, '${m.title}')">View Details</button>`;
-                    } else if(pCount >= 2) {
-                        btn = `<button class="btn-join full" disabled>Match Full</button>`;
-                    }
-
-                    container.innerHTML += `
-                        <div class="m-card">
-                            <div class="m-tag">${m.map || 'Bermuda'}</div>
-                            <h2 class="m-title">${m.title}</h2>
-                            <div class="timer-box">
-                                <i class="fas fa-clock"></i>
-                                <span class="cd" data-time="${m.startTime}">Calculating...</span>
-                            </div>
-                            <div class="stats-row">
-                                <div class="stat-item"><small>Prize</small><b>₹${m.prize}</b></div>
-                                <div class="stat-item"><small>Entry</small><b>₹${m.entry}</b></div>
-                                <div class="stat-item"><small>Type</small><b>1VS1</b></div>
-                            </div>
-                            ${btn}
-                        </div>`;
-                }
-            });
-            startTimer();
+        // --- Fetch Matches ---
+        db.ref('matches').on('value', snap => {
+            allMatches = snap.val() || {};
+            renderMatches();
         });
 
-        // 3. Countdown Timer
-        function startTimer() {
-            setInterval(() => {
-                document.querySelectorAll('.cd').forEach(el => {
-                    const target = new Date(el.getAttribute('data-time')).getTime();
-                    const now = new Date().getTime();
-                    const diff = target - now;
-                    if(diff < 0) { el.innerText = "Started"; el.style.color = "var(--success)"; }
-                    else {
-                        const h = Math.floor(diff/(1000*60*60));
-                        const m = Math.floor((diff/(1000*60))%60);
-                        const s = Math.floor((diff/1000)%60);
-                        el.innerText = `${h}h ${m}m ${s}s left`;
-                    }
-                });
-            }, 1000);
+        function renderMatches() {
+            const list = document.getElementById('matchList');
+            list.innerHTML = "";
+
+            Object.keys(allMatches).forEach(id => {
+                const m = allMatches[id];
+                if(m.status === 'finished') return;
+                if(currentFilter !== 'all' && m.status !== currentFilter) return;
+
+                let joined = false;
+                if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) joined = true; });
+
+                const tagClass = m.status === 'live' ? 'status-live' : 'status-upcoming';
+                const tagText = m.status === 'live' ? '● LIVE NOW' : 'UPCOMING';
+
+                list.innerHTML += `
+                    <div class="m-card">
+                        <div class="m-status-tag ${tagClass}">${tagText}</div>
+                        <h2 class="m-title">${m.title}</h2>
+                        <div class="timer-box">
+                            <i class="fas fa-clock"></i>
+                            <span class="timer-display" data-time="${m.time}">${m.time}</span>
+                        </div>
+                        <div class="stats">
+                            <div class="s-item"><small>Prize</small><b>₹${m.prize}</b></div>
+                            <div class="s-item"><small>Entry</small><b>₹${m.entry}</b></div>
+                            <div class="s-item"><small>Type</small><b>1 VS 1</b></div>
+                        </div>
+                        <button class="btn-join ${joined?'joined':''}" onclick="openMatch('${id}', ${m.entry}, '${m.title}')">
+                            ${joined ? 'VIEW DETAILS' : (m.status === 'live' ? 'JOIN LIVE' : 'JOIN MATCH')}
+                        </button>
+                    </div>`;
+            });
         }
 
-        // 4. Open Match & View Logic
-        function openMatch(id, fee, title) {
-            if(!userPhone) return showToast("Please login first!");
-            activeMatchId = id;
-            activeFee = fee;
-            document.getElementById('overlayTitle').innerText = title;
-            document.getElementById('feeShow').innerText = "₹" + fee;
-            document.getElementById('joinOverlay').style.display = 'flex';
+        // --- Timer Engine ---
+        setInterval(() => {
+            document.querySelectorAll('.timer-display').forEach(el => {
+                const targetTime = new Date(el.getAttribute('data-time')).getTime();
+                const now = new Date().getTime();
+                const diff = targetTime - now;
 
-            // Real-time listener for ID/Pass and Join status
-            database.ref(`matches/${id}`).on('value', snap => {
-                const match = snap.val();
-                let myData = null;
-                if(match.players) {
-                    Object.values(match.players).forEach(p => { if(p.phone === userPhone) myData = p; });
+                if(isNaN(targetTime)) { el.innerText = "Time TBD"; return; }
+
+                if(diff <= 0) {
+                    el.innerText = "Match Started";
+                } else {
+                    const h = Math.floor(diff/3600000);
+                    const m = Math.floor((diff%3600000)/60000);
+                    const s = Math.floor((diff%60000)/1000);
+                    el.innerText = `${h}h ${m}m ${s}s left`;
                 }
+            });
+        }, 1000);
+
+        function openMatch(id, fee, title) {
+            activeMatch = { id, fee, title };
+            document.getElementById('oTitle').innerText = title;
+            document.getElementById('matchOverlay').style.display = 'flex';
+
+            db.ref(`matches/${id}`).on('value', snap => {
+                const m = snap.val();
+                let myData = null;
+                if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
                 if(myData) {
-                    document.getElementById('formView').style.display = 'none';
+                    document.getElementById('joinView').style.display = 'none';
                     document.getElementById('detailsView').style.display = 'block';
-                    document.getElementById('savedUID').innerText = myData.uid;
-                    document.getElementById('rID').innerText = match.roomId || "WAITING";
-                    document.getElementById('rPass').innerText = match.roomPass || "WAITING";
+                    document.getElementById('myUID').innerText = myData.uid;
+                    document.getElementById('rID').innerText = m.roomId || "WAITING";
+                    document.getElementById('rPass').innerText = m.roomPass || "WAITING";
                 } else {
-                    document.getElementById('formView').style.display = 'block';
+                    document.getElementById('joinView').style.display = 'block';
                     document.getElementById('detailsView').style.display = 'none';
                 }
             });
         }
 
-        // 5. JOIN & PAY LOGIC (Main functionality)
         async function confirmJoin() {
             const uid = document.getElementById('playerUID').value;
-            const checked = document.getElementById('ruleCheck').checked;
-            const btn = document.getElementById('finalJoinBtn');
+            if(!uid || uid.length < 5) return showToast("Enter Valid UID!");
+            
+            const btn = document.getElementById('payBtn');
+            btn.disabled = true; btn.innerText = "Processing...";
 
-            if(!uid || uid.length < 5) return showToast("Enter Valid Player UID!");
-            if(!checked) return showToast("Accept rules first!");
+            const userSnap = await db.ref(`users/${userPhone}`).once('value');
+            const balance = userSnap.val().balance || 0;
 
-            btn.disabled = true;
-            btn.innerText = "Processing Pay...";
-
-            try {
-                const userRef = database.ref(`users/${userPhone}`);
-                const userSnap = await userRef.get();
-                const userData = userSnap.val();
-                const balance = parseFloat(userData.balance || 0);
-
-                if(balance < activeFee) {
-                    showToast("Insufficient Wallet Balance!");
-                    btn.disabled = false;
-                    btn.innerText = "Join & Pay Now";
-                    return;
-                }
-
-                // 1. Deduct Balance
-                await userRef.update({ balance: balance - activeFee });
-
-                // 2. Add to Match History (User Side)
-                await userRef.child('matchHistory').push({
-                    title: document.getElementById('overlayTitle').innerText,
-                    amount: "-" + activeFee,
-                    type: "1V1 Join",
-                    date: new Date().toLocaleString()
-                });
-
-                // 3. Add to Match Players (Admin Side)
-                await database.ref(`matches/${activeMatchId}/players`).push({
-                    phone: userPhone,
-                    uid: uid,
-                    name: userData.name || "Player"
-                });
-
-                showToast("Match Joined Successfully!");
-            } catch (err) {
-                showToast("Error: " + err.message);
-                btn.disabled = false;
+            if(balance < activeMatch.fee) {
+                showToast("Insufficient Balance!");
+                btn.disabled = false; btn.innerText = "PAY & JOIN NOW";
+                return;
             }
+
+            // Pay & Join
+            await db.ref(`users/${userPhone}`).update({ balance: balance - activeMatch.fee });
+            await db.ref(`matches/${activeMatch.id}/players`).push({
+                phone: userPhone,
+                uid: uid,
+                name: userSnap.val().name || "Player"
+            });
+
+            showToast("Joined Successfully!");
         }
 
         function closeOverlay() {
-            document.getElementById('joinOverlay').style.display = 'none';
-            if(activeMatchId) database.ref(`matches/${activeMatchId}`).off();
-        }
-
-        function copyText(id) {
-            const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return;
-            navigator.clipboard.writeText(val);
-            showToast("Copied to Clipboard!");
+            document.getElementById('matchOverlay').style.display = 'none';
+            if(activeMatch) db.ref(`matches/${activeMatch.id}`).off();
         }
     </script>
 </body>
