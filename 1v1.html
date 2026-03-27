@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>1V1 Elite Arena | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
@@ -13,233 +13,283 @@
 
     <style>
         :root {
-            --orange: #ff6a00;
-            --orange-light: #fff5eb;
-            --grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
+            --primary: #ff6a00;
+            --primary-grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
+            --bg-mix: linear-gradient(180deg, #ffffff 0%, #fff4ec 100%);
             --white: #ffffff;
-            --bg-mix: linear-gradient(180deg, #ffffff 0%, #fff9f5 100%);
-            --text: #1e293b;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --card-shadow: 0 12px 30px rgba(255, 106, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            background: var(--bg-mix); 
-            color: var(--text); 
-            min-height: 100vh;
-        }
+        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* Header */
+        /* --- HEADER --- */
         .header {
-            background: var(--white); height: 70px; display: flex; align-items: center;
+            background: var(--white); height: 75px; display: flex; align-items: center;
             padding: 0 20px; position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 15px rgba(255, 106, 0, 0.1); gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); gap: 15px;
         }
         .header .back-btn {
-            width: 40px; height: 40px; border-radius: 12px; background: var(--orange-light);
-            display: flex; align-items: center; justify-content: center; color: var(--orange);
-            text-decoration: none; font-size: 18px;
+            width: 42px; height: 42px; border-radius: 12px; background: #fff1e6;
+            display: flex; align-items: center; justify-content: center; color: var(--primary);
+            text-decoration: none; font-size: 18px; transition: 0.3s;
         }
-        .header h1 { font-family: 'Orbitron'; font-size: 15px; font-weight: 900; color: var(--orange); letter-spacing: 1px; }
+        .header h1 { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
 
-        /* Filters */
-        .filters {
-            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto;
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-            position: sticky; top: 70px; z-index: 999;
+        /* --- FILTER TABS --- */
+        .filter-container {
+            display: flex; gap: 12px; padding: 15px 20px; overflow-x: auto;
+            background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
+            position: sticky; top: 75px; z-index: 999; border-bottom: 1px solid rgba(255, 106, 0, 0.1);
         }
         .filter-btn {
-            padding: 8px 18px; border-radius: 50px; background: var(--white);
-            font-size: 11px; font-weight: 700; color: #64748b; border: 1px solid #eee;
+            padding: 10px 22px; border-radius: 50px; background: var(--white);
+            font-size: 11px; font-weight: 800; color: var(--text-muted); border: 1px solid #eee;
             white-space: nowrap; cursor: pointer; transition: 0.3s;
         }
         .filter-btn.active {
-            background: var(--grad); color: white; border: none;
-            box-shadow: 0 4px 12px rgba(255, 106, 0, 0.3);
+            background: var(--primary-grad); color: white; border: none;
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
         }
 
-        /* Match Cards */
-        .content { padding: 20px; max-width: 500px; margin: 0 auto; }
+        /* --- MATCH CARDS --- */
+        .content-area { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         
         .m-card {
-            background: var(--white); border-radius: 24px; padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(255, 106, 0, 0.08); border: 1px solid var(--orange-light);
-            position: relative; overflow: hidden;
+            background: var(--white); border-radius: 28px; padding: 22px; margin-bottom: 25px;
+            box-shadow: var(--card-shadow); border: 1px solid rgba(255, 106, 0, 0.05);
+            position: relative; transition: 0.3s; animation: fadeIn 0.5s ease;
         }
-        .m-status-tag {
-            position: absolute; top: 0; right: 0; padding: 6px 15px;
-            font-size: 10px; font-weight: 800; border-bottom-left-radius: 15px;
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10s); } to { opacity: 1; transform: translateY(0); } }
+
+        .m-tag {
+            position: absolute; top: 0; right: 0; background: #fff1e6;
+            color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px;
+            border-bottom-left-radius: 20px; text-transform: uppercase;
         }
-        .status-upcoming { background: #fff1e6; color: var(--orange); }
-        .status-live { background: #ff4b2b; color: white; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.7; } }
+        .m-tag.live { background: #ff4b2b; color: white; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; color: #0f172a; }
-
+        .m-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: #0f172a; width: 70%; }
+        
         .timer-box {
-            background: var(--orange-light); border-radius: 12px; padding: 10px;
-            display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
+            background: #f8fafc; border-radius: 15px; padding: 12px 18px;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+            border: 1px dashed #cbd5e1;
         }
-        .timer-box i { color: var(--orange); font-size: 14px; }
-        .timer-box span { font-size: 13px; font-weight: 700; color: var(--orange); }
+        .timer-box i { color: var(--primary); font-size: 16px; }
+        .timer-box span { font-size: 14px; font-weight: 700; color: #475569; }
 
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .s-item { text-align: center; background: #fafafa; padding: 8px; border-radius: 12px; }
-        .s-item small { display: block; font-size: 9px; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; }
-        .s-item b { font-size: 13px; font-weight: 800; color: #334155; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { text-align: center; background: #fffcf9; padding: 12px; border-radius: 18px; border: 1px solid #fff5eb; }
+        .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-card b { font-size: 15px; color: var(--text-main); font-weight: 800; }
 
-        .btn-join {
-            width: 100%; padding: 15px; border: none; border-radius: 15px;
-            background: var(--grad); color: white; font-weight: 800;
-            font-size: 13px; text-transform: uppercase; cursor: pointer;
-            box-shadow: 0 6px 15px rgba(255, 106, 0, 0.2);
+        .action-btn {
+            width: 100%; padding: 18px; border: none; border-radius: 20px;
+            background: var(--primary-grad); color: white; font-weight: 800;
+            font-size: 14px; text-transform: uppercase; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.25); transition: 0.3s;
         }
-        .btn-join.joined { background: #10b981; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2); }
+        .action-btn.joined { background: var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25); }
+        .action-btn:active { transform: scale(0.97); }
 
-        /* Overlay */
+        /* --- OVERLAY SYSTEM --- */
         .overlay {
             position: fixed; inset: 0; background: var(--bg-mix); z-index: 2000;
-            display: none; flex-direction: column; animation: slideUp 0.3s ease;
+            display: none; flex-direction: column; animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .o-head { padding: 20px; display: flex; align-items: center; gap: 15px; background: white; border-bottom: 1px solid #eee; }
-        .o-body { padding: 20px; flex: 1; overflow-y: auto; }
+        .o-header { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
+        .o-body { padding: 25px; flex: 1; overflow-y: auto; }
 
-        .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .input-card { background: var(--white); padding: 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .input-card label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
         .input-card input {
-            width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px;
-            margin: 15px 0; font-weight: 700; outline: none; background: #f8fafc;
+            width: 100%; padding: 16px; border: 2px solid #f1f5f9; border-radius: 16px;
+            font-size: 16px; font-weight: 700; outline: none; background: #f8fafc; transition: 0.3s;
         }
+        .input-card input:focus { border-color: var(--primary); background: #fff; }
+        
+        /* RULES CHECKBOX */
+        .rules-wrapper { margin: 20px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+        .rules-wrapper input { width: 20px; height: 20px; accent-color: var(--primary); margin-top: 2px; }
+        .rules-wrapper span { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+
+        /* DETAILS BOX */
+        .info-box { background: #f1f5f9; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border: 1px solid #e2e8f0; }
+        .info-box b { font-family: 'Orbitron'; letter-spacing: 1px; color: var(--text-main); font-size: 15px; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 7px 15px; border-radius: 10px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
         #toast {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: #334155; color: white; padding: 12px 25px; border-radius: 50px;
-            font-size: 12px; z-index: 9999; display: none;
+            background: #1e293b; color: white; padding: 14px 28px; border-radius: 50px;
+            font-size: 13px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
-    <div id="toast"></div>
+    <div id="toast">Message here</div>
 
     <header class="header">
         <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
         <h1>1V1 ELITE ARENA</h1>
     </header>
 
-    <div class="filters">
-        <div class="filter-btn active" onclick="applyFilter('all', this)">ALL</div>
-        <div class="filter-btn" onclick="applyFilter('upcoming', this)">UPCOMING</div>
-        <div class="filter-btn" onclick="applyFilter('live', this)">LIVE</div>
+    <div class="filter-container">
+        <div class="filter-btn active" onclick="setFilter('all', this)">ALL MATCHES</div>
+        <div class="filter-btn" onclick="setFilter('upcoming', this)">UPCOMING</div>
+        <div class="filter-btn" onclick="setFilter('live', this)">LIVE</div>
     </div>
 
-    <div class="content" id="matchList">
-        </div>
+    <div class="content-area" id="matchList">
+        <p style="text-align:center; margin-top:50px; color:var(--text-muted);">Fetching Arena Matches...</p>
+    </div>
 
-    <div class="overlay" id="matchOverlay">
-        <div class="o-head">
-            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:18px; color:var(--orange);"></i>
-            <h2 id="oTitle" style="font-size:15px; font-weight:800;">Match Details</h2>
+    <div class="overlay" id="mainOverlay">
+        <div class="o-header">
+            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:20px; color:var(--primary); cursor:pointer;"></i>
+            <h2 id="oMatchTitle" style="font-size:15px; font-weight:800; text-transform:uppercase;">Match Details</h2>
         </div>
+        
         <div class="o-body">
-            <div id="joinView">
+            <div id="joinForm">
                 <div class="input-card">
-                    <p style="font-size:12px; color:#64748b; font-weight:600;">ENTER PLAYER UID</p>
-                    <input type="number" id="playerUID" placeholder="Ex: 102938475">
-                    <button class="btn-join" id="payBtn" onclick="confirmJoin()">PAY & JOIN NOW</button>
+                    <label>FREE FIRE PLAYER UID</label>
+                    <input type="number" id="pUID" placeholder="Enter 8-10 digit UID">
+                    
+                    <div style="margin:20px 0; padding:18px; background:#fff8f1; border-radius:15px; display:flex; justify-content:space-between; border:1px solid #ffeada;">
+                        <span style="font-weight:600; font-size:14px; color:#9a4a00;">Entry Fee</span>
+                        <b style="color:var(--primary); font-size:16px;" id="oFee">₹0</b>
+                    </div>
+
+                    <label class="rules-wrapper">
+                        <input type="checkbox" id="rulesCheck">
+                        <span>I confirm that I will not use hacks, scripts, or teaming. Screen recording will be kept ready as proof.</span>
+                    </label>
+
+                    <button class="action-btn" id="payBtn" onclick="processJoin()">PAY & JOIN MATCH</button>
                 </div>
             </div>
-            <div id="detailsView" style="display:none;">
-                <div class="input-card" style="text-align:center;">
-                    <small style="color:#94a3b8;">REGISTERED UID</small>
-                    <h2 id="myUID" style="font-family:'Orbitron'; margin:10px 0 20px 0; color:var(--orange);">---</h2>
-                    <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
-                        <span>ROOM ID:</span> <b id="rID">WAITING</b>
+
+            <div id="matchDetails" style="display:none;">
+                <div class="input-card" style="text-align:center; border:2px solid var(--primary);">
+                    <small style="color:var(--text-muted); font-weight:800; display:block; margin-bottom:5px;">YOUR REGISTERED UID</small>
+                    <h2 id="displayUID" style="font-family:'Orbitron'; color:var(--text-main); margin-bottom:25px; font-size:24px;">---</h2>
+                    
+                    <div class="info-box">
+                        <div style="text-align:left;"><small style="display:block; font-size:9px; color:var(--text-muted);">ROOM ID</small><b id="roomID">WAITING</b></div>
+                        <button class="copy-btn" onclick="copyValue('roomID')">COPY</button>
                     </div>
-                    <div style="background:#f8fafc; padding:15px; border-radius:12px; display:flex; justify-content:space-between;">
-                        <span>PASSWORD:</span> <b id="rPass">WAITING</b>
+                    <div class="info-box">
+                        <div style="text-align:left;"><small style="display:block; font-size:9px; color:var(--text-muted);">PASSWORD</small><b id="roomPass">WAITING</b></div>
+                        <button class="copy-btn" onclick="copyValue('roomPass')">COPY</button>
                     </div>
+
+                    <p style="margin-top:25px; font-size:12px; color:var(--primary); font-weight:700; line-height:1.5;">
+                        <i class="fas fa-clock"></i> ID & Password will be updated exactly 15 minutes before the match start time.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 1. Firebase Initialization
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
-        let allMatches = {};
         let currentFilter = 'all';
-        let activeMatch = null;
+        let matchDataStore = {};
+        let activeMID = null;
+        let activeEntryFee = 0;
 
-        function showToast(m) {
+        function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = m; t.style.display = 'block';
-            setTimeout(()=> t.style.display = 'none', 3000);
+            t.innerText = msg; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        function applyFilter(f, el) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        // 2. Filter Logic
+        function setFilter(type, el) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
-            currentFilter = f;
-            renderMatches();
+            currentFilter = type;
+            renderAllMatches();
         }
 
-        // --- Fetch Matches ---
-        db.ref('matches').on('value', snap => {
-            allMatches = snap.val() || {};
-            renderMatches();
+        // 3. Listen to Data
+        db.ref('matches').on('value', (snap) => {
+            matchDataStore = snap.val() || {};
+            renderAllMatches();
         });
 
-        function renderMatches() {
-            const list = document.getElementById('matchList');
-            list.innerHTML = "";
+        function renderAllMatches() {
+            const container = document.getElementById('matchList');
+            container.innerHTML = "";
+            
+            const matchKeys = Object.keys(matchDataStore);
+            if(matchKeys.length === 0) {
+                container.innerHTML = "<p style='text-align:center; padding-top:50px;'>No matches found in Arena.</p>";
+                return;
+            }
 
-            Object.keys(allMatches).forEach(id => {
-                const m = allMatches[id];
+            matchKeys.forEach(mid => {
+                const m = matchDataStore[mid];
+                
+                // Rules: Skip finished, filter status
                 if(m.status === 'finished') return;
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
-                let joined = false;
-                if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) joined = true; });
+                let playerCount = m.players ? Object.keys(m.players).length : 0;
+                let userHasJoined = false;
+                if(m.players) {
+                    Object.values(m.players).forEach(p => { if(p.phone === userPhone) userHasJoined = true; });
+                }
 
-                const tagClass = m.status === 'live' ? 'status-live' : 'status-upcoming';
-                const tagText = m.status === 'live' ? '● LIVE NOW' : 'UPCOMING';
+                let tagClass = m.status === 'live' ? 'm-tag live' : 'm-tag';
+                let tagText = m.status === 'live' ? '● LIVE' : 'UPCOMING';
+                let btnText = userHasJoined ? 'VIEW DETAILS' : (m.status === 'live' ? 'JOIN LIVE' : 'JOIN MATCH');
+                let btnClass = userHasJoined ? 'action-btn joined' : 'action-btn';
 
-                list.innerHTML += `
+                container.innerHTML += `
                     <div class="m-card">
-                        <div class="m-status-tag ${tagClass}">${tagText}</div>
+                        <div class="${tagClass}">${tagText}</div>
                         <h2 class="m-title">${m.title}</h2>
                         <div class="timer-box">
-                            <i class="fas fa-clock"></i>
-                            <span class="timer-display" data-time="${m.time}">${m.time}</span>
+                            <i class="fas fa-stopwatch"></i>
+                            <span class="countdown-timer" data-time="${m.time}">Calculating...</span>
                         </div>
-                        <div class="stats">
-                            <div class="s-item"><small>Prize</small><b>₹${m.prize}</b></div>
-                            <div class="s-item"><small>Entry</small><b>₹${m.entry}</b></div>
-                            <div class="s-item"><small>Type</small><b>1 VS 1</b></div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><small>Win Prize</small><b>₹${m.prize}</b></div>
+                            <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
+                            <div class="stat-card"><small>Map</small><b>${m.map || 'Bermuda'}</b></div>
                         </div>
-                        <button class="btn-join ${joined?'joined':''}" onclick="openMatch('${id}', ${m.entry}, '${m.title}')">
-                            ${joined ? 'VIEW DETAILS' : (m.status === 'live' ? 'JOIN LIVE' : 'JOIN MATCH')}
-                        </button>
+                        <button class="${btnClass}" onclick="handleMatchClick('${mid}', ${m.entry}, '${m.title}')">${btnText}</button>
                     </div>`;
             });
         }
 
-        // --- Timer Engine ---
+        // 4. Timer Logic
         setInterval(() => {
-            document.querySelectorAll('.timer-display').forEach(el => {
-                const targetTime = new Date(el.getAttribute('data-time')).getTime();
+            document.querySelectorAll('.countdown-timer').forEach(el => {
+                const target = new Date(el.getAttribute('data-time')).getTime();
                 const now = new Date().getTime();
-                const diff = targetTime - now;
+                const diff = target - now;
 
-                if(isNaN(targetTime)) { el.innerText = "Time TBD"; return; }
-
-                if(diff <= 0) {
+                if(isNaN(target)) {
+                    el.innerText = "Time TBD";
+                } else if(diff <= 0) {
                     el.innerText = "Match Started";
+                    el.style.color = "var(--success)";
                 } else {
                     const h = Math.floor(diff/3600000);
                     const m = Math.floor((diff%3600000)/60000);
@@ -249,59 +299,97 @@
             });
         }, 1000);
 
-        function openMatch(id, fee, title) {
-            activeMatch = { id, fee, title };
-            document.getElementById('oTitle').innerText = title;
-            document.getElementById('matchOverlay').style.display = 'flex';
+        // 5. Open Match & View Logic
+        function handleMatchClick(id, fee, title) {
+            if(!userPhone) return showToast("Pehle login karein!");
+            activeMID = id;
+            activeEntryFee = fee;
+            document.getElementById('oMatchTitle').innerText = title;
+            document.getElementById('oFee').innerText = "₹" + fee;
+            document.getElementById('mainOverlay').style.display = 'flex';
 
+            // Real-time updates for Room ID/Pass while overlay is open
             db.ref(`matches/${id}`).on('value', snap => {
-                const m = snap.val();
-                let myData = null;
-                if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) myData = p; });
+                const match = snap.val();
+                let myEntry = null;
+                if(match.players) {
+                    Object.values(match.players).forEach(p => { if(p.phone === userPhone) myEntry = p; });
+                }
 
-                if(myData) {
-                    document.getElementById('joinView').style.display = 'none';
-                    document.getElementById('detailsView').style.display = 'block';
-                    document.getElementById('myUID').innerText = myData.uid;
-                    document.getElementById('rID').innerText = m.roomId || "WAITING";
-                    document.getElementById('rPass').innerText = m.roomPass || "WAITING";
+                if(myEntry) {
+                    document.getElementById('joinForm').style.display = 'none';
+                    document.getElementById('matchDetails').style.display = 'block';
+                    document.getElementById('displayUID').innerText = myEntry.uid;
+                    document.getElementById('roomID').innerText = match.roomId || "WAITING";
+                    document.getElementById('roomPass').innerText = match.roomPass || "WAITING";
                 } else {
-                    document.getElementById('joinView').style.display = 'block';
-                    document.getElementById('detailsView').style.display = 'none';
+                    document.getElementById('joinForm').style.display = 'block';
+                    document.getElementById('matchDetails').style.display = 'none';
                 }
             });
         }
 
-        async function confirmJoin() {
-            const uid = document.getElementById('playerUID').value;
-            if(!uid || uid.length < 5) return showToast("Enter Valid UID!");
-            
+        // 6. Join Logic (Wallet & Database)
+        async function processJoin() {
+            const uid = document.getElementById('pUID').value;
+            const checked = document.getElementById('rulesCheck').checked;
             const btn = document.getElementById('payBtn');
-            btn.disabled = true; btn.innerText = "Processing...";
 
-            const userSnap = await db.ref(`users/${userPhone}`).once('value');
-            const balance = userSnap.val().balance || 0;
+            if(!uid || uid.length < 5) return showToast("Valid Game UID daalein!");
+            if(!checked) return showToast("Pehle rules accept karein!");
 
-            if(balance < activeMatch.fee) {
-                showToast("Insufficient Balance!");
-                btn.disabled = false; btn.innerText = "PAY & JOIN NOW";
-                return;
+            btn.disabled = true;
+            btn.innerText = "Processing Payment...";
+
+            try {
+                const userRef = db.ref(`users/${userPhone}`);
+                const userSnap = await userRef.get();
+                const userData = userSnap.val();
+                const balance = parseFloat(userData.balance || 0);
+
+                if(balance < activeEntryFee) {
+                    showToast("Wallet balance kam hai! Top-up karein.");
+                    btn.disabled = false;
+                    btn.innerText = "PAY & JOIN MATCH";
+                    return;
+                }
+
+                // A. Deduct Money
+                await userRef.update({ balance: (balance - activeEntryFee).toFixed(2) });
+
+                // B. Add to Match History
+                await userRef.child('matchHistory').push({
+                    matchName: document.getElementById('oMatchTitle').innerText,
+                    amount: "-" + activeEntryFee,
+                    date: new Date().toLocaleString()
+                });
+
+                // C. Add to Arena Players
+                await db.ref(`matches/${activeMID}/players`).push({
+                    phone: userPhone,
+                    uid: uid,
+                    name: userData.name || "Unknown Player",
+                    joinDate: new Date().toISOString()
+                });
+
+                showToast("Match Joined Successfully! 🔥");
+            } catch (e) {
+                showToast("System Error: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "PAY & JOIN MATCH";
             }
-
-            // Pay & Join
-            await db.ref(`users/${userPhone}`).update({ balance: balance - activeMatch.fee });
-            await db.ref(`matches/${activeMatch.id}/players`).push({
-                phone: userPhone,
-                uid: uid,
-                name: userSnap.val().name || "Player"
-            });
-
-            showToast("Joined Successfully!");
         }
 
         function closeOverlay() {
-            document.getElementById('matchOverlay').style.display = 'none';
-            if(activeMatch) db.ref(`matches/${activeMatch.id}`).off();
+            document.getElementById('mainOverlay').style.display = 'none';
+            if(activeMID) db.ref(`matches/${activeMID}`).off();
+        }
+
+        function copyValue(id) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return showToast("Abhi wait karein...");
+            navigator.clipboard.writeText(val);
+            showToast("Copied to Clipboard!");
         }
     </script>
 </body>
