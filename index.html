@@ -62,14 +62,15 @@
             border-radius: 25px 8px 8px 25px; border-right: 5px solid var(--orange);
             display: flex; align-items: center; overflow: hidden;
         }
-        .bullet-box i { position: absolute; left: 15px; color: var(--orange); font-size: 14px; }
+        .bullet-box i:first-child { position: absolute; left: 15px; color: var(--orange); font-size: 14px; }
         .bullet-box input {
             width: 100%; height: 100%; background: transparent; border: none;
             padding: 0 45px 0 45px; color: #fff; font-family: 'Rajdhani'; font-size: 15px;
             user-select: text;
         }
+        /* 👁️ Eye Icon Fixed to the End */
         .eye-icon {
-            position: absolute; right: 15px; color: #666; cursor: pointer; font-size: 14px;
+            position: absolute; right: 15px; color: #888; cursor: pointer; font-size: 16px; z-index: 10;
         }
 
         .btn-start {
