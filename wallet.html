@@ -13,73 +13,32 @@
 
     <style>
         :root { --primary: #ff9900; --dark: #1a1a1a; --white: #ffffff; --bg: #fff5e6; --success: #2ecc71; --error: #e74c3c; --gray: #95a5a6; }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
-
-        body { 
-            background: linear-gradient(180deg, var(--white) 0%, var(--bg) 100%);
-            color: var(--dark); min-height: 100vh; padding-bottom: 50px;
-        }
-
-        .header {
-            background: var(--white); padding: 18px 20px; display: flex; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        body { background: linear-gradient(180deg, var(--white) 0%, var(--bg) 100%); color: var(--dark); min-height: 100vh; padding-bottom: 50px; }
+        .header { background: var(--white); padding: 18px 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .back-btn { font-size: 22px; color: var(--primary); cursor: pointer; padding-right: 15px; }
         .header h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; flex: 1; text-align: center; margin-right: 35px; color: var(--dark); }
-
-        .balance-card {
-            background: var(--dark);
-            margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff;
-            text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,153,0,0.3);
-        }
+        .balance-card { background: var(--dark); margin: 20px; padding: 35px 20px; border-radius: 30px; color: #fff; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid rgba(255,153,0,0.3); }
         .balance-card p { font-size: 11px; font-weight: 800; opacity: 0.7; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); }
         .balance-card h1 { font-family: 'Orbitron'; font-size: 42px; margin-top: 8px; }
-
         .container { padding: 0 20px; max-width: 500px; margin: 0 auto; }
-
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
-        .tab-btn {
-            flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #ffd8a8;
-            background: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gray);
-        }
+        .tab-btn { flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #ffd8a8; background: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gray); }
         .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.2); }
-
         .section { display: none; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
         .ui-box { background: #fff; padding: 25px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); border: 1px solid #ffe8cc; margin-bottom: 25px; }
-        
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 6px; margin-left: 15px; text-transform: uppercase; }
-        .input-group input { 
-            width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid #fff3e6;
-            background: #fffcfa; font-weight: 700; font-size: 15px; transition: 0.3s;
-        }
-        .input-group input:focus { border-color: var(--primary); background: #fff; }
-
-        .main-btn {
-            background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px;
-            border-radius: 50px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900;
-            box-shadow: 0 10px 20px rgba(255,153,0,0.2); cursor: pointer; margin-top: 10px;
-        }
-
-        .upi-intent-btn {
-            background: var(--dark); color: #fff; border: none; width: 100%; padding: 15px;
-            border-radius: 50px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
-            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; cursor: pointer;
-        }
-
+        .input-group input { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid #fff3e6; background: #fffcfa; font-weight: 700; font-size: 15px; transition: 0.3s; }
+        .main-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 50px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        .upi-intent-btn { background: var(--dark); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 50px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; cursor: pointer; }
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1.2px solid #fff5e6; }
         .status-tag { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 5px; text-transform: uppercase; }
         .pending { background: #fff4e5; color: #ff9800; }
         .approved { background: #e8f5e9; color: #2ecc71; }
         .rejected { background: #ffebee; color: #e74c3c; }
-
         #notice-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 5000; backdrop-filter: blur(4px); }
         .notice-card { width: 85%; max-width: 340px; background: #fff; border-radius: 30px; padding: 35px 25px; text-align: center; }
     </style>
@@ -91,7 +50,7 @@
             <i id="n-icon" class="fas fa-check-circle" style="font-size: 50px; margin-bottom: 15px;"></i>
             <h3 id="n-title" style="font-family:'Orbitron';">TITLE</h3>
             <p id="n-msg" style="margin: 10px 0 20px; font-weight: 700; color: #666;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-family:'Orbitron'; cursor:pointer;">OK</button>
+            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-family:'Orbitron';">OK</button>
         </div>
     </div>
 
@@ -118,22 +77,18 @@
                     <label>Amount to Add (₹)</label>
                     <input type="number" id="dep-amt-input" placeholder="Min ₹10">
                 </div>
-                
                 <button class="upi-intent-btn" onclick="openUPIIntent()">
                     <i class="fas fa-bolt"></i> PAY VIA UPI APPS
                 </button>
-
                 <div style="text-align:center; margin: 20px 0;">
                     <p style="font-size:10px; font-weight:900; color:var(--gray); margin-bottom:10px;">- OR SCAN QR CODE -</p>
                     <img src="https://i.ibb.co/TBYdw4Cr/Screenshot-2026-0326-125939.png" style="width:160px; border-radius:15px; border:2px solid #fff3e6; padding: 5px;">
                     <p style="font-size:12px; font-weight:800; margin-top:5px; color:var(--primary);">8968146117@ybl</p>
                 </div>
-
                 <div class="input-group">
                     <label>12-Digit UTR / Ref No.</label>
                     <input type="text" id="dep-utr-input" placeholder="Enter Reference Number">
                 </div>
-
                 <button class="main-btn" onclick="handleDepositSubmit()">SUBMIT REQUEST</button>
             </div>
         </div>
@@ -160,16 +115,22 @@
     </div>
 
     <script>
+        // FIREBASE SYNC
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const myUID = localStorage.getItem('gameID');
+        // KEY FIX: Arena uses 'userPhone'
+        const myID = localStorage.getItem('userPhone'); 
         const myName = localStorage.getItem('userName') || "Gamer";
 
-        if(!myUID) window.location.href = "index.html";
+        if(!myID) { 
+            alert("Session expired! Please login again.");
+            window.location.href = "index.html"; 
+        }
 
-        db.ref('users/' + myUID + '/balance').on('value', snap => {
+        // REAL-TIME BALANCE SYNC
+        db.ref(`users/${myID}/balance`).on('value', snap => {
             document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
 
@@ -184,14 +145,16 @@
         function showNotice(title, msg, isSuccess = true) {
             document.getElementById('n-title').innerText = title;
             document.getElementById('n-msg').innerText = msg;
+            document.getElementById('n-icon').className = isSuccess ? "fas fa-check-circle" : "fas fa-exclamation-circle";
             document.getElementById('n-icon').style.color = isSuccess ? '#2ecc71' : '#e74c3c';
             document.getElementById('notice-overlay').style.display = 'flex';
         }
+
         function closeNotice() { document.getElementById('notice-overlay').style.display = 'none'; }
 
         function openUPIIntent() {
             const amt = document.getElementById('dep-amt-input').value;
-            if(!amt) return showNotice("ERROR", "Please enter amount first!", false);
+            if(!amt || amt < 1) return showNotice("ERROR", "Please enter amount first!", false);
             window.location.href = `upi://pay?pa=8968146117@ybl&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
         }
 
@@ -201,7 +164,7 @@
             if(!amt || !utr) return showNotice("WAIT", "Amount aur UTR dono bhariye!", false);
 
             db.ref('deposits').push({
-                userUID: myUID,
+                userUID: myID,
                 userName: myName,
                 amount: amt,
                 utr: utr,
@@ -220,13 +183,13 @@
 
             if(!amt || !upi.includes('@')) return showNotice("ERROR", "Details sahi bhariye!", false);
 
-            db.ref('users/' + myUID + '/balance').get().then(snap => {
+            db.ref(`users/${myID}/balance`).get().then(snap => {
                 const bal = snap.val() || 0;
                 if(amt > bal) return showNotice("FAILED", "Balance kam hai!", false);
 
-                db.ref('users/' + myUID + '/balance').set(bal - amt).then(() => {
+                db.ref(`users/${myID}/balance`).set(bal - amt).then(() => {
                     db.ref('withdrawals').push({
-                        userUID: myUID,
+                        userUID: myID,
                         userName: myName,
                         amount: amt,
                         upiID: upi,
@@ -239,34 +202,57 @@
             });
         }
 
+        // FETCH ALL LOGS (Deposits + Withdrawals + Arena Matches)
         function fetchHistory() {
             const container = document.getElementById('logs-container');
-            container.innerHTML = "";
+            container.innerHTML = "<p style='text-align:center'>Loading History...</p>";
             
-            db.ref('deposits').orderByChild('userUID').equalTo(myUID).once('value', snap => {
-                snap.forEach(child => renderLog(child.val(), 'CREDIT (DEP)'));
-            });
+            let allLogs = [];
 
-            db.ref('withdrawals').orderByChild('userUID').equalTo(myUID).once('value', snap => {
-                snap.forEach(child => renderLog(child.val(), 'DEBIT (WD)'));
-            });
-        }
+            // 1. Fetch Deposits
+            const depTask = db.ref('deposits').orderByChild('userUID').equalTo(myID).once('value');
+            // 2. Fetch Withdrawals
+            const wdTask = db.ref('withdrawals').orderByChild('userUID').equalTo(myID).once('value');
+            // 3. Fetch Arena Match History (Jo Match Join kiya)
+            const matchTask = db.ref(`users/${myID}/matchHistory`).once('value');
 
-        function renderLog(data, type) {
-            const container = document.getElementById('logs-container');
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.innerHTML = `
-                <div>
-                    <h4 style="font-size:14px;">${type}</h4>
-                    <p style="font-size:10px; color:#999;">${data.time}</p>
-                </div>
-                <div style="text-align:right">
-                    <h4 style="color:${type.includes('CREDIT')?'#2ecc71':'#e74c3c'}">₹${data.amount}</h4>
-                    <span class="status-tag ${data.status}">${data.status}</span>
-                </div>
-            `;
-            container.prepend(item);
+            Promise.all([depTask, wdTask, matchTask]).then(results => {
+                container.innerHTML = "";
+                
+                results[0].forEach(child => { 
+                    allLogs.push({...child.val(), type: 'Deposit', color: '#2ecc71', prefix: '+'}); 
+                });
+                results[1].forEach(child => { 
+                    allLogs.push({...child.val(), type: 'Withdraw', color: '#e74c3c', prefix: '-'}); 
+                });
+                results[2].forEach(child => { 
+                    allLogs.push({...child.val(), type: 'Match Join', color: '#e74c3c', prefix: '', status: 'approved'}); 
+                });
+
+                if(allLogs.length === 0) {
+                    container.innerHTML = "<p style='text-align:center; color:#999;'>No history found.</p>";
+                    return;
+                }
+
+                // Sort by time (latest first)
+                allLogs.sort((a,b) => new Date(b.time) - new Date(a.time));
+
+                allLogs.forEach(log => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    item.innerHTML = `
+                        <div>
+                            <h4 style="font-size:14px;">${log.title || log.type}</h4>
+                            <p style="font-size:10px; color:#999;">${log.time}</p>
+                        </div>
+                        <div style="text-align:right">
+                            <h4 style="color:${log.color}">${log.prefix}₹${Math.abs(log.amount)}</h4>
+                            <span class="status-tag ${log.status}">${log.status}</span>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            });
         }
     </script>
 </body>
