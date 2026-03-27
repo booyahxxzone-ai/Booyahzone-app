@@ -2,75 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BZ | MASTER CASH & USERS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&display=swap" rel="stylesheet">
+    <title>BZ | USER MASTER CONTROL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --primary: #00ffcc; --red: #ff4d4d; --card: #0f172a; }
-        body { background: #050810; color: #fff; font-family: 'Rajdhani'; padding: 15px; padding-bottom: 80px; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #232a3d; }
-        h2 { font-size: 14px; color: var(--primary); font-family: 'Orbitron'; margin-bottom: 10px; text-transform: uppercase; }
+        :root { --primary: #00ffcc; --red: #ff4d4d; --card: #0f172a; --bg: #050810; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani'; }
+        body { background: var(--bg); color: #fff; padding: 15px; padding-bottom: 80px; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1e293b; }
-        
-        input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; font-family: 'Rajdhani'; }
-        
-        .btn-ok { background: #10b981; border: none; padding: 8px 12px; color: #000; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        .btn-no { background: var(--red); border: none; padding: 8px 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        .btn-blue { background: #3b82f6; border: none; padding: 10px; color: #fff; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
 
-        .user-info-box { background: #161e31; padding: 15px; border-radius: 10px; margin-top: 10px; display: none; border: 1px dashed var(--primary); }
-        .label { color: #64748b; font-size: 11px; font-weight: bold; margin-bottom: 4px; display: block; }
+        .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #232a3d; }
+        h2 { font-size: 13px; color: var(--primary); font-family: 'Orbitron'; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+        /* Search Section */
+        .search-bar { display: flex; gap: 10px; margin-bottom: 5px; }
+        input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 10px; width: 100%; font-size: 15px; }
+        
+        /* User Profile Style */
+        .user-profile { display: none; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .info-item { background: #161e31; padding: 10px; border-radius: 8px; border: 1px solid #1e293b; }
+        .info-item label { display: block; font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+        .info-item span { font-weight: bold; font-size: 16px; color: #e2e8f0; }
+        .info-item input { padding: 5px; background: transparent; border: none; border-bottom: 1px solid var(--primary); border-radius: 0; font-size: 16px; margin-bottom: 0; }
+
+        .status-badge { padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; }
+        .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status-banned { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .btn-action { border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; padding: 12px; cursor: pointer; transition: 0.3s; }
+        .btn-save { background: var(--primary); color: #000; width: 100%; margin-top: 15px; }
+        .btn-ban { background: var(--red); color: #fff; width: 100%; margin-top: 8px; }
+
+        /* Tables */
+        .table-wrap { overflow-x: auto; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 10px; background: #1e293b; color: #94a3b8; }
+        td { padding: 10px; border-bottom: 1px solid #1e293b; }
+        
+        .btn-sm { padding: 6px 10px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 11px; }
     </style>
 </head>
 <body>
 
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h1 style="font-family:'Orbitron'; font-size:18px; color:var(--primary);">BZ ADMIN v2</h1>
-        <button onclick="location.href='admin.html'" style="background:var(--primary); border:none; padding:5px 15px; font-weight:bold; border-radius:5px; cursor:pointer;">➔ TOURNAMENT</button>
+    <div class="header">
+        <h1>BZ MASTER ADMIN</h1>
+        <button onclick="location.href='admin.html'" style="background:var(--primary); padding:6px 12px; border:none; border-radius:8px; font-weight:bold;">GAMES ➔</button>
     </div>
 
     <div class="card">
-        <h2><i class="fas fa-user-cog"></i> ADVANCED USER MANAGER</h2>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="uSearchPhone" placeholder="Enter Phone Number...">
-            <button class="btn-ok" style="height:40px;" onclick="fetchUserData()">FIND</button>
+        <h2><i class="fas fa-id-card"></i> USER FULL DETAILS</h2>
+        <div class="search-bar">
+            <input type="text" id="uSearchPhone" placeholder="Enter Phone Number (e.g. 98765...)">
+            <button class="btn-sm" style="background:var(--primary); color:#000; padding:0 15px;" onclick="fetchUserData()">SEARCH</button>
         </div>
 
-        <div id="userInfoBox" class="user-info-box">
-            <span class="label">FULL NAME</span>
-            <input type="text" id="editName">
-            
-            <span class="label">PASSWORD</span>
-            <input type="text" id="editPass">
-            
-            <span class="label">WALLET BALANCE (₹)</span>
-            <input type="number" id="editBalance">
-            
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn-blue" style="flex:2;" onclick="updateUserData()">UPDATE DATA</button>
-                <button id="banBtn" class="btn-no" style="flex:1;" onclick="toggleUserBan()">BAN</button>
+        <div id="userProfile" class="user-profile">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">
+                <h3 id="profNameTitle" style="font-family: 'Orbitron'; font-size: 16px;">USERNAME</h3>
+                <span id="profStatus" class="status-badge">ACTIVE</span>
             </div>
+
+            <div class="profile-grid">
+                <div class="info-item">
+                    <label>Full Name</label>
+                    <input type="text" id="editName">
+                </div>
+                <div class="info-item">
+                    <label>Phone Number</label>
+                    <span id="profPhone">0000000000</span>
+                </div>
+                <div class="info-item">
+                    <label>App Password</label>
+                    <input type="text" id="editPass">
+                </div>
+                <div class="info-item">
+                    <label>Wallet Balance</label>
+                    <input type="number" id="editBalance">
+                </div>
+            </div>
+
+            <button class="btn-action btn-save" onclick="updateUserData()">SAVE ALL CHANGES</button>
+            <button id="banBtn" class="btn-action btn-ban" onclick="toggleUserBan()">BAN USER</button>
         </div>
     </div>
 
     <div class="card">
-        <h2>DEPOSIT REQUESTS</h2>
-        <div style="overflow-x:auto;">
+        <h2><i class="fas fa-arrow-down"></i> DEPOSITS (PENDING)</h2>
+        <div class="table-wrap">
             <table>
-                <thead><tr><th>Phone</th><th>Amt</th><th>UTR</th><th>Action</th></tr></thead>
+                <thead><tr><th>Phone</th><th>Amount</th><th>UTR</th><th>Action</th></tr></thead>
                 <tbody id="depBox"></tbody>
             </table>
         </div>
     </div>
 
     <div class="card">
-        <h2>WITHDRAW REQUESTS</h2>
-        <div style="overflow-x:auto;">
+        <h2><i class="fas fa-arrow-up"></i> WITHDRAWALS (PENDING)</h2>
+        <div class="table-wrap">
             <table>
-                <thead><tr><th>Phone</th><th>Amt</th><th>UPI</th><th>Action</th></tr></thead>
+                <thead><tr><th>Phone</th><th>Amount</th><th>UPI</th><th>Action</th></tr></thead>
                 <tbody id="witBox"></tbody>
             </table>
         </div>
@@ -81,56 +118,65 @@
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
 
-        let currentSearchingPhone = "";
-        let currentBanStatus = false;
+        let currentSearchPhone = "";
+        let isBanned = false;
 
-        // --- 1. USER MANAGEMENT LOGIC ---
+        // --- FETCH USER DATA ---
         async function fetchUserData() {
             const phone = document.getElementById('uSearchPhone').value.trim();
-            if(!phone) return alert("Phone number toh daal!");
+            if(!phone) return alert("Pehle number daalo bhai!");
 
             const snap = await db.ref('users/' + phone).once('value');
             if(snap.exists()) {
                 const u = snap.val();
-                currentSearchingPhone = phone;
-                currentBanStatus = u.isBanned || false;
-                
+                currentSearchPhone = phone;
+                isBanned = u.isBanned || false;
+
+                // UI Update
+                document.getElementById('profNameTitle').innerText = u.name || "Gamer";
                 document.getElementById('editName').value = u.name || "";
+                document.getElementById('profPhone').innerText = phone;
                 document.getElementById('editPass').value = u.password || "";
                 document.getElementById('editBalance').value = u.balance || 0;
-                
-                // Ban button text update
-                const bBtn = document.getElementById('banBtn');
-                bBtn.innerText = currentBanStatus ? "UNBAN" : "BAN";
-                bBtn.style.background = currentBanStatus ? "#10b981" : "#ff4d4d";
 
-                document.getElementById('userInfoBox').style.display = 'block';
+                const st = document.getElementById('profStatus');
+                st.innerText = isBanned ? "BANNED" : "ACTIVE";
+                st.className = "status-badge " + (isBanned ? "status-banned" : "status-active");
+
+                const bBtn = document.getElementById('banBtn');
+                bBtn.innerText = isBanned ? "UNBAN USER" : "BAN USER";
+                bBtn.style.background = isBanned ? "#10b981" : "#ef4444";
+
+                document.getElementById('userProfile').style.display = 'block';
             } else {
-                alert("User nahi mila! Registration check karo.");
-                document.getElementById('userInfoBox').style.display = 'none';
+                alert("User nahi mila!");
+                document.getElementById('userProfile').style.display = 'none';
             }
         }
 
+        // --- UPDATE DATA ---
         async function updateUserData() {
-            if(!currentSearchingPhone) return;
-            const updates = {
+            if(!currentSearchPhone) return;
+            const up = {
                 name: document.getElementById('editName').value,
                 password: document.getElementById('editPass').value,
                 balance: Number(document.getElementById('editBalance').value)
             };
-            await db.ref('users/' + currentSearchingPhone).update(updates);
-            alert("User data updated successfully! 🔥");
+            await db.ref('users/' + currentSearchPhone).update(up);
+            alert("Data updated! Ab user ke pass nayi details dikhengi.");
+            fetchUserData();
         }
 
+        // --- BAN / UNBAN ---
         async function toggleUserBan() {
-            if(!currentSearchingPhone) return;
-            const newStatus = !currentBanStatus;
-            await db.ref('users/' + currentSearchingPhone).update({ isBanned: newStatus });
-            alert(newStatus ? "User Banned!" : "User Unbanned!");
-            fetchUserData(); // Refresh data
+            if(!currentSearchPhone) return;
+            const newStatus = !isBanned;
+            await db.ref('users/' + currentSearchPhone).update({ isBanned: newStatus });
+            alert(newStatus ? "User Banned successfully!" : "User is now Active!");
+            fetchUserData();
         }
 
-        // --- 2. DEPOSIT LOGIC ---
+        // --- DEPOSITS & WITHDRAWALS (BAKKI LOGIC SAME HAI) ---
         db.ref('deposits').on('value', snap => {
             const box = document.getElementById('depBox'); box.innerHTML = "";
             snap.forEach(child => {
@@ -138,8 +184,8 @@
                 if(d.status === 'pending') {
                     box.innerHTML += `<tr><td>${d.userPhone}</td><td>₹${d.amount}</td><td>${d.utr}</td>
                     <td>
-                        <button class="btn-ok" onclick="actionDep('${child.key}','${d.userPhone}',${d.amount},'approved')">✔</button>
-                        <button class="btn-no" onclick="actionDep('${child.key}','${d.userPhone}',0,'rejected')">✖</button>
+                        <button class="btn-sm" style="background:#10b981; color:#000" onclick="actionDep('${child.key}','${d.userPhone}',${d.amount},'approved')">✔</button>
+                        <button class="btn-sm" style="background:#ef4444; color:#fff" onclick="actionDep('${child.key}','${d.userPhone}',0,'rejected')">✖</button>
                     </td></tr>`;
                 }
             });
@@ -158,7 +204,6 @@
             alert("Deposit " + status);
         }
 
-        // --- 3. WITHDRAWAL LOGIC ---
         db.ref('withdrawals').on('value', snap => {
             const box = document.getElementById('witBox'); box.innerHTML = "";
             snap.forEach(child => {
@@ -166,8 +211,8 @@
                 if(w.status === 'pending') {
                     box.innerHTML += `<tr><td>${w.userPhone}</td><td>₹${w.amount}</td><td>${w.upiID}</td>
                     <td>
-                        <button class="btn-ok" onclick="actionWit('${child.key}','approved')">PAY</button>
-                        <button class="btn-no" onclick="actionWit('${child.key}','rejected')">REFUND</button>
+                        <button class="btn-sm" style="background:#3b82f6; color:#fff" onclick="actionWit('${child.key}','approved')">PAY</button>
+                        <button class="btn-sm" style="background:#ef4444; color:#fff" onclick="actionWit('${child.key}','rejected')">REFUND</button>
                     </td></tr>`;
                 }
             });
