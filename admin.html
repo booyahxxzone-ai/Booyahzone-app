@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -228,6 +228,7 @@
 
     <script>
         // --- CONFIG ---
+        // Bhai, Firebase URL check karlena ek baar sahi hai na.
         const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
@@ -258,28 +259,39 @@
         function publishMatch() {
             const id = "M" + Date.now();
             const data = {
-                mId: id, title: document.getElementById('mTitle').value,
+                mId: id, 
+                title: document.getElementById('mTitle').value,
                 mode: document.getElementById('mMode').value,
                 entry: document.getElementById('mEntry').value,
                 prize: document.getElementById('mPrize').value,
                 time: document.getElementById('mTime').value,
                 map: document.getElementById('mMap').value,
-                status: "upcoming"
+                status: "upcoming",
+                joinedCount: 0 // Inital count zero
             };
-            if(!data.title || !data.entry) return alert("Fill all fields!");
+
+            if(!data.title || !data.entry || !data.time) return alert("Bhai, saari fields bharo!");
+
+            // Firebase mein set karna
             db.ref('matches/' + id).set(data).then(() => {
-                notify("Match Published!");
+                notify("Match Published! 🔥");
                 document.getElementById('mTitle').value = "";
-            });
+                document.getElementById('mEntry').value = "";
+                document.getElementById('mPrize').value = "";
+            }).catch(err => alert("Error: " + err.message));
         }
 
         function syncMatches(status) {
             db.ref('matches').orderByChild('status').equalTo(status).on('value', snap => {
                 const container = document.getElementById('matchContainer');
                 container.innerHTML = "";
+                if(!snap.exists()) {
+                    container.innerHTML = "<tr><td colspan='5' style='text-align:center'>No matches found.</td></tr>";
+                    return;
+                }
                 snap.forEach(child => {
                     const m = child.val();
-                    const players = m.players ? Object.keys(m.players).length : 0;
+                    const players = m.joinedPlayers ? Object.keys(m.joinedPlayers).length : 0;
                     container.innerHTML += `
                         <tr>
                             <td><b>${m.title}</b><br><small>${m.winnerName ? '🏆 '+m.winnerName : m.time}</small></td>
@@ -298,14 +310,18 @@
         }
 
         function viewPlayers(id) {
-            db.ref('matches/'+id+'/players').once('value', snap => {
+            db.ref('matches/'+id+'/joinedPlayers').once('value', snap => {
                 const list = document.getElementById('playerListContent');
                 list.innerHTML = "";
-                if(!snap.exists()) list.innerHTML = "No players yet.";
+                if(!snap.exists()) list.innerHTML = "<p style='text-align:center;color:#64748b'>Abhi tak koi join nahi hua.</p>";
                 else {
                     let i = 1;
                     snap.forEach(p => {
-                        list.innerHTML += `<div style="padding:10px; border-bottom:1px solid #334155;">${i}. <b>${p.val().gameName}</b> (${p.key})</div>`;
+                        const player = p.val();
+                        list.innerHTML += `<div style="padding:12px; border-bottom:1px solid #334155; display:flex; justify-content:space-between">
+                            <span>${i}. <b>${player.gameName || 'Gamer'}</b></span>
+                            <span style="color:var(--primary)">${player.uid}</span>
+                        </div>`;
                         i++;
                     });
                 }
@@ -314,24 +330,26 @@
         }
 
         function openRoom(id) { activeMatchId = id; document.getElementById('roomModal').style.display = 'flex'; }
+        
         function confirmLive() {
             const rid = document.getElementById('roomId').value;
             const rps = document.getElementById('roomPass').value;
-            if(!rid) return alert("Enter Room ID!");
+            if(!rid) return alert("Room ID toh daalo!");
             db.ref('matches/'+activeMatchId).update({ roomId: rid, roomPass: rps, status: 'live' })
-            .then(() => { closeModal('roomModal'); notify("Match is Live!"); });
+            .then(() => { closeModal('roomModal'); notify("Match is LIVE! 🔴"); });
         }
 
         function openFinish(id) { activeMatchId = id; document.getElementById('finishModal').style.display = 'flex'; }
+        
         function confirmFinish() {
             const win = document.getElementById('winName').value;
             const kills = document.getElementById('winKills').value;
-            if(!win) return alert("Enter winner name!");
+            if(!win) return alert("Winner ka naam batao!");
             db.ref('matches/'+activeMatchId).update({ status: 'finished', winnerName: win, winnerKills: kills })
-            .then(() => { closeModal('finishModal'); notify("Match Finished!"); });
+            .then(() => { closeModal('finishModal'); notify("Match Finished! 🏆"); });
         }
 
-        // --- CASH ---
+        // --- CASH MANAGEMENT ---
         function syncDeposits() {
             db.ref('deposits').on('value', snap => {
                 const container = document.getElementById('depositContainer');
@@ -340,20 +358,22 @@
                     const d = child.val();
                     if(d.status === 'pending') {
                         container.innerHTML += `<tr><td>${d.userUID}</td><td>₹${d.amount}</td><td>${d.utr}</td>
-                        <td><button class="btn btn-sm btn-green" onclick="approveDep('${child.key}','${d.userUID}',${d.amount})">ADD</button></td></tr>`;
+                        <td><button class="btn btn-sm btn-green" onclick="approveDep('${child.key}','${d.userUID}',${d.amount})">APPROVE</button></td></tr>`;
                     }
                 });
             });
         }
 
         async function approveDep(id, uid, amt) {
-            const user = db.ref('users/'+uid);
-            const snap = await user.once('value');
+            const userRef = db.ref('users/'+uid);
+            const snap = await userRef.once('value');
             if(snap.exists()) {
                 let bal = Number(snap.val().balance || 0);
-                await user.update({ balance: bal + Number(amt) });
+                await userRef.update({ balance: bal + Number(amt) });
                 await db.ref('deposits/'+id).update({ status: 'approved' });
-                notify("Deposit Approved!");
+                notify("Deposit Approved! Paisa add ho gaya.");
+            } else {
+                alert("User nahi mila!");
             }
         }
 
@@ -365,14 +385,15 @@
                     const w = child.val();
                     if(w.status === 'pending') {
                         container.innerHTML += `<tr><td>${w.userUID}</td><td>₹${w.amount}</td><td>${w.upiID}</td>
-                        <td><button class="btn btn-sm btn-red" onclick="markPaid('${child.key}')">PAID</button></td></tr>`;
+                        <td><button class="btn btn-sm btn-red" onclick="markPaid('${child.key}')">MARK PAID</button></td></tr>`;
                     }
                 });
             });
         }
-        function markPaid(id) { db.ref('withdrawals/'+id).update({ status: 'paid' }).then(() => notify("Marked as Paid!")); }
 
-        // --- USERS ---
+        function markPaid(id) { db.ref('withdrawals/'+id).update({ status: 'paid' }).then(() => notify("Payment Done!")); }
+
+        // --- USER MANAGEMENT ---
         function syncUsers() {
             db.ref('users').on('value', snap => {
                 const container = document.getElementById('userContainer');
@@ -386,7 +407,7 @@
             });
         }
 
-        function deleteItem(path) { if(confirm("Confirm Delete?")) db.ref(path).remove().then(() => notify("Deleted!")); }
+        function deleteItem(path) { if(confirm("Kya sach mein delete karna hai?")) db.ref(path).remove().then(() => notify("Deleted!")); }
 
         function searchUsers() {
             let filter = document.getElementById('userSearch').value.toUpperCase();
