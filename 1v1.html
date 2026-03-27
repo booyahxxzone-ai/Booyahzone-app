@@ -15,19 +15,18 @@
         :root {
             --primary: #ff6a00;
             --primary-grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
-            --bg: #f0f2f5;
+            --bg: #f8fafc;
             --white: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --success: #10b981;
-            --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { background: var(--bg); color: var(--text-main); min-height: 100vh; }
+        body { background: var(--bg); color: var(--text-main); }
 
-        /* --- STICKY HEADER --- */
+        /* HEADER */
         .header {
             background: var(--white); height: 70px; display: flex; align-items: center;
             padding: 0 20px; position: sticky; top: 0; z-index: 1000;
@@ -36,47 +35,30 @@
         .header .back-btn {
             width: 40px; height: 40px; border-radius: 12px; background: #f1f5f9;
             display: flex; align-items: center; justify-content: center; color: var(--text-main);
-            text-decoration: none; font-size: 18px; transition: 0.3s;
+            text-decoration: none; font-size: 18px;
         }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- TAB NAVIGATION --- */
-        .tab-nav {
-            background: var(--white); display: flex; padding: 5px; margin: 15px 20px;
-            border-radius: 15px; box-shadow: var(--card-shadow);
-        }
-        .tab-item {
-            flex: 1; padding: 12px; text-align: center; font-size: 12px; font-weight: 700;
-            color: var(--text-muted); cursor: pointer; border-radius: 12px; transition: 0.3s;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .tab-item.active { background: var(--primary-grad); color: var(--white); }
-
-        /* --- MATCH LIST AREA --- */
-        .content-area { padding: 0 20px 100px 20px; max-width: 600px; margin: 0 auto; }
-        .view-section { display: none; animation: slideUp 0.4s ease; }
-        .view-section.active { display: block; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- MATCH CARD STYLES --- */
+        /* CONTENT */
+        .content-area { padding: 20px; max-width: 600px; margin: 0 auto; }
+        
         .m-card {
             background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px;
-            box-shadow: var(--card-shadow); border: 1px solid rgba(255,106,0,0.05); position: relative;
+            box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); position: relative;
         }
         .m-tag {
             position: absolute; top: 20px; right: 20px; background: #fff1e6;
             color: var(--primary); font-size: 10px; font-weight: 800; padding: 5px 12px;
             border-radius: 50px; text-transform: uppercase;
         }
-        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; width: 70%; }
+        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 12px; width: 75%; }
         
         .timer-box {
-            background: #f8fafc; border-radius: 15px; padding: 12px;
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border: 1px dashed #cbd5e1;
+            background: #f1f5f9; border-radius: 12px; padding: 10px 15px;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
         }
-        .timer-box i { color: var(--primary); font-size: 14px; }
-        .timer-box span { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .timer-box i { color: var(--primary); }
+        .timer-box span { font-size: 13px; font-weight: 700; }
 
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-item { text-align: center; background: #fffcf9; padding: 10px; border-radius: 15px; border: 1px solid #fff5eb; }
@@ -84,49 +66,46 @@
         .stat-item b { font-size: 14px; color: var(--text-main); font-weight: 800; }
 
         .btn-join {
-            width: 100%; padding: 15px; border: none; border-radius: 18px;
+            width: 100%; padding: 16px; border: none; border-radius: 18px;
             background: var(--primary-grad); color: white; font-weight: 800;
-            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25); cursor: pointer; transition: 0.3s;
+            font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.2);
         }
-        .btn-join:active { transform: scale(0.96); }
         .btn-join.joined { background: var(--success); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); }
-        .btn-join.full { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+        .btn-join.full { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; }
 
-        /* --- OVERLAY UI --- */
+        /* OVERLAY */
         .overlay {
             position: fixed; inset: 0; background: var(--bg); z-index: 2000;
-            display: none; flex-direction: column; animation: slideIn 0.3s forwards;
+            display: none; flex-direction: column; animation: slideIn 0.3s ease-out;
         }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         .o-header { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; }
 
-        .input-card { background: var(--white); padding: 25px; border-radius: 25px; box-shadow: var(--card-shadow); }
+        .input-card { background: var(--white); padding: 25px; border-radius: 25px; box-shadow: var(--card-shadow); margin-bottom: 20px; }
         .input-card label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; }
         .input-card input {
             width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 15px;
-            font-size: 16px; font-weight: 700; outline: none; transition: 0.3s; background: #f8fafc;
+            font-size: 16px; font-weight: 700; outline: none; background: #f8fafc;
         }
-        .input-card input:focus { border-color: var(--primary); background: #fff; }
+        
+        /* CHECKBOX RULES */
+        .rules-container { margin: 20px 0; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+        .rules-container input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .rules-container span { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
 
-        /* --- TOAST --- */
+        /* ID PASS BOX */
+        .room-info { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .room-info b { font-family: 'Orbitron'; letter-spacing: 1px; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
+
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px;
-            font-size: 13px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            font-size: 12px; font-weight: 600; display: none; z-index: 9999;
         }
-
-        /* Results Card */
-        .res-card {
-            background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 12px;
-            display: flex; align-items: center; justify-content: space-between; border-left: 5px solid var(--success);
-        }
-        .res-info h4 { font-size: 14px; font-weight: 800; }
-        .res-info p { font-size: 11px; color: var(--text-muted); }
-        .res-prize { color: var(--success); font-weight: 900; font-size: 15px; }
-
     </style>
 </head>
 <body>
@@ -138,75 +117,53 @@
         <h1>1V1 ELITE ARENA</h1>
     </header>
 
-    <div class="tab-nav">
-        <div class="tab-item active" onclick="switchTab('upcoming', this)">Upcoming</div>
-        <div class="tab-item" onclick="switchTab('history', this)">Results</div>
-        <div class="tab-item" onclick="switchTab('rules', this)">Rules</div>
-    </div>
-
     <div class="content-area">
-        <div id="upcoming" class="view-section active">
-            <div id="matchList">
-                <div style="text-align:center; padding-top:50px; color:var(--text-muted);">
-                    <i class="fas fa-circle-notch fa-spin" style="font-size:30px; color:var(--primary);"></i>
-                    <p style="margin-top:10px; font-weight:600;">Searching Matches...</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="history" class="view-section">
-            <div id="historyList">
-                <p style="text-align:center; color:var(--text-muted); margin-top:50px;">No match history found.</p>
-            </div>
-        </div>
-
-        <div id="rules" class="view-section">
-            <div class="input-card">
-                <h3 style="font-size:16px; margin-bottom:15px; color:var(--primary);">Arena Rules:</h3>
-                <ul style="font-size:13px; color:var(--text-muted); line-height:1.8; padding-left:15px;">
-                    <li>No Hacks / Third Party Tools (Ban).</li>
-                    <li>Wait for Room ID/Pass in Match Details.</li>
-                    <li>Screen recording is mandatory for prize claim.</li>
-                    <li>Teaming up is not allowed in 1v1.</li>
-                </ul>
-            </div>
+        <div id="matchList">
+            <p style="text-align:center; padding-top:50px; color:var(--text-muted);">Loading Matches...</p>
         </div>
     </div>
 
     <div class="overlay" id="joinOverlay">
         <div class="o-header">
             <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:18px;"></i>
-            <h2 id="overlayTitle" style="font-size:15px; font-weight:800;">Join Match</h2>
+            <h2 id="overlayTitle" style="font-size:15px; font-weight:800;">Match Details</h2>
         </div>
         <div class="o-body">
             <div id="formView">
                 <div class="input-card">
-                    <label>PLAYER FREE FIRE UID</label>
-                    <input type="number" id="playerUID" placeholder="Enter your 10 digit UID">
+                    <label>FREE FIRE UID (REQUIRED)</label>
+                    <input type="number" id="playerUID" placeholder="Ex: 1029384756">
+                    
                     <div style="margin-top:20px; padding:15px; background:#fff8f1; border-radius:12px; display:flex; justify-content:space-between;">
                         <span style="font-weight:600; font-size:13px;">Entry Fee</span>
                         <b style="color:var(--primary);" id="feeShow">₹0</b>
                     </div>
-                    <button class="btn-join" style="margin-top:20px;" onclick="confirmJoin()">Confirm Registration</button>
+
+                    <label class="rules-container">
+                        <input type="checkbox" id="ruleCheck">
+                        <span>I have read all the rules. No hacks allowed. Teaming is banned. Screen recording must be ON.</span>
+                    </label>
+
+                    <button class="btn-join" id="finalJoinBtn" onclick="confirmJoin()">Join & Pay Now</button>
                 </div>
             </div>
 
             <div id="detailsView" style="display:none;">
                 <div class="input-card" style="text-align:center; border:2px solid var(--primary);">
-                    <p style="font-size:11px; color:var(--text-muted);">REGISTERED UID</p>
-                    <h2 id="savedUID" style="font-family:'Orbitron'; margin-bottom:20px;">---</h2>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div style="background:#f1f5f9; padding:10px; border-radius:12px;">
-                            <small style="display:block; font-size:9px;">ROOM ID</small>
-                            <b id="rID">WAITING</b>
-                        </div>
-                        <div style="background:#f1f5f9; padding:10px; border-radius:12px;">
-                            <small style="display:block; font-size:9px;">PASSWORD</small>
-                            <b id="rPass">WAITING</b>
-                        </div>
+                    <p style="font-size:10px; color:var(--text-muted); margin-bottom:5px;">YOUR REGISTERED UID</p>
+                    <h2 id="savedUID" style="font-family:'Orbitron'; color:var(--text-main); margin-bottom:20px;">---</h2>
+                    
+                    <div class="room-info">
+                        <div><small style="display:block; font-size:9px; color:var(--text-muted); text-align:left;">ROOM ID</small><b id="rID">WAITING</b></div>
+                        <button class="copy-btn" onclick="copyText('rID')">COPY</button>
                     </div>
-                    <p style="margin-top:15px; font-size:10px; color:var(--primary); font-weight:700;">
-                        <i class="fas fa-info-circle"></i> ID/Pass will appear 15m before start.
+                    <div class="room-info">
+                        <div><small style="display:block; font-size:9px; color:var(--text-muted); text-align:left;">PASSWORD</small><b id="rPass">WAITING</b></div>
+                        <button class="copy-btn" onclick="copyText('rPass')">COPY</button>
+                    </div>
+
+                    <p style="margin-top:20px; font-size:11px; color:var(--primary); font-weight:700;">
+                        <i class="fas fa-info-circle"></i> ID/Password will be updated 15 minutes before the match start time.
                     </p>
                 </div>
             </div>
@@ -214,14 +171,14 @@
     </div>
 
     <script>
-        // 1. Firebase Configuration
+        // 1. Firebase Config
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
-        let selectedMatchId = null;
-        let selectedFee = 0;
+        let activeMatchId = null;
+        let activeFee = 0;
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -230,22 +187,13 @@
             setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            el.classList.add('active');
-        }
-
-        // 2. Fetch Matches & Handle Countdown
+        // 2. Load Matches
         database.ref('matches').on('value', (snapshot) => {
-            const list = document.getElementById('matchList');
-            const historyList = document.getElementById('historyList');
-            list.innerHTML = "";
-            historyList.innerHTML = "";
+            const container = document.getElementById('matchList');
+            container.innerHTML = "";
             
             if(!snapshot.exists()) {
-                list.innerHTML = "<p style='text-align:center;'>No Matches Available</p>";
+                container.innerHTML = "<p style='text-align:center;'>No Active Matches</p>";
                 return;
             }
 
@@ -253,89 +201,70 @@
                 const m = child.val();
                 const mid = child.key;
 
-                if(m.status === "upcoming" || m.status === "ongoing") {
-                    renderMatchCard(mid, m, list);
-                } else if(m.status === "finish") {
-                    renderHistoryCard(m, historyList);
+                if(m.status === "upcoming") {
+                    let pCount = m.players ? Object.keys(m.players).length : 0;
+                    let iJoined = false;
+                    if(m.players) {
+                        Object.values(m.players).forEach(p => { if(p.phone === userPhone) iJoined = true; });
+                    }
+
+                    let btn = `<button class="btn-join" onclick="openMatch('${mid}', ${m.entry}, '${m.title}')">Join Match</button>`;
+                    if(iJoined) {
+                        btn = `<button class="btn-join joined" onclick="openMatch('${mid}', ${m.entry}, '${m.title}')">View Details</button>`;
+                    } else if(pCount >= 2) {
+                        btn = `<button class="btn-join full" disabled>Match Full</button>`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="m-card">
+                            <div class="m-tag">${m.map || 'Bermuda'}</div>
+                            <h2 class="m-title">${m.title}</h2>
+                            <div class="timer-box">
+                                <i class="fas fa-clock"></i>
+                                <span class="cd" data-time="${m.startTime}">Calculating...</span>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-item"><small>Prize</small><b>₹${m.prize}</b></div>
+                                <div class="stat-item"><small>Entry</small><b>₹${m.entry}</b></div>
+                                <div class="stat-item"><small>Type</small><b>1VS1</b></div>
+                            </div>
+                            ${btn}
+                        </div>`;
                 }
             });
-            
-            startCountdowns();
+            startTimer();
         });
 
-        function renderMatchCard(id, data, container) {
-            let pCount = data.players ? Object.keys(data.players).length : 0;
-            let iJoined = false;
-            if(data.players) {
-                Object.values(data.players).forEach(p => { if(p.phone === userPhone) iJoined = true; });
-            }
-
-            let btnHtml = `<button class="btn-join" onclick="openJoin('${id}', ${data.entry}, '${data.title}')">Join Match</button>`;
-            if(iJoined) {
-                btnHtml = `<button class="btn-join joined" onclick="openJoin('${id}', ${data.entry}, '${data.title}')">Already Joined</button>`;
-            } else if(pCount >= 2) {
-                btnHtml = `<button class="btn-join full" disabled>Match Full</button>`;
-            }
-
-            container.innerHTML += `
-                <div class="m-card">
-                    <div class="m-tag">${data.map || 'Bermuda'}</div>
-                    <h2 class="m-title">${data.title}</h2>
-                    <div class="timer-box">
-                        <i class="fas fa-clock"></i>
-                        <span class="countdown-timer" data-time="${data.startTime}">Loading Time...</span>
-                    </div>
-                    <div class="stats-row">
-                        <div class="stat-item"><small>Prize</small><b>₹${data.prize}</b></div>
-                        <div class="stat-item"><small>Entry</small><b>₹${data.entry}</b></div>
-                        <div class="stat-item"><small>Type</small><b>1 VS 1</b></div>
-                    </div>
-                    ${btnHtml}
-                </div>`;
-        }
-
-        function renderHistoryCard(data, container) {
-            container.innerHTML += `
-                <div class="res-card">
-                    <div class="res-info">
-                        <h4>${data.title}</h4>
-                        <p>Winner: ${data.winner || 'TBA'}</p>
-                    </div>
-                    <div class="res-prize">₹${data.prize}</div>
-                </div>`;
-        }
-
-        // 3. Countdown Logic
-        function startCountdowns() {
+        // 3. Countdown Timer
+        function startTimer() {
             setInterval(() => {
-                document.querySelectorAll('.countdown-timer').forEach(timer => {
-                    const target = new Date(timer.getAttribute('data-time')).getTime();
+                document.querySelectorAll('.cd').forEach(el => {
+                    const target = new Date(el.getAttribute('data-time')).getTime();
                     const now = new Date().getTime();
                     const diff = target - now;
-
-                    if (diff < 0) {
-                        timer.innerText = "Match Started / Ongoing";
-                        timer.style.color = "#10b981";
-                    } else {
-                        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                        const m = Math.floor((diff / (1000 * 60)) % 60);
-                        const s = Math.floor((diff / 1000) % 60);
-                        timer.innerText = `${h}h ${m}m ${s}s left`;
+                    if(diff < 0) { el.innerText = "Started"; el.style.color = "var(--success)"; }
+                    else {
+                        const h = Math.floor(diff/(1000*60*60));
+                        const m = Math.floor((diff/(1000*60))%60);
+                        const s = Math.floor((diff/1000)%60);
+                        el.innerText = `${h}h ${m}m ${s}s left`;
                     }
                 });
             }, 1000);
         }
 
-        // 4. Join Logic
-        function openJoin(id, fee, title) {
-            selectedMatchId = id;
-            selectedFee = fee;
+        // 4. Open Match & View Logic
+        function openMatch(id, fee, title) {
+            if(!userPhone) return showToast("Please login first!");
+            activeMatchId = id;
+            activeFee = fee;
             document.getElementById('overlayTitle').innerText = title;
             document.getElementById('feeShow').innerText = "₹" + fee;
             document.getElementById('joinOverlay').style.display = 'flex';
 
-            database.ref(`matches/${id}`).on('value', s => {
-                const match = s.val();
+            // Real-time listener for ID/Pass and Join status
+            database.ref(`matches/${id}`).on('value', snap => {
+                const match = snap.val();
                 let myData = null;
                 if(match.players) {
                     Object.values(match.players).forEach(p => { if(p.phone === userPhone) myData = p; });
@@ -354,40 +283,66 @@
             });
         }
 
+        // 5. JOIN & PAY LOGIC (Main functionality)
         async function confirmJoin() {
             const uid = document.getElementById('playerUID').value;
-            if(!uid || uid.length < 5) return showToast("Enter valid UID!");
+            const checked = document.getElementById('ruleCheck').checked;
+            const btn = document.getElementById('finalJoinBtn');
 
-            const userRef = database.ref(`users/${userPhone}`);
-            const snapshot = await userRef.get();
-            const userData = snapshot.val();
-            const currentBal = parseFloat(userData.balance || 0);
+            if(!uid || uid.length < 5) return showToast("Enter Valid Player UID!");
+            if(!checked) return showToast("Accept rules first!");
 
-            if(currentBal < selectedFee) return showToast("Insufficient Balance!");
+            btn.disabled = true;
+            btn.innerText = "Processing Pay...";
 
-            // Update Database
-            await userRef.update({ balance: currentBal - selectedFee });
-            
-            // Push to History
-            await userRef.child('matchHistory').push({
-                matchTitle: document.getElementById('overlayTitle').innerText,
-                fee: "-" + selectedFee,
-                date: new Date().toLocaleString()
-            });
+            try {
+                const userRef = database.ref(`users/${userPhone}`);
+                const userSnap = await userRef.get();
+                const userData = userSnap.val();
+                const balance = parseFloat(userData.balance || 0);
 
-            // Add to Match Players
-            await database.ref(`matches/${selectedMatchId}/players`).push({
-                phone: userPhone,
-                uid: uid,
-                name: userData.name
-            });
+                if(balance < activeFee) {
+                    showToast("Insufficient Wallet Balance!");
+                    btn.disabled = false;
+                    btn.innerText = "Join & Pay Now";
+                    return;
+                }
 
-            showToast("Successfully Joined!");
+                // 1. Deduct Balance
+                await userRef.update({ balance: balance - activeFee });
+
+                // 2. Add to Match History (User Side)
+                await userRef.child('matchHistory').push({
+                    title: document.getElementById('overlayTitle').innerText,
+                    amount: "-" + activeFee,
+                    type: "1V1 Join",
+                    date: new Date().toLocaleString()
+                });
+
+                // 3. Add to Match Players (Admin Side)
+                await database.ref(`matches/${activeMatchId}/players`).push({
+                    phone: userPhone,
+                    uid: uid,
+                    name: userData.name || "Player"
+                });
+
+                showToast("Match Joined Successfully!");
+            } catch (err) {
+                showToast("Error: " + err.message);
+                btn.disabled = false;
+            }
         }
 
         function closeOverlay() {
             document.getElementById('joinOverlay').style.display = 'none';
-            if(selectedMatchId) database.ref(`matches/${selectedMatchId}`).off();
+            if(activeMatchId) database.ref(`matches/${activeMatchId}`).off();
+        }
+
+        function copyText(id) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return;
+            navigator.clipboard.writeText(val);
+            showToast("Copied to Clipboard!");
         }
     </script>
 </body>
