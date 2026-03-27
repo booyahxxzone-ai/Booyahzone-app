@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BZ | MASTER CASH & USERS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <style>
+        :root { --primary: #00ffcc; --red: #ff4d4d; --card: #0f172a; }
+        body { background: #050810; color: #fff; font-family: 'Rajdhani'; padding: 15px; padding-bottom: 80px; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #232a3d; }
+        h2 { font-size: 14px; color: var(--primary); font-family: 'Orbitron'; margin-bottom: 10px; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1e293b; }
+        
+        input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; font-family: 'Rajdhani'; }
+        
+        .btn-ok { background: #10b981; border: none; padding: 8px 12px; color: #000; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-no { background: var(--red); border: none; padding: 8px 12px; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-blue { background: #3b82f6; border: none; padding: 10px; color: #fff; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; }
+
+        .user-info-box { background: #161e31; padding: 15px; border-radius: 10px; margin-top: 10px; display: none; border: 1px dashed var(--primary); }
+        .label { color: #64748b; font-size: 11px; font-weight: bold; margin-bottom: 4px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h1 style="font-family:'Orbitron'; font-size:18px; color:var(--primary);">BZ ADMIN v2</h1>
+        <button onclick="location.href='admin.html'" style="background:var(--primary); border:none; padding:5px 15px; font-weight:bold; border-radius:5px; cursor:pointer;">➔ TOURNAMENT</button>
+    </div>
+
+    <div class="card">
+        <h2><i class="fas fa-user-cog"></i> ADVANCED USER MANAGER</h2>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="uSearchPhone" placeholder="Enter Phone Number...">
+            <button class="btn-ok" style="height:40px;" onclick="fetchUserData()">FIND</button>
+        </div>
+
+        <div id="userInfoBox" class="user-info-box">
+            <span class="label">FULL NAME</span>
+            <input type="text" id="editName">
+            
+            <span class="label">PASSWORD</span>
+            <input type="text" id="editPass">
+            
+            <span class="label">WALLET BALANCE (₹)</span>
+            <input type="number" id="editBalance">
+            
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn-blue" style="flex:2;" onclick="updateUserData()">UPDATE DATA</button>
+                <button id="banBtn" class="btn-no" style="flex:1;" onclick="toggleUserBan()">BAN</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>DEPOSIT REQUESTS</h2>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead><tr><th>Phone</th><th>Amt</th><th>UTR</th><th>Action</th></tr></thead>
+                <tbody id="depBox"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>WITHDRAW REQUESTS</h2>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead><tr><th>Phone</th><th>Amt</th><th>UPI</th><th>Action</th></tr></thead>
+                <tbody id="witBox"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(fbConfig);
+        const db = firebase.database();
+
+        let currentSearchingPhone = "";
+        let currentBanStatus = false;
+
+        // --- 1. USER MANAGEMENT LOGIC ---
+        async function fetchUserData() {
+            const phone = document.getElementById('uSearchPhone').value.trim();
+            if(!phone) return alert("Phone number toh daal!");
+
+            const snap = await db.ref('users/' + phone).once('value');
+            if(snap.exists()) {
+                const u = snap.val();
+                currentSearchingPhone = phone;
+                currentBanStatus = u.isBanned || false;
+                
+                document.getElementById('editName').value = u.name || "";
+                document.getElementById('editPass').value = u.password || "";
+                document.getElementById('editBalance').value = u.balance || 0;
+                
+                // Ban button text update
+                const bBtn = document.getElementById('banBtn');
+                bBtn.innerText = currentBanStatus ? "UNBAN" : "BAN";
+                bBtn.style.background = currentBanStatus ? "#10b981" : "#ff4d4d";
+
+                document.getElementById('userInfoBox').style.display = 'block';
+            } else {
+                alert("User nahi mila! Registration check karo.");
+                document.getElementById('userInfoBox').style.display = 'none';
+            }
+        }
+
+        async function updateUserData() {
+            if(!currentSearchingPhone) return;
+            const updates = {
+                name: document.getElementById('editName').value,
+                password: document.getElementById('editPass').value,
+                balance: Number(document.getElementById('editBalance').value)
+            };
+            await db.ref('users/' + currentSearchingPhone).update(updates);
+            alert("User data updated successfully! 🔥");
+        }
+
+        async function toggleUserBan() {
+            if(!currentSearchingPhone) return;
+            const newStatus = !currentBanStatus;
+            await db.ref('users/' + currentSearchingPhone).update({ isBanned: newStatus });
+            alert(newStatus ? "User Banned!" : "User Unbanned!");
+            fetchUserData(); // Refresh data
+        }
+
+        // --- 2. DEPOSIT LOGIC ---
+        db.ref('deposits').on('value', snap => {
+            const box = document.getElementById('depBox'); box.innerHTML = "";
+            snap.forEach(child => {
+                const d = child.val();
+                if(d.status === 'pending') {
+                    box.innerHTML += `<tr><td>${d.userPhone}</td><td>₹${d.amount}</td><td>${d.utr}</td>
+                    <td>
+                        <button class="btn-ok" onclick="actionDep('${child.key}','${d.userPhone}',${d.amount},'approved')">✔</button>
+                        <button class="btn-no" onclick="actionDep('${child.key}','${d.userPhone}',0,'rejected')">✖</button>
+                    </td></tr>`;
+                }
+            });
+        });
+
+        async function actionDep(id, phone, amt, status) {
+            if(status === 'approved') {
+                const userRef = db.ref('users/' + phone);
+                const uSnap = await userRef.once('value');
+                if(uSnap.exists()){
+                    let newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
+                    await userRef.update({ balance: newBal });
+                }
+            }
+            await db.ref('deposits/'+id).update({ status: status });
+            alert("Deposit " + status);
+        }
+
+        // --- 3. WITHDRAWAL LOGIC ---
+        db.ref('withdrawals').on('value', snap => {
+            const box = document.getElementById('witBox'); box.innerHTML = "";
+            snap.forEach(child => {
+                const w = child.val();
+                if(w.status === 'pending') {
+                    box.innerHTML += `<tr><td>${w.userPhone}</td><td>₹${w.amount}</td><td>${w.upiID}</td>
+                    <td>
+                        <button class="btn-ok" onclick="actionWit('${child.key}','approved')">PAY</button>
+                        <button class="btn-no" onclick="actionWit('${child.key}','rejected')">REFUND</button>
+                    </td></tr>`;
+                }
+            });
+        });
+
+        async function actionWit(id, status) {
+            if(status === 'rejected') {
+                const wRef = await db.ref('withdrawals/'+id).once('value');
+                const wData = wRef.val();
+                const uRef = db.ref('users/'+wData.userPhone);
+                const uSnap = await uRef.once('value');
+                let refundBal = (Number(uSnap.val().balance) || 0) + Number(wData.amount);
+                await uRef.update({ balance: refundBal });
+            }
+            await db.ref('withdrawals/'+id).update({ status: status });
+            alert("Withdrawal " + status);
+        }
+    </script>
+</body>
+</html>
