@@ -206,8 +206,7 @@
         function calculateDuoBill() {
             let count = 1;
             if(document.getElementById('addPartner').checked) {
-                if(document.getElementById('p2UID').value) count = 2;
-                else count = 2; // Assume 2 if checkbox is on for pricing
+                count = 2;
             }
             const total = activeEntryFee * count;
             document.getElementById('billCount').innerText = count;
@@ -358,6 +357,14 @@
                     date: new Date().toLocaleDateString(), status: "joined", matchId: activeMID
                 });
 
+                // --- Notification Logic Added ---
+                await db.ref(`user_notifications/${userPhone}`).push({
+                    title: "Duo Match Joined!",
+                    message: `Registered for ${activeTitle}. Mode: ${isDuo ? 'Duo' : 'Solo in 2v2'}. UID: ${u1}${isDuo ? ' & '+u2 : ''}`,
+                    type: "match",
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+
                 let teleMsg = `✅ <b>2V2 JOINED</b>\n\n` +
                               `📱 Phone: ${userPhone}\n` +
                               `👥 Mode: ${isDuo ? 'DUO' : 'SOLO (in 2v2)'}\n` +
@@ -386,10 +393,10 @@
             if(activeMID) db.ref(`matches_2v2/${activeMID}`).off();
         }
 
-        // Countdown Logic
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
+                const targetText = el.getAttribute('data-time');
+                const target = new Date(targetText).getTime();
                 const now = new Date().getTime();
                 const diff = target - now;
                 if(diff <= 0) { el.innerText = "Match Started"; } 
