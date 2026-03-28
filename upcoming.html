@@ -19,6 +19,8 @@
             --white: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
+            --danger: #ff4d4d;
+            --success: #00c853;
             --card-shadow: 0 15px 35px rgba(255, 106, 0, 0.12);
         }
 
@@ -40,21 +42,30 @@
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; }
+        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; overflow: hidden; }
         
-        .m-type-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; }
+        .m-type-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; z-index: 1; }
 
-        /* Slot Info & Progress Bar */
+        /* Countdown Timer Style */
+        .timer-strip { background: #fff1f1; color: var(--danger); font-size: 12px; font-weight: 800; padding: 8px; border-radius: 12px; text-align: center; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #ffebeb; }
+        .timer-strip i { animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
         .slot-info { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; margin-bottom: 8px; color: var(--text-main); }
         .progress-bar { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
         .progress-fill { height: 100%; background: var(--primary-grad); width: 0%; transition: 1s ease; }
 
-        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; color: var(--text-main); margin-top: 5px; }
+        .m-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; color: var(--text-main); margin-top: 5px; }
 
+        /* Enhanced Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-item { text-align: center; background: #fdfcfb; padding: 10px; border-radius: 15px; border: 1px solid #fff5eb; }
-        .stat-item small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-        .stat-item b { font-size: 13px; color: var(--text-main); }
+        .stat-item { text-align: center; background: #fdfcfb; padding: 12px 8px; border-radius: 18px; border: 1px solid #fff5eb; }
+        .stat-item small { display: block; font-size: 8px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-item b { font-size: 12px; color: var(--text-main); }
+        
+        /* Prize Special Style */
+        .stat-item.prize-box { background: #f0fff4; border: 1px solid #dcffe4; }
+        .stat-item.prize-box b { color: var(--success); font-size: 16px; font-weight: 900; }
 
         .join-btn { width: 100%; padding: 15px; border: none; border-radius: 18px; background: var(--primary-grad); color: white; font-weight: 800; font-size: 13px; text-transform: uppercase; cursor: pointer; display: block; text-align: center; text-decoration: none; box-shadow: 0 8px 20px rgba(255, 106, 0, 0.2); }
         .join-btn.full { background: #cbd5e1; box-shadow: none; color: #64748b; pointer-events: none; }
@@ -98,12 +109,11 @@
                     const type = path.replace('matches_', '');
                     const data = snap.val();
                     
-                    // Pehle purana data remove karo
                     matchStore = matchStore.filter(m => m.type !== type);
                     
                     if(data) {
                         Object.keys(data).forEach(id => {
-                            if(data[id].status !== 'finished') {
+                            if(data[id].status !== 'finished' && data[id].status !== 'live') {
                                 matchStore.push({ ...data[id], id, type });
                             }
                         });
@@ -121,29 +131,52 @@
             renderUI();
         }
 
+        // Countdown Timer Logic
+        function startTimer(targetDate, elementId) {
+            const update = () => {
+                const now = new Date().getTime();
+                const diff = new Date(targetDate).getTime() - now;
+
+                if (diff <= 0) {
+                    document.getElementById(elementId).innerHTML = "<i class='fas fa-bolt'></i> STARTING SOON";
+                    return;
+                }
+
+                const h = Math.floor((diff / (1000 * 60 * 60)));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById(elementId).innerHTML = `<i class='fas fa-clock'></i> STARTS IN: ${h}h ${m}m ${s}s`;
+            };
+            setInterval(update, 1000);
+            update();
+        }
+
         function renderUI() {
             const list = document.getElementById('matchList');
             list.innerHTML = "";
 
             const filtered = matchStore.filter(m => currentFilter === 'all' || m.type === currentFilter);
-            
             filtered.sort((a,b) => new Date(a.time) - new Date(b.time));
 
             filtered.forEach(m => {
                 const joined = m.players ? Object.keys(m.players).length : 0;
-                
-                // Max Teams Logic
-                let max = 2; // Default for 1v1 and 2v2
-                if(m.type === '4v4') max = 25; 
+                let max = (m.type === '4v4') ? 25 : 2; 
                 
                 const isFull = joined >= max;
                 const percent = (joined/max) * 100;
+                const timerId = `timer_${m.id}`;
                 const targetPage = m.type === '1v1' ? '1v1.html' : (m.type === '2v2' ? '2v2.html' : '4v4.html');
 
                 const card = document.createElement('div');
                 card.className = 'm-card';
                 card.innerHTML = `
                     <div class="m-type-tag">${m.type}</div>
+                    
+                    <div class="timer-strip" id="${timerId}">
+                        <i class="fas fa-clock"></i> CALCULATING...
+                    </div>
+
                     <div class="m-title">${m.title}</div>
                     
                     <div class="slot-info">
@@ -155,9 +188,9 @@
                     </div>
 
                     <div class="stats-grid">
-                        <div class="stat-item"><small>WIN PRIZE</small><b>₹${m.prize}</b></div>
+                        <div class="stat-item prize-box"><small>WIN PRIZE</small><b>₹${m.prize}</b></div>
                         <div class="stat-item"><small>ENTRY</small><b>₹${m.entry}</b></div>
-                        <div class="stat-item"><small>TIME</small><b>${m.time}</b></div>
+                        <div class="stat-item"><small>VERSION</small><b>MOBILE</b></div>
                     </div>
 
                     <a href="${targetPage}" class="join-btn ${isFull ? 'full' : ''}">
@@ -165,6 +198,7 @@
                     </a>
                 `;
                 list.appendChild(card);
+                startTimer(m.time, timerId);
             });
         }
 
