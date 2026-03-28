@@ -51,6 +51,7 @@
         .stat-card { text-align: center; background: #fffcf9; padding: 12px 5px; border-radius: 18px; border: 1px solid #fff5eb; }
         .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
         .stat-card b { font-size: 14px; color: var(--text-main); font-family: 'Orbitron'; }
+        .stat-card.prize-b b { color: var(--success); } /* Winning Prize Green */
 
         .action-btn { width: 100%; padding: 18px; border: none; border-radius: 20px; background: var(--primary-grad); color: white; font-weight: 800; font-size: 13px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 106, 0, 0.3); }
         .action-btn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
@@ -72,11 +73,13 @@
         .input-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 10px; }
         .input-group input { width: 100%; padding: 15px; border-radius: 15px; border: 1.5px solid #edf2f7; outline: none; background: #f8fafc; font-weight: 600; font-size: 14px; color: var(--text-main); }
 
-        .uid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; display: none; } /* Hidden by default */
-
         .checkbox-container { display: flex; align-items: center; gap: 12px; margin: 15px 5px; background: #fff1e6; padding: 12px; border-radius: 15px; }
         .checkbox-container input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
         .checkbox-container label { font-size: 13px; font-weight: 700; color: var(--primary); cursor: pointer; flex: 1; }
+
+        .rule-check-box { display: flex; align-items: flex-start; gap: 12px; margin: 20px 5px; }
+        .rule-check-box input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--success); }
+        .rule-check-box label { font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.5; }
 
         .copy-box { background: #ffffff; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1.5px solid #edf2f7; }
         .copy-box b { font-family: 'Orbitron'; font-size: 15px; color: var(--text-main); }
@@ -117,7 +120,7 @@
                     </div>
                     
                     <div id="teammateFields" style="display:none;">
-                        <div class="uid-grid" style="display:grid; margin-top:15px;">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:15px;">
                             <div class="input-group">
                                 <label>PLAYER 2 UID</label>
                                 <input type="number" id="p2UID" placeholder="UID P2" oninput="calculateBill()">
@@ -140,10 +143,15 @@
                         <span style="font-size:12px; font-weight:600;">Players Joining:</span>
                         <b id="billPlayers" style="color:var(--primary);">1</b>
                     </div>
-                    <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; pt-10; margin-top:10px; padding-top:10px;">
+                    <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; padding-top:10px;">
                         <span style="font-size:14px; font-weight:800;">Total Amount:</span>
                         <b id="billAmount" style="font-family:'Orbitron'; color:var(--text-main);">₹0</b>
                     </div>
+                </div>
+
+                <div class="rule-check-box">
+                    <input type="checkbox" id="finalRuleCheck">
+                    <label for="finalRuleCheck">I have read the match rules and my squad is ready to play. No hack/emulator allowed.</label>
                 </div>
 
                 <button class="action-btn" id="payBtn" onclick="processSquadJoin()">PAY & JOIN SQUAD</button>
@@ -184,6 +192,7 @@
         let activeEntryFee = 0;
         let activeTitle = "";
 
+        // Toast Utility
         function triggerToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
@@ -191,14 +200,41 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
+        // Real-time Countdown Logic
+        function startCountdown(matchId, matchTimeStr) {
+            const timerSpan = document.getElementById(`timer-${matchId}`);
+            if(!timerSpan) return;
+
+            function update() {
+                const now = new Date().getTime();
+                const matchTime = new Date(matchTimeStr).getTime();
+                const diff = matchTime - now;
+
+                if (diff <= 0) {
+                    timerSpan.innerText = "Match Started";
+                    return;
+                }
+
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                timerSpan.innerText = `${h}h ${m}m ${s}s left`;
+            }
+            setInterval(update, 1000);
+            update();
+        }
+
+        // Toggle Teammate Fields
         function toggleTeammates() {
             const isChecked = document.getElementById('addTeammates').checked;
             document.getElementById('teammateFields').style.display = isChecked ? 'block' : 'none';
             calculateBill();
         }
 
+        // Calculate Payment Bill
         function calculateBill() {
-            let count = 1; // Always Leader
+            let count = 1; 
             if(document.getElementById('addTeammates').checked) {
                 if(document.getElementById('p2UID').value) count++;
                 if(document.getElementById('p3UID').value) count++;
@@ -211,6 +247,7 @@
             return { count, total };
         }
 
+        // Listen for Match Data
         db.ref('matches_4v4').on('value', snap => {
             matchDataStore = snap.val() || {};
             renderMatches();
@@ -222,7 +259,6 @@
             Object.keys(matchDataStore).reverse().forEach(id => {
                 const m = matchDataStore[id];
                 
-                // Calculate Total Players Joined
                 let totalPlayersJoined = 0;
                 if(m.players) {
                     Object.values(m.players).forEach(p => {
@@ -239,11 +275,11 @@
                 card.innerHTML = `
                     <div class="m-tag ${isLive ? 'live' : ''}">${isLive ? '● Live' : 'Upcoming'}</div>
                     <h2 class="m-title">${m.title}</h2>
-                    <div class="timer-box"><i class="fas fa-clock"></i><span>${m.time}</span></div>
+                    <div class="timer-box"><i class="fas fa-clock"></i><span id="timer-${id}">${m.time}</span></div>
                     <div class="stats-grid">
-                        <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
-                        <div class="stat-card"><small>Entry/Player</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Joined</small><b>${totalPlayersJoined} Players</b></div>
+                        <div class="stat-card prize-b"><small>Prize</small><b>₹${m.prize}</b></div>
+                        <div class="stat-card"><small>Entry/P</small><b>₹${m.entry}</b></div>
+                        <div class="stat-card"><small>Joined</small><b>${totalPlayersJoined}</b></div>
                     </div>
                     <button class="action-btn ${isJoined ? 'joined' : ''}" 
                         ${isLive && !isJoined ? 'disabled' : ''} 
@@ -252,6 +288,7 @@
                     </button>
                 `;
                 container.appendChild(card);
+                if(!isLive) startCountdown(id, m.time);
             });
         }
 
@@ -261,7 +298,8 @@
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
             
-            // Reset Form
+            // Reset Form State
+            document.getElementById('finalRuleCheck').checked = false;
             document.getElementById('addTeammates').checked = false;
             document.getElementById('teammateFields').style.display = 'none';
             document.getElementById('p1UID').value = "";
@@ -290,11 +328,10 @@
 
         async function processSquadJoin() {
             const p1 = document.getElementById('p1UID').value;
-            const p2 = document.getElementById('p2UID').value;
-            const p3 = document.getElementById('p3UID').value;
-            const p4 = document.getElementById('p4UID').value;
+            const agree = document.getElementById('finalRuleCheck').checked;
             
             if(!p1) return triggerToast("Leader UID is required!");
+            if(!agree) return triggerToast("Please agree to the match rules!");
 
             const bill = calculateBill();
             const btn = document.getElementById('payBtn');
@@ -309,12 +346,18 @@
                     triggerToast("Low Balance!"); btn.disabled = false; calculateBill(); return;
                 }
 
+                // Balance Update
                 await userRef.update({ balance: (bal - bill.total).toFixed(2) });
 
                 const squadData = {
                     phone: userPhone,
                     playerCount: bill.count,
-                    uids: { p1, p2: p2||'N/A', p3: p3||'N/A', p4: p4||'N/A' },
+                    uids: { 
+                        p1, 
+                        p2: document.getElementById('p2UID').value || 'N/A', 
+                        p3: document.getElementById('p3UID').value || 'N/A', 
+                        p4: document.getElementById('p4UID').value || 'N/A' 
+                    },
                     timestamp: Date.now()
                 };
 
@@ -325,15 +368,16 @@
                     date: new Date().toLocaleDateString(), status: "joined"
                 });
 
+                // Telegram Alert
                 const msg = `🔥 <b>SQUAD JOINED (4V4)</b>\n\n` +
                             `📱 Phone: ${userPhone}\n` +
-                            `👥 Total Players: ${bill.count}\n` +
-                            `💰 Total Paid: ₹${bill.total}\n\n` +
+                            `👥 Players: ${bill.count}\n` +
+                            `💰 Paid: ₹${bill.total}\n\n` +
                             `🎮 <b>UIDs:</b>\n` +
-                            `1️⃣ ${p1} (L)\n` +
-                            (p2 ? `2️⃣ ${p2}\n` : '') +
-                            (p3 ? `3️⃣ ${p3}\n` : '') +
-                            (p4 ? `4️⃣ ${p4}` : '');
+                            `1️⃣ ${squadData.uids.p1}\n` +
+                            (squadData.uids.p2 !== 'N/A' ? `2️⃣ ${squadData.uids.p2}\n` : '') +
+                            (squadData.uids.p3 !== 'N/A' ? `3️⃣ ${squadData.uids.p3}\n` : '') +
+                            (squadData.uids.p4 !== 'N/A' ? `4️⃣ ${squadData.uids.p4}` : '');
                 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
 
