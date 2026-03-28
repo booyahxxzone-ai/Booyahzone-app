@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BZ | ELITE ADMIN</title>
+    <title>BZ | ELITE ADMIN SMART</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -24,7 +24,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
 
-        /* HEADER */
         .header { 
             padding: 20px; text-align: center; background: var(--card); 
             border-bottom: 2px solid var(--primary); display: flex; 
@@ -35,7 +34,6 @@
 
         .container { padding: 15px; max-width: 600px; margin: auto; }
 
-        /* FORM CARDS */
         .card { 
             background: var(--card); border-radius: 20px; padding: 20px; 
             margin-bottom: 20px; border: 1px solid rgba(0,255,204,0.1);
@@ -45,7 +43,7 @@
 
         input, select { 
             background: #232a3d; border: 1px solid #334155; color: #fff; 
-            padding: 12px; border-radius: 12px; width: 100%; margin-bottom: 12px; font-size: 14px;
+            padding: 12px; border-radius: 12px; width: 100%; margin-bottom: 12px; font-size: 14px; outline: none;
         }
 
         .btn { 
@@ -53,41 +51,36 @@
             cursor: pointer; font-weight: 900; padding: 14px; transition: 0.3s; 
             font-size: 12px;
         }
-        .btn-main { background: var(--primary-grad, var(--primary)); color: #000; width: 100%; }
+        .btn-main { background: var(--primary); color: #000; width: 100%; }
         .btn-sm { padding: 8px 12px; font-size: 10px; color: #fff; margin: 2px; border-radius: 8px; }
 
-        /* CATEGORY FILTER */
-        .cat-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+        .cat-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
         .cat-btn { 
             padding: 8px 16px; background: #232a3d; border-radius: 50px; 
-            font-size: 11px; font-weight: 600; white-space: nowrap; border: 1px solid #334155;
+            font-size: 11px; font-weight: 600; white-space: nowrap; border: 1px solid #334155; color: #fff;
         }
         .cat-btn.active { background: var(--primary); color: #000; border: none; }
 
-        /* MATCH LIST */
         .match-row {
             background: #1e2536; border-radius: 15px; padding: 15px; margin-bottom: 12px;
             display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary);
         }
-        .match-info b { font-size: 14px; display: block; }
-        .match-info small { color: #94a3b8; font-size: 11px; }
-        .status-tag { font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 800; }
+        .match-info b { font-size: 14px; display: block; color: var(--primary); }
+        .match-info small { color: #94a3b8; font-size: 11px; display: block; margin: 4px 0; }
+        .status-tag { font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
 
-        /* MODALS */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
         .modal-box { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 380px; border: 1px solid var(--primary); }
 
-        /* NAVIGATION */
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 75px; 
             background: var(--card); display: flex; justify-content: space-around; 
             align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; 
         }
-        .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; font-weight: 600; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; font-weight: 600; cursor: pointer; }
         .nav-item i { font-size: 20px; margin-bottom: 5px; display: block; }
         .nav-item.active { color: var(--primary); }
 
-        /* PLAYER LIST STYLING */
         .p-item { background: #232a3d; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 12px; border: 1px solid #334155; }
         .p-item b { color: var(--primary); }
     </style>
@@ -96,19 +89,18 @@
 
     <div class="header">
         <h1>BZ ADMIN <span style="color:white">PANEL</span></h1>
-        <button class="btn btn-sm" style="background:var(--accent); color:#000;" onclick="location.href='admin2.html'">CASH PANEL ➔</button>
+        <button class="btn btn-sm" style="background:var(--accent); color:#000;" onclick="location.href='admin2.html'">CASH ➔</button>
     </div>
 
     <div class="container">
         <div id="tab-add" class="tab-content">
             <div class="card">
                 <h2>CREATE NEW MATCH</h2>
-                <input type="text" id="mTitle" placeholder="Match Title (e.g. 1V1 Daily)">
+                <input type="text" id="mTitle" placeholder="Match Title (e.g. 2V2 Duo War)">
                 <select id="mMode">
                     <option value="1V1">1V1 Match</option>
                     <option value="2V2">2V2 Match</option>
                     <option value="4V4">4V4 Match</option>
-                    <option value="Solo">Classic Solo</option>
                 </select>
                 <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
                 <input type="number" id="mPrize" placeholder="Prize Pool (₹)">
@@ -120,13 +112,13 @@
         <div id="tab-matches" class="tab-content" style="display:none;">
             <div class="cat-filter">
                 <div class="cat-btn active" onclick="filterBy('all', this)">ALL</div>
-                <div class="cat-btn" onclick="filterBy('1V1', this)">1V1</div>
-                <div class="cat-btn" onclick="filterBy('2V2', this)">2V2</div>
-                <div class="cat-btn" onclick="filterBy('4V4', this)">4V4</div>
+                <div class="cat-btn" onclick="filterBy('matches', this)">1V1</div>
+                <div class="cat-btn" onclick="filterBy('matches_2v2', this)">2V2</div>
+                <div class="cat-btn" onclick="filterBy('matches_4v4', this)">4V4</div>
             </div>
             
             <div id="matchListContainer">
-                <p style="text-align:center; color:#64748b; margin-top:20px;">Loading matches...</p>
+                <p style="text-align:center; color:#64748b; margin-top:20px;">Fetching matches...</p>
             </div>
         </div>
     </div>
@@ -156,19 +148,20 @@
     </div>
 
     <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showTab('tab-add', this)"><i class="fas fa-plus-circle"></i>CREATE</a>
-        <a href="#" class="nav-item" onclick="showTab('tab-matches', this)"><i class="fas fa-tasks"></i>MANAGE</a>
+        <div class="nav-item active" onclick="showTab('tab-add', this)"><i class="fas fa-plus-circle"></i>CREATE</div>
+        <div class="nav-item" onclick="showTab('tab-matches', this)"><i class="fas fa-tasks"></i>MANAGE</div>
     </nav>
 
     <script>
         const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(fbConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(fbConfig); }
         const db = firebase.database();
         
         const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const chatId = "7852788120";
         let activeMID = "";
-        let currentCat = "all";
+        let activePath = ""; 
+        let currentFilter = "all";
 
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
@@ -179,77 +172,92 @@
         }
 
         async function publishMatch() {
+            const mode = document.getElementById('mMode').value;
             const id = "M" + Date.now();
+            
+            // 🔥 SMART ROUTING: Mode ke hisaab se sahi folder path
+            let path = 'matches'; 
+            if(mode === '2V2') path = 'matches_2v2';
+            if(mode === '4V4') path = 'matches_4v4';
+
             const data = {
                 mId: id,
                 title: document.getElementById('mTitle').value,
-                mode: document.getElementById('mMode').value,
+                mode: mode,
                 entry: document.getElementById('mEntry').value,
                 prize: document.getElementById('mPrize').value,
                 time: document.getElementById('mTime').value,
-                status: "upcoming"
+                status: "upcoming",
+                dbPath: path // Track path for future updates
             };
+
             if(!data.title || !data.entry) return alert("Bhai details toh bharo!");
-            await db.ref('matches/' + id).set(data);
-            alert("Match Live ho gaya App par!");
+            
+            await db.ref(path + '/' + id).set(data);
+            alert("Match Sahi Folder (" + path + ") Mein Live Ho Gaya!");
             showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
         }
 
         function filterBy(cat, el) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            currentCat = cat;
+            currentFilter = cat;
             loadMatches();
         }
 
-        function loadMatches() {
-            db.ref('matches').on('value', snap => {
-                const container = document.getElementById('matchListContainer');
-                container.innerHTML = "";
+        async function loadMatches() {
+            const container = document.getElementById('matchListContainer');
+            container.innerHTML = "<p style='text-align:center; color:#64748b;'>Loading...</p>";
+            
+            const paths = ['matches', 'matches_2v2', 'matches_4v4'];
+            let allHtml = "";
+
+            for(let p of paths) {
+                if(currentFilter !== 'all' && currentFilter !== p) continue;
+
+                const snap = await db.ref(p).once('value');
                 snap.forEach(child => {
                     const m = child.val();
-                    if(currentCat !== 'all' && m.mode !== currentCat) return;
-
                     const pCount = m.players ? Object.keys(m.players).length : 0;
                     
-                    container.innerHTML += `
+                    allHtml += `
                         <div class="match-row">
                             <div class="match-info">
-                                <b>${m.title} (${m.mode})</b>
-                                <small>${m.time} | 👥 Joined: ${pCount}</small>
-                                <span class="status-tag" style="background:${m.status=='live'?'red':'#334155'}">
-                                    ${m.status.toUpperCase()}
+                                <b>${m.title}</b>
+                                <small>Mode: ${m.mode} | Time: ${m.time}</small>
+                                <small>👥 Joined: ${pCount} | Path: ${p}</small>
+                                <span class="status-tag" style="background:${m.status=='live'?'var(--red)':'#334155'}">
+                                    ${m.status}
                                 </span>
                             </div>
-                            <div style="display:flex; flex-direction:column;">
-                                <button class="btn-sm" style="background:var(--blue)" onclick="viewPlayers('${m.mId}')">PLAYERS</button>
-                                ${m.status=='upcoming' ? `<button class="btn-sm" style="background:green" onclick="openRoom('${m.mId}')">LIVE</button>` : ''}
-                                ${m.status=='live' ? `<button class="btn-sm" style="background:var(--accent); color:black" onclick="openFinish('${m.mId}')">FINISH</button>` : ''}
-                                <button class="btn-sm" style="background:var(--red)" onclick="deleteMatch('${m.mId}')">DEL</button>
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                <button class="btn-sm" style="background:var(--blue)" onclick="viewPlayers('${p}', '${m.mId}')">PLAYERS</button>
+                                ${m.status=='upcoming' ? `<button class="btn-sm" style="background:green" onclick="openRoom('${p}', '${m.mId}')">LIVE</button>` : ''}
+                                ${m.status=='live' ? `<button class="btn-sm" style="background:var(--accent); color:black" onclick="openFinish('${p}', '${m.mId}')">FINISH</button>` : ''}
+                                <button class="btn-sm" style="background:var(--red)" onclick="deleteMatch('${p}', '${m.mId}')">DEL</button>
                             </div>
                         </div>`;
                 });
-            });
+            }
+            container.innerHTML = allHtml || "<p style='text-align:center; padding:20px;'>No matches found.</p>";
         }
 
-        function viewPlayers(id) {
-            db.ref(`matches/${id}/players`).once('value', snap => {
+        function viewPlayers(path, id) {
+            db.ref(`${path}/${id}/players`).once('value', snap => {
                 const list = document.getElementById('playerList');
                 list.innerHTML = "";
-                if(!snap.exists()) {
-                    list.innerHTML = "<p style='text-align:center;'>No players yet.</p>";
-                } else {
-                    snap.forEach(p => {
-                        const val = p.val();
-                        list.innerHTML += `<div class="p-item"><b>${val.name}</b><br>UID: ${val.uid} | Ph: ${val.phone}</div>`;
-                    });
-                }
+                if(!snap.exists()) list.innerHTML = "No players joined.";
+                snap.forEach(p => {
+                    const val = p.val();
+                    let pDetail = val.uid ? `UID: ${val.uid}` : `UID1: ${val.uid1} | UID2: ${val.uid2}`;
+                    list.innerHTML += `<div class="p-item"><b>${val.phone || 'Unknown'}</b><br>${pDetail}</div>`;
+                });
                 document.getElementById('playerModal').style.display = 'flex';
             });
         }
 
-        function openRoom(id) { 
-            activeMID = id; 
+        function openRoom(path, id) { 
+            activeMID = id; activePath = path;
             document.getElementById('roomModal').style.display='flex';
             document.getElementById('roomInputs').style.display='block';
             document.getElementById('winnerInputs').style.display='none';
@@ -258,13 +266,13 @@
         function confirmLive() {
             const rid = document.getElementById('roomId').value;
             const rps = document.getElementById('roomPass').value;
-            db.ref('matches/'+activeMID).update({ roomId: rid, roomPass: rps, status: 'live' });
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🔴 Match Live!\nID: ${rid}\nPass: ${rps}`);
-            closeModal();
+            db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🔴 Match Live!\nPath: ${activePath}\nID: ${rid}\nPass: ${rps}`);
+            closeModal(); loadMatches();
         }
 
-        function openFinish(id) { 
-            activeMID = id; 
+        function openFinish(path, id) { 
+            activeMID = id; activePath = path;
             document.getElementById('roomModal').style.display='flex';
             document.getElementById('roomInputs').style.display='none';
             document.getElementById('winnerInputs').style.display='block';
@@ -272,13 +280,16 @@
 
         function confirmFinish() {
             const win = document.getElementById('winName').value;
-            db.ref('matches/'+activeMID).update({ status: 'finished', winner: win });
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🏆 Winner Announced!\nName: ${win}`);
-            closeModal();
+            db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner: win });
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🏆 Winner Announced!\nPath: ${activePath}\nWinner: ${win}`);
+            closeModal(); loadMatches();
         }
 
-        function deleteMatch(id) {
-            if(confirm("Bhai delete karun?")) db.ref('matches/'+id).remove();
+        function deleteMatch(path, id) {
+            if(confirm("Bhai sach mein delete karun?")) {
+                db.ref(`${path}/${id}`).remove();
+                loadMatches();
+            }
         }
 
         function closeModal() { 
