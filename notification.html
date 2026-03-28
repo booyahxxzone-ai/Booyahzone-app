@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,72 +14,80 @@
     <style>
         :root { 
             --primary: #ff6a00; 
-            --bg: linear-gradient(180deg, #fff4ec 0%, #ffffff 100%);
+            --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        body { background: var(--bg); background-attachment: fixed; min-height: 100vh; color: var(--text-main); padding-bottom: 40px; }
+        body { background: var(--bg); min-height: 100vh; color: var(--text-main); padding-bottom: 20px; }
 
-        /* Modern Header */
+        /* Glossy Header */
         .header {
-            background: #fff; height: 70px; display: flex; align-items: center; padding: 0 20px;
-            box-shadow: 0 4px 15px rgba(255, 106, 0, 0.1); position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.9); height: 70px; display: flex; align-items: center; padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
         }
         .back-btn { 
-            width: 40px; height: 40px; border-radius: 12px; background: #fff1e6;
-            display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 18px;
+            width: 40px; height: 40px; border-radius: 50%; background: #f1f5f9;
+            display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 16px;
         }
-        .header h2 { font-family: 'Orbitron'; font-size: 15px; flex: 1; text-align: center; margin-right: 40px; font-weight: 800; letter-spacing: 1px; }
+        .header h2 { font-family: 'Orbitron'; font-size: 16px; flex: 1; text-align: center; margin-right: 40px; font-weight: 800; letter-spacing: 1px; color: var(--primary); }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
-        /* Notification Card Design */
+        /* Notification Card - Modern Style */
         .notif-card {
-            background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 12px;
-            display: flex; gap: 15px; align-items: flex-start;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.03); border: 1px solid rgba(255, 106, 0, 0.05);
-            animation: slideUp 0.4s ease forwards; opacity: 0;
+            background: var(--card-bg); border-radius: 24px; padding: 16px; margin-bottom: 12px;
+            display: flex; gap: 12px; align-items: center; position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .notif-icon {
-            width: 48px; height: 48px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
         }
 
-        /* Type Styles */
-        .type-match { background: #fff1e6; color: #ff6a00; } /* Match alerts */
-        .type-success { background: #f0fdf4; color: #16a34a; } /* Money Approved/Join */
-        .type-error { background: #fef2f2; color: #dc2626; } /* Reject */
-        .type-info { background: #e0f2fe; color: #0284c7; } /* Generic info */
+        /* Type Theme */
+        .type-match { background: linear-gradient(135deg, #fff1e6, #ffe4d1); color: #ff6a00; }
+        .type-success { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #16a34a; }
+        .type-error { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #dc2626; }
+        .type-info { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); color: #475569; }
 
-        .notif-content { flex: 1; }
-        .notif-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
-        .notif-msg { font-size: 11px; color: var(--text-muted); line-height: 1.5; font-weight: 500; }
-        .notif-time { font-size: 9px; color: #94a3b8; margin-top: 8px; font-weight: 700; display: block; text-transform: uppercase; }
+        .notif-content { flex: 1; padding-right: 25px; }
+        .notif-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+        .notif-msg { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+        .notif-time { font-size: 10px; color: #94a3b8; margin-top: 6px; font-weight: 600; display: block; }
+
+        /* Delete Button */
+        .del-notif {
+            position: absolute; top: 15px; right: 15px; width: 28px; height: 28px;
+            background: #f8fafc; color: #cbd5e1; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .del-notif:active { transform: scale(0.9); background: #fee2e2; color: #ef4444; }
 
         /* Empty State */
-        .empty-state { text-align: center; margin-top: 100px; padding: 0 40px; }
-        .empty-state i { font-size: 60px; color: #ffd8b8; margin-bottom: 20px; }
-        .empty-state h3 { font-family: 'Orbitron'; font-size: 14px; color: var(--text-main); margin-bottom: 10px; }
-        .empty-state p { font-size: 12px; color: var(--text-muted); }
+        .empty-state { text-align: center; margin-top: 120px; }
+        .empty-state i { font-size: 70px; background: linear-gradient(to bottom, #e2e8f0, #f8fafc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .empty-state h3 { font-family: 'Orbitron'; font-size: 14px; color: #94a3b8; }
+
+        .loading-spinner { display: flex; justify-content: center; margin-top: 100px; color: var(--primary); font-size: 30px; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="back-btn" onclick="history.back()"><i class="fas fa-chevron-left"></i></div>
-        <h2>NOTIFICATIONS</h2>
+        <div class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+        <h2>INBOX</h2>
     </header>
 
     <div class="container" id="notif-container">
-        <div style="text-align: center; margin-top: 50px;">
-            <i class="fas fa-spinner fa-spin" style="color: var(--primary); font-size: 24px;"></i>
-        </div>
+        <div class="loading-spinner"><i class="fas fa-circle-notch fa-spin"></i></div>
     </div>
 
     <script>
@@ -92,32 +100,27 @@
             const container = document.getElementById('notif-container');
             
             if(!userPhone) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-user-lock"></i><h3>LOGIN REQUIRED</h3><p>Please login to see your personal alerts.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-lock"></i><h3>LOGIN REQUIRED</h3></div>`;
                 return;
             }
 
-            // Listen to User Specific Notifications
             db.ref('user_notifications/' + userPhone).on('value', (snap) => {
                 container.innerHTML = "";
                 
                 if(snap.exists()) {
-                    let notifications = [];
-                    snap.forEach(child => {
-                        notifications.push({ ...child.val(), id: child.key });
-                    });
+                    let items = [];
+                    snap.forEach(child => { items.push({ ...child.val(), id: child.key }); });
 
-                    // Sort: Latest First
-                    notifications.reverse().forEach(data => {
+                    items.reverse().forEach(data => {
                         const card = document.createElement('div');
                         card.className = 'notif-card';
                         
-                        // Decide Icon based on type
                         let icon = 'fa-bell';
                         let typeClass = 'type-info';
                         
-                        if(data.type === 'money') { icon = 'fa-wallet'; typeClass = 'type-success'; }
-                        else if(data.type === 'reject') { icon = 'fa-times-circle'; typeClass = 'type-error'; }
-                        else if(data.type === 'match') { icon = 'fa-gamepad'; typeClass = 'type-match'; }
+                        if(data.type === 'money' || data.type === 'finish') { icon = 'fa-wallet'; typeClass = 'type-success'; }
+                        else if(data.type === 'reject') { icon = 'fa-exclamation-triangle'; typeClass = 'type-error'; }
+                        else if(data.type === 'match' || data.type === 'live') { icon = 'fa-gamepad'; typeClass = 'type-match'; }
 
                         card.innerHTML = `
                             <div class="notif-icon ${typeClass}"><i class="fas ${icon}"></i></div>
@@ -126,13 +129,26 @@
                                 <div class="notif-msg">${data.message}</div>
                                 <span class="notif-time">${data.time || 'Just Now'}</span>
                             </div>
+                            <div class="del-notif" onclick="deleteNotif('${data.id}')">
+                                <i class="fas fa-times"></i>
+                            </div>
                         `;
                         container.appendChild(card);
                     });
                 } else {
-                    container.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><h3>CLEAN SLATE</h3><p>No new notifications at the moment.</p></div>`;
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-envelope-open"></i><h3>NO NOTIFICATIONS</h3></div>`;
                 }
             });
+        }
+
+        async function deleteNotif(id) {
+            if(!userPhone) return;
+            try {
+                // Delete specific notification from Firebase
+                await db.ref('user_notifications/' + userPhone + '/' + id).remove();
+            } catch (error) {
+                console.error("Error deleting notification:", error);
+            }
         }
 
         loadNotifications();
