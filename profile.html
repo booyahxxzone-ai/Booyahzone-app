@@ -12,23 +12,23 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --gray: #888; --soft-orange: #fff5e6; }
+        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --gray: #888; --soft-orange: #fff5e6; --success: #10b981; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body { 
-            background: linear-gradient(to bottom, var(--dark) 30%, var(--soft-orange) 100%);
+            background: linear-gradient(to bottom, var(--dark) 20%, #f8f9fa 100%);
             color: var(--dark); min-height: 100vh; padding-bottom: 50px;
         }
 
-        .profile-header { padding: 50px 20px 60px; text-align: center; color: #fff; position: relative; }
+        .profile-header { padding: 40px 20px 60px; text-align: center; color: #fff; position: relative; }
         .user-avatar {
-            width: 100px; height: 100px; background: var(--primary);
+            width: 90px; height: 90px; background: var(--primary);
             border-radius: 50%; margin: 0 auto 15px; border: 4px solid rgba(255,255,255,0.1);
-            display: flex; align-items: center; justify-content: center; font-size: 45px;
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .user-name { font-family: 'Orbitron'; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
-        .user-id { font-size: 14px; opacity: 0.8; font-weight: 700; margin-top: 5px; }
+        .user-name { font-family: 'Orbitron'; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .user-id { font-size: 13px; opacity: 0.8; font-weight: 700; margin-top: 5px; }
 
         .container { padding: 0 20px; max-width: 500px; margin: -30px auto 0; }
 
@@ -39,7 +39,8 @@
             border-bottom: 3px solid var(--primary); transition: 0.2s; cursor: pointer;
         }
         .stat-card i { color: var(--primary); font-size: 20px; margin-bottom: 8px; }
-        .stat-card h4 { font-family: 'Orbitron'; font-size: 18px; }
+        .stat-card h4 { font-family: 'Orbitron'; font-size: 16px; }
+        .stat-card p { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-top: 2px; }
 
         .menu-box { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
@@ -47,55 +48,58 @@
         .menu-link i { width: 25px; color: var(--primary); font-size: 18px; }
         .menu-link span { font-weight: 700; font-size: 15px; }
 
-        #details-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
-            backdrop-filter: blur(5px);
+        /* Social Section */
+        .social-card { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .social-card h5 { font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; color: var(--gray); letter-spacing: 1px; }
+        .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .s-btn { padding: 12px; border-radius: 15px; text-decoration: none; color: white; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .yt-btn { background: #ff0000; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2); }
+        .tg-btn { background: #0088cc; box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2); }
+
+        /* Policies */
+        .policy-card { background: var(--white); border-radius: 20px; padding: 5px 15px; margin-bottom: 10px; border: 1px solid #eee; }
+        .policy-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; font-family: 'Rajdhani'; font-size: 14px; font-weight: 800; cursor: pointer; padding: 15px 0; color: #444; }
+        .policy-btn i { font-size: 12px; color: var(--gray); transition: 0.3s; }
+        .policy-text { display: none; padding-bottom: 15px; font-size: 12px; color: #666; border-top: 1px solid #f5f5f5; padding-top: 10px; text-align: left; line-height: 1.6; }
+
+        /* Modal & Notice */
+        #details-modal, #custom-notice {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+            display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(5px);
         }
-        .modal-content { width: 90%; max-width: 350px; background: #fff; border-radius: 30px; padding: 25px; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { font-size: 12px; font-weight: 800; color: var(--gray); margin-left: 10px; }
-        .input-group input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-weight: 700; margin-top: 5px; }
-
-        .policy-card { background: rgba(255,255,255,0.7); border-radius: 20px; padding: 5px 15px; margin-bottom: 10px; border: 1px solid #fff; }
-        .policy-btn { width: 100%; display: flex; justify-content: space-between; background: none; border: none; font-family: 'Orbitron'; font-size: 12px; font-weight: 900; cursor: pointer; padding: 15px 0; }
-        .policy-text { display: none; padding-bottom: 15px; font-size: 13px; color: #555; border-top: 1px solid #eee; padding-top: 10px; text-align: left; }
-
-        #custom-notice { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 3000; }
-        .notice-card { width: 80%; background: #1a1a1a; border: 2px solid var(--primary); border-radius: 25px; padding: 25px; text-align: center; color: #fff; }
-
-        .logout-btn { width: 100%; padding: 15px; background: transparent; color: #eb4d4b; border: 2px solid #eb4d4b; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; margin-top: 10px; cursor: pointer; }
-        .save-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; margin-top: 10px; cursor: pointer; }
+        .modal-content, .notice-card { width: 90%; max-width: 350px; background: #fff; border-radius: 30px; padding: 25px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { font-size: 11px; font-weight: 800; color: var(--gray); display: block; margin-bottom: 5px; margin-left: 5px; }
+        .input-group input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1.5px solid #eee; font-weight: 700; outline: none; font-size: 14px; }
+        
+        .save-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
+        .logout-btn { width: 100%; padding: 15px; background: #fff1f1; color: #eb4d4b; border: 1.5px dashed #eb4d4b; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; margin-top: 10px; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
 
     <div id="custom-notice">
-        <div class="notice-card">
-            <h2 id="n-title" style="font-family:'Orbitron'; color:var(--primary);">NOTICE</h2>
-            <p id="n-msg" style="margin: 15px 0; font-size: 14px;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:10px; background:var(--primary); border:none; border-radius:10px; color:#fff; font-weight:900;">OKAY</button>
+        <div class="notice-card" style="text-align: center;">
+            <h2 id="n-title" style="font-family:'Orbitron'; color:var(--primary); font-size:18px;">NOTICE</h2>
+            <p id="n-msg" style="margin: 15px 0; font-size: 14px; color: #444; font-weight: 600;"></p>
+            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--primary); border:none; border-radius:12px; color:#fff; font-weight:900; cursor:pointer;">OKAY</button>
         </div>
     </div>
 
     <div id="details-modal">
         <div class="modal-content">
-            <h3 style="font-family:'Orbitron'; margin-bottom:20px; color:var(--primary);">EDIT PROFILE</h3>
+            <h3 style="font-family:'Orbitron'; margin-bottom:20px; color:var(--primary); text-align: center;">EDIT PROFILE</h3>
             <div class="input-group">
                 <label>FULL NAME</label>
-                <input type="text" id="edit-name">
-            </div>
-            <div class="input-group">
-                <label>PHONE (READ ONLY)</label>
-                <input type="tel" id="edit-phone" readonly style="opacity: 0.6;">
+                <input type="text" id="edit-name" placeholder="Enter Name">
             </div>
             <div class="input-group">
                 <label>GAME UID</label>
-                <input type="text" id="edit-uid">
+                <input type="text" id="edit-uid" placeholder="Your FF UID">
             </div>
             <div class="input-group">
                 <label>UPI ID (FOR WITHDRAWAL)</label>
-                <input type="text" id="edit-upi" placeholder="example@ybl">
+                <input type="text" id="edit-upi" placeholder="example@upi">
             </div>
             <button class="save-btn" onclick="saveProfile()">UPDATE DATA</button>
             <p onclick="closeModal()" style="margin-top:15px; font-size:12px; font-weight:900; cursor:pointer; color:var(--gray); text-align: center;">CANCEL</p>
@@ -103,7 +107,7 @@
     </div>
 
     <div class="profile-header">
-        <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+        <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
         <h2 class="user-name" id="disp-name">PLAYER</h2>
         <p class="user-id">ID: <span id="disp-uid">000000</span></p>
     </div>
@@ -111,12 +115,13 @@
     <div class="container">
         <div class="stats-grid">
             <div class="stat-card" onclick="location.href='wallet.html'">
-                <i class="fas fa-coins"></i>
+                <p>Available Balance</p>
                 <h4 id="disp-balance">₹0</h4>
             </div>
-            <div class="stat-card" onclick="location.href='wallet.html#hist-sec'">
-                <i class="fas fa-gamepad"></i>
-                <h4>MATCHES</h4>
+            <div class="stat-card" onclick="location.href='wallet.html#history'">
+                <i class="fas fa-history"></i>
+                <h4>HISTORY</h4>
+                <p>Match & Trans.</p>
             </div>
         </div>
 
@@ -126,7 +131,7 @@
                 <i class="fas fa-chevron-right" style="font-size:12px; color:#ddd;"></i>
             </div>
             <div class="menu-item" onclick="location.href='refer.html'">
-                <div class="menu-link"><i class="fas fa-share-nodes"></i><span>Refer & Earn</span></div>
+                <div class="menu-link"><i class="fas fa-gift"></i><span>Refer & Earn</span></div>
                 <i class="fas fa-chevron-right" style="font-size:12px; color:#ddd;"></i>
             </div>
             <div class="menu-item" onclick="window.open('https://wa.me/918968146117')">
@@ -135,12 +140,33 @@
             </div>
         </div>
 
+        <div class="social-card">
+            <h5>FOR MORE UPDATES</h5>
+            <div class="social-btns">
+                <a href="https://youtube.com/@YourChannel" target="_blank" class="s-btn yt-btn">
+                    <i class="fab fa-youtube"></i> YOUTUBE
+                </a>
+                <a href="https://t.me/YourChannel" target="_blank" class="s-btn tg-btn">
+                    <i class="fab fa-telegram-plane"></i> TELEGRAM
+                </a>
+            </div>
+        </div>
+
         <div class="policy-card">
-            <button class="policy-btn" onclick="togglePol('t-and-c')">TERMS & CONDITIONS <i class="fas fa-caret-down"></i></button>
-            <div id="t-and-c" class="policy-text">
-                1. Only players aged 18+ can participate in cash matches.<br>
-                2. One player can use only one account. Multi-accounting is banned.<br>
-                3. Results will be updated within 60 mins of match completion.
+            <button class="policy-btn" onclick="togglePol('refund-pol')">REFUND POLICY <i class="fas fa-caret-down"></i></button>
+            <div id="refund-pol" class="policy-text">
+                • Refunds are only issued if a match is cancelled by the Admin.<br>
+                • If you join a match but fail to enter the room, no refund will be provided.<br>
+                • Technical issues from the player's side (Internet, Device) are not eligible for refunds.
+            </div>
+        </div>
+
+        <div class="policy-card">
+            <button class="policy-btn" onclick="togglePol('fair-play')">FAIR PLAY RULES <i class="fas fa-caret-down"></i></button>
+            <div id="fair-play" class="policy-text">
+                • Use of Hacks, Scripts, or GFX tools will lead to a permanent ban without refund.<br>
+                • Teaming up with opponents in Solo matches is strictly prohibited.<br>
+                • Only Mobile players are allowed. Emulators/PC players will be kicked without refund.
             </div>
         </div>
 
@@ -152,13 +178,11 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // FIX: Hamesha userPhone hi use karna hai
         const userPhone = localStorage.getItem('userPhone');
 
         if(!userPhone) {
             window.location.href = 'index.html';
         } else {
-            // REAL-TIME DATA LOAD
             database.ref('users/' + userPhone).on('value', (snap) => {
                 const data = snap.val();
                 if(data) {
@@ -166,9 +190,7 @@
                     document.getElementById('disp-uid').innerText = data.uid || "N/A";
                     document.getElementById('disp-balance').innerText = "₹" + (data.balance || 0);
                     
-                    // Pre-fill modal
                     document.getElementById('edit-name').value = data.name || "";
-                    document.getElementById('edit-phone').value = userPhone;
                     document.getElementById('edit-uid').value = data.uid || "";
                     document.getElementById('edit-upi').value = data.upi || "";
                 }
@@ -190,7 +212,7 @@
             const newUPI = document.getElementById('edit-upi').value;
 
             if(!newName || !newUID) { 
-                showNotice("ERROR", "Name and Game UID are required!"); 
+                showNotice("ERROR", "Name and UID are required!"); 
                 return; 
             }
 
@@ -201,9 +223,9 @@
                     upi: newUPI
                 });
                 closeModal();
-                showNotice("SUCCESS", "Profile Updated Successfully!");
+                showNotice("SUCCESS", "Profile Updated!");
             } catch (e) {
-                showNotice("ERROR", "Update failed: " + e.message);
+                showNotice("ERROR", "Failed to update profile.");
             }
         }
 
