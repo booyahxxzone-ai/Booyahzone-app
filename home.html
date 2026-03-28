@@ -224,11 +224,11 @@
         <div class="action-grid">
             <a href="upcoming.html" class="action-card">
                 <i class="fas fa-calendar-check"></i>
-                <span>Upcoming</span>
+                <span>Matches</span>
             </a>
             <a href="ongoing.html" class="action-card">
                 <i class="fas fa-bolt"></i>
-                <span>Live Match</span>
+                <span>Live Now</span>
             </a>
             <a href="finish.html" class="action-card">
                 <i class="fas fa-award"></i>
@@ -246,7 +246,7 @@
                 <div class="mode-img"><i class="fas fa-gun"></i></div>
                 <div class="mode-info">
                     <h3>SOLO 1V1</h3>
-                    <span class="tag">Duel Master</span>
+                    <span class="tag">Duel Master Mode</span>
                 </div>
             </div>
         </div>
@@ -256,7 +256,7 @@
                 <div class="mode-img"><i class="fas fa-user-group"></i></div>
                 <div class="mode-info">
                     <h3>DUO 2V2</h3>
-                    <span class="tag">Duo Survival</span>
+                    <span class="tag">Partner Survival</span>
                 </div>
             </div>
         </div>
@@ -266,11 +266,10 @@
                 <div class="mode-img"><i class="fas fa-users-rays"></i></div>
                 <div class="mode-info">
                     <h3>SQUAD 4V4</h3>
-                    <span class="tag">Clash Squad</span>
+                    <span class="tag">Clash Squad Battle</span>
                 </div>
             </div>
         </div>
-
     </div>
 
     <nav class="bottom-nav">
@@ -280,7 +279,7 @@
         </a>
         <a href="notification.html" class="nav-link">
             <i class="fas fa-bell"></i>
-            <span>Notification</span>
+            <span>Alerts</span>
         </a>
         <a href="profile.html" class="fab-profile">
             <i class="fas fa-user-shield"></i>
@@ -301,7 +300,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // FIX: Hamesha userPhone use karna hai sync ke liye
         const userPhone = localStorage.getItem('userPhone');
 
         // Page Loader Logic
@@ -313,7 +311,7 @@
             }, 800);
         });
 
-        // Login Check & Real-time Sync
+        // Security Check & Real-time Sync
         if (!userPhone) {
             window.location.href = "index.html";
         } else {
@@ -321,20 +319,20 @@
             database.ref('users/' + userPhone).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Name aur UID update
+                    // Update Name and UID
                     document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
                     document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
                     
-                    // Balance Formatting (₹0.00 style)
+                    // Currency Formatting
                     const bal = parseFloat(data.balance || 0);
                     document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
                 } else {
-                    // Agar database se delete ho gaya ho user
+                    // Force Logout if user data is missing
                     localStorage.clear();
                     window.location.href = "index.html";
                 }
             }, (error) => {
-                console.error("Firebase Error:", error);
+                console.error("Firebase Sync Error:", error);
             });
         }
     </script>
