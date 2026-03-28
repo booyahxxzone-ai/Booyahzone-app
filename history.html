@@ -5,140 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MATCH HISTORY | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --bg: #ffffff; --card-bg: #fff; --text: #1a1a1a; --gray: #888; --win: #27ae60; }
+        :root { 
+            --primary: #ff6a00; 
+            --primary-light: #fff5e6;
+            --bg: #ffffff; 
+            --card-bg: #ffffff; 
+            --text-main: #1e293b; 
+            --text-muted: #64748b; 
+            --win-green: #22c55e; 
+        }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body { 
-            background: radial-gradient(circle at top right, #fff5e6 0%, #ffffff 60%);
-            color: var(--text); min-height: 100vh; padding-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #fff9f5 100%);
+            color: var(--text-main); min-height: 100vh; padding-bottom: 50px;
         }
 
-        /* Top Header with Back Arrow */
+        /* Modern Orange Header */
         .header {
-            background: #fff; padding: 18px 20px; display: flex; align-items: center;
-            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.08); border-bottom: 2px solid #fdf0d5;
+            background: #fff; padding: 20px; display: flex; align-items: center;
+            box-shadow: 0 4px 20px rgba(255, 106, 0, 0.1); border-bottom: 2px solid var(--primary-light);
             position: sticky; top: 0; z-index: 100;
         }
         .header .back-btn { 
-            font-size: 20px; color: var(--text); cursor: pointer; padding: 5px 10px 5px 0; 
+            font-size: 22px; color: var(--primary); cursor: pointer; padding: 5px; 
             transition: 0.2s;
         }
-        .header .back-btn:active { transform: scale(0.9); color: var(--primary); }
-        .header h2 { font-family: 'Orbitron'; font-size: 15px; letter-spacing: 1px; color: var(--text); flex: 1; text-align: center; margin-right: 30px; }
-        .header h2 i { color: var(--primary); margin-right: 5px; }
+        .header h2 { 
+            font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; color: var(--text-main); 
+            flex: 1; text-align: center; margin-right: 30px; font-weight: 900;
+        }
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* Match Card Style */
+        /* Match Card Style - Orange/White Theme */
         .history-card {
-            background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1.5px solid #f0f0f0;
-            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px;
-            transition: 0.2s;
+            background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(255, 106, 0, 0.06); border: 1px solid #ffe8d6;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 15px;
+            transition: 0.3s;
         }
-        .history-card:active { transform: scale(0.98); }
+        .history-card:active { transform: scale(0.97); }
 
-        .match-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
-        .match-type { font-family: 'Orbitron'; font-size: 11px; color: var(--primary); background: #fff5e6; padding: 4px 10px; border-radius: 8px; font-weight: 900; }
-        .match-map { font-size: 10px; font-weight: 800; color: var(--gray); text-transform: uppercase; }
+        .match-top { display: flex; justify-content: space-between; align-items: center; }
+        .match-mode { font-family: 'Orbitron'; font-size: 10px; color: var(--primary); background: var(--primary-light); padding: 5px 12px; border-radius: 50px; font-weight: 900; border: 1px solid #ffd8b8; }
+        .match-id { font-size: 10px; font-weight: 700; color: var(--text-muted); }
 
-        .match-main { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
-        .match-title { font-family: 'Orbitron'; font-size: 14px; color: #000; }
+        .match-main { display: flex; justify-content: space-between; align-items: flex-start; }
+        .match-title h4 { font-family: 'Orbitron'; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
+        .match-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+
         .match-price { text-align: right; }
-        .match-price h3 { font-family: 'Orbitron'; font-size: 17px; color: var(--text); }
-        .match-price p { font-size: 9px; font-weight: 900; color: var(--gray); }
+        .match-price .amt { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); font-weight: 900; display: block; }
+        .match-price span { font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
 
-        .match-bottom { display: flex; justify-content: space-between; align-items: center; background: #fafafa; padding: 10px 15px; margin: 0 -18px -18px; }
-        .match-time { font-size: 10px; font-weight: 700; color: #666; }
-        .match-winner { font-size: 10px; font-weight: 800; color: var(--win); display: flex; align-items: center; gap: 5px; }
+        /* Winner Strip */
+        .match-bottom { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #fffbf7; padding: 12px 20px; margin: 5px -20px -20px;
+            border-top: 1px solid #fff0e0;
+        }
+        .winner-info { font-size: 11px; font-weight: 700; color: var(--win-green); display: flex; align-items: center; gap: 6px; }
+        .status-tag { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
 
+        /* Booyah Badge Styling */
         .booyah-badge {
-            position: absolute; top: 10px; right: -30px; background: var(--win); color: #fff;
-            font-family: 'Orbitron'; font-size: 9px; font-weight: 900; padding: 4px 35px;
-            transform: rotate(40deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute; top: 12px; right: -35px; background: linear-gradient(45deg, #ff4b2b, #ff8c00);
+            color: #fff; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; 
+            padding: 5px 40px; transform: rotate(45deg); box-shadow: 0 4px 10px rgba(255, 75, 43, 0.3);
+            border: 1px solid #ffffff55;
         }
 
         /* Empty State */
-        .empty-history { text-align: center; padding: 60px 20px; color: #ccc; }
-        .empty-history i { font-size: 60px; margin-bottom: 15px; color: #eee; }
+        .loading-state, .empty-history { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+        .empty-history i { font-size: 60px; color: #ffd8b8; margin-bottom: 20px; }
+        .empty-history p { font-family: 'Orbitron'; font-size: 13px; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
-        <h2><i class="fas fa-history"></i> BATTLE RECORDS</h2>
+        <i class="fas fa-chevron-left back-btn" onclick="history.back()"></i>
+        <h2><i class="fas fa-trophy"></i> BATTLE RECORDS</h2>
     </div>
 
     <div class="container" id="history-list">
-        <div class="empty-history">
-            <i class="fas fa-circle-notch fa-spin"></i>
-            <p style="font-family:'Orbitron'; font-size:12px; margin-top:10px;">FETCHING BATTLES...</p>
+        <div class="loading-state">
+            <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary);"></i>
+            <p style="font-family:'Orbitron'; font-size:12px; margin-top:15px; letter-spacing: 2px;">SYNCING RECORDS...</p>
         </div>
     </div>
 
     <script>
+        // Firebase Setup
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const userUID = localStorage.getItem('gameID');
+        // Getting User Phone from LocalStorage
+        const userPhone = localStorage.getItem('userPhone');
 
-        if(userUID) {
-            database.ref('user_history/' + userUID).on('value', (snapshot) => {
-                const list = document.getElementById('history-list');
+        function loadHistory() {
+            const list = document.getElementById('history-list');
+
+            if(!userPhone) {
+                list.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-user-lock"></i>
+                        <p>PLEASE LOGIN TO VIEW HISTORY</p>
+                    </div>`;
+                return;
+            }
+
+            // Real-time listener for user history
+            database.ref('user_history/' + userPhone).on('value', (snapshot) => {
                 list.innerHTML = "";
 
                 if(snapshot.exists()) {
+                    let historyHTML = "";
                     snapshot.forEach((child) => {
                         const data = child.val();
-                        const isWinner = data.result === "WINNER";
+                        // Check if this user was the winner
+                        const isWinner = data.result === "WINNER" || data.status === "WINNER";
                         
-                        list.innerHTML += `
+                        historyHTML = `
                             <div class="history-card">
                                 ${isWinner ? '<div class="booyah-badge">BOOYAH</div>' : ''}
+                                
                                 <div class="match-top">
-                                    <span class="match-type">${data.mode || '1vs1'} BATTLE</span>
-                                    <span class="match-map"><i class="fas fa-map"></i> ${data.map || 'BERMUDA'}</span>
+                                    <span class="match-mode">${data.mode || 'SOLO'} BATTLE</span>
+                                    <span class="match-id">ID: #${child.key.substr(-6).toUpperCase()}</span>
                                 </div>
+
                                 <div class="match-main">
                                     <div class="match-title">
-                                        <p style="font-size:10px; color:var(--gray); font-weight:800;">ID: #${child.key.substr(-5).toUpperCase()}</p>
-                                        <h4 style="margin-top:2px;">${data.matchTitle || 'BATTLE ROYALE'}</h4>
+                                        <h4>${data.title || 'Classic Match'}</h4>
+                                        <div class="match-time">
+                                            <i class="far fa-clock"></i> ${data.date || 'Today'} | ${data.time || ''}
+                                        </div>
                                     </div>
                                     <div class="match-price">
-                                        <h3>₹${data.entry || 0}</h3>
-                                        <p>ENTRY FEE</p>
+                                        <span class="amt">₹${data.entry || '0'}</span>
+                                        <span>ENTRY FEE</span>
                                     </div>
                                 </div>
+
                                 <div class="match-bottom">
-                                    <div class="match-time">
-                                        <i class="far fa-calendar-alt"></i> ${data.date || 'Today'} | ${data.time || '00:00'}
-                                    </div>
-                                    <div class="match-winner">
+                                    <div class="winner-info">
                                         <i class="fas fa-crown"></i> 
-                                        <span>WINNER: ${data.winnerName || 'WAITING'}</span>
+                                        <span>WINNER: ${data.winnerName || 'PROCESSING...'}</span>
+                                    </div>
+                                    <div class="status-tag">
+                                        ${data.status === 'finished' ? 'COMPLETED' : 'JOINED'}
                                     </div>
                                 </div>
-                            </div>`;
+                            </div>` + historyHTML; // Newest on top
                     });
+                    list.innerHTML = historyHTML;
                 } else {
                     list.innerHTML = `
                         <div class="empty-history">
                             <i class="fas fa-ghost"></i>
-                            <p style="font-family:'Orbitron'; font-size:12px;">NO BATTLES FOUND!</p>
+                            <p>NO BATTLES FOUND!</p>
+                            <small style="display:block; margin-top:10px;">Join a match to see your records here.</small>
                         </div>`;
                 }
             });
         }
+
+        loadHistory();
     </script>
 </body>
 </html>
