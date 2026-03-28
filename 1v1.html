@@ -66,12 +66,15 @@
         .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
 
-        .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
+        .bill-total { border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px; color: var(--text-main); font-weight: 800; font-size: 15px; }
+
         .input-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px; }
         .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: #f8fafc; font-weight: 600; }
 
-        .rules-list { font-size: 12px; color: var(--text-muted); padding: 10px 0; }
-        .rules-list li { margin-bottom: 8px; list-style: none; display: flex; gap: 10px; line-height: 1.4; }
+        .rules-list { font-size: 12px; color: var(--text-muted); padding: 5px 0; }
+        .rules-list li { margin-bottom: 6px; list-style: none; display: flex; gap: 10px; line-height: 1.4; }
         .rules-list i { color: var(--danger); font-size: 10px; margin-top: 4px; }
 
         .copy-box { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; border: 1px solid #e2e8f0; }
@@ -107,6 +110,13 @@
         <div class="o-body">
             
             <div id="joinForm">
+                <div class="input-card" style="border-left: 4px solid var(--primary);">
+                    <h2 style="font-size:12px; margin-bottom:12px; color:var(--text-main); font-weight:800;">ORDER SUMMARY</h2>
+                    <div class="bill-row"><span>Entry Fee</span><span id="billEntry">₹0</span></div>
+                    <div class="bill-row"><span>Platform Fee</span><span>₹0</span></div>
+                    <div class="bill-row bill-total"><span>Total Payable</span><span id="billTotal">₹0</span></div>
+                </div>
+
                 <div class="input-card">
                     <div class="input-group">
                         <label>YOUR GAME UID</label>
@@ -115,20 +125,19 @@
                 </div>
 
                 <div class="input-card">
-                    <h2 style="font-size:12px; color:var(--danger); font-weight:800;">⚠️ MANDATORY RULES</h2>
+                    <h2 style="font-size:11px; color:var(--danger); font-weight:800; margin-bottom:8px;">⚠️ PLAYER RULES</h2>
                     <ul class="rules-list">
-                        <li><i class="fas fa-exclamation-triangle"></i> Fair Play Only: Use of hacks or glitches = Instant Ban.</li>
-                        <li><i class="fas fa-mobile-alt"></i> Mobile Only: No Emulator/PC players.</li>
-                        <li><i class="fas fa-undo"></i> Cancellation: Refund only if match canceled by Admin.</li>
+                        <li><i class="fas fa-check-circle"></i> Fair Play Only (No Hacks).</li>
+                        <li><i class="fas fa-check-circle"></i> Mobile Only.</li>
                     </ul>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:0 10px;">
                     <input type="checkbox" id="ruleCheck" style="width:20px; height:20px; accent-color:var(--primary);">
-                    <label for="ruleCheck" style="font-size:12px; font-weight:700; color:var(--text-main);">I agree to the Fair Play policy.</label>
+                    <label for="ruleCheck" style="font-size:12px; font-weight:700; color:var(--text-main);">Confirm all details & rules.</label>
                 </div>
 
-                <button class="action-btn" id="payBtn" onclick="processSoloJoin()">PAY & JOIN BATTLE</button>
+                <button class="action-btn" id="payBtn" onclick="processSoloJoin()">PAY ₹0 & JOIN</button>
             </div>
 
             <div id="matchDetails" style="display:none;">
@@ -136,7 +145,6 @@
                     <small style="font-weight:800; color:var(--text-muted); letter-spacing:1px;">REGISTERED UID</small>
                     <h2 id="displayUID" style="font-family:'Orbitron'; margin: 10px 0; color:var(--primary); font-size:18px;">---</h2>
                 </div>
-
                 <div class="input-card">
                     <h2 style="font-size:12px; margin-bottom:15px; color:var(--text-main);">ROOM ACCESS</h2>
                     <div class="copy-box" onclick="copyText('roomID', 'Room ID')">
@@ -240,6 +248,12 @@
         function openMatchView(id, fee, title) {
             if(!userPhone) return triggerToast("Please login first!");
             activeMID = id; activeEntryFee = fee; activeTitle = title;
+            
+            // Set Bill Details
+            document.getElementById('billEntry').innerText = "₹" + fee;
+            document.getElementById('billTotal').innerText = "₹" + fee;
+            document.getElementById('payBtn').innerText = `PAY ₹${fee} & JOIN BATTLE`;
+            
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
             document.getElementById('ruleCheck').checked = false;
@@ -267,7 +281,7 @@
             const agree = document.getElementById('ruleCheck').checked;
 
             if(uid.length < 5) return triggerToast("Enter a valid Game UID!");
-            if(!agree) return triggerToast("Agree to Fair Play rules!");
+            if(!agree) return triggerToast("Please agree to rules!");
 
             const btn = document.getElementById('payBtn');
             btn.disabled = true; btn.innerText = "Processing...";
@@ -278,8 +292,8 @@
                 const bal = parseFloat(uSnap.val().balance || 0);
 
                 if(bal < activeEntryFee) {
-                    triggerToast("Low Balance!");
-                    btn.disabled = false; btn.innerText = "PAY & JOIN BATTLE";
+                    triggerToast("Low Balance! Please recharge.");
+                    btn.disabled = false; btn.innerText = `PAY ₹${activeEntryFee} & JOIN`;
                     return;
                 }
 
@@ -287,26 +301,27 @@
 
                 await db.ref(`user_history/${userPhone}`).push({
                     matchTitle: activeTitle, entry: activeEntryFee, mode: "1V1 SOLO",
-                    date: new Date().toLocaleDateString(), status: "joined", matchId: activeMID
+                    date: new Date().toLocaleDateString(), status: "joined", matchId: activeMID,
+                    amountDeducted: activeEntryFee
                 });
 
                 await db.ref(`matches_1v1/${activeMID}/players`).push({
                     phone: userPhone, uid: uid, timestamp: Date.now()
                 });
 
-                let teleMsg = `⚔️ <b>1V1 SOLO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 UID: ${uid}\n💰 Fee: ₹${activeEntryFee}`;
+                let teleMsg = `⚔️ <b>1V1 SOLO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 UID: ${uid}\n💰 Fee Deducted: ₹${activeEntryFee}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
 
-                triggerToast("Joined Successfully!");
+                triggerToast("Battle Joined Successfully!");
             } catch(e) {
-                triggerToast("System Error!");
+                triggerToast("Server Error!");
                 btn.disabled = false;
             }
         }
 
         function copyText(id, label) {
             const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
+            if(val === "WAITING") return triggerToast("Waiting for Room Info...");
             navigator.clipboard.writeText(val);
             triggerToast(label + " Copied!");
         }
