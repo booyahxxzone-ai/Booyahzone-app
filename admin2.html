@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BZ | MASTER CONTROL PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,49 +17,48 @@
         .header { padding: 20px; background: var(--card); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; color: var(--primary); }
         .container { padding: 15px; max-width: 800px; margin: auto; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* User Row Styling */
         .user-row { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
         .u-info b { display: block; font-size: 14px; color: var(--primary); }
         .u-info span { font-size: 11px; color: #94a3b8; }
         .u-bal { font-weight: 800; color: var(--accent); font-size: 15px; }
+
         .action-card { background: #1e2536; border-radius: 18px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 600; }
-        .ac-body { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.05); }
-        .ac-body b { color: var(--primary); font-weight: 600; }
-        .ac-footer { display: flex; gap: 10px; }
+        .ac-body { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; border: 1px solid rgba(255,255,255,0.05); }
+        
         input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px; font-size: 13px; }
         .btn { border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s; }
         .btn-pay { background: var(--green); color: #000; flex: 1; }
         .btn-rej { background: var(--red); color: #fff; flex: 1; }
-        .btn-edit { background: var(--blue); color: #fff; padding: 5px 10px; font-size: 10px; margin-top: 5px; border-radius: 5px; }
+        .btn-edit { background: var(--blue); color: #fff; padding: 5px 10px; font-size: 10px; border-radius: 5px; margin-top: 5px;}
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; }
-        .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; cursor: pointer;}
         .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-item.active { color: var(--primary); }
-        .search-box { display: flex; gap: 8px; margin-bottom: 20px; }
+        .tab-content { display: none; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>BZ MASTER <span style="color:white">PRO</span></h1>
-        <button onclick="location.href='admin.html'" style="background:var(--primary); padding:6px 15px; border:none; border-radius:8px; font-weight:bold; font-size:12px;">GAMES ➔</button>
+        <div id="stats" style="font-size: 10px; color: var(--primary);">Loading System...</div>
     </div>
 
     <div class="container">
         <div id="tab-users" class="tab-content" style="display:block;">
-            <div class="search-box">
-                <input type="text" id="userSearch" placeholder="Search name or phone..." onkeyup="searchUsers()">
-            </div>
+            <input type="text" id="userSearch" placeholder="Search by Phone or Name..." onkeyup="searchUsers()">
             <div id="allUsersList"></div>
         </div>
 
         <div id="tab-payments" class="tab-content">
-            <h2 style="font-size:13px; color:var(--primary); margin-bottom:12px; font-family:'Orbitron';">PENDING DEPOSITS</h2>
+            <h2 style="font-size:12px; color:var(--primary); margin-bottom:15px; font-family:'Orbitron';">📥 DEPOSIT REQUESTS</h2>
             <div id="depositList"></div>
             
-            <h2 style="font-size:13px; color:var(--red); margin:25px 0 12px; font-family:'Orbitron';">PENDING WITHDRAWALS</h2>
+            <h2 style="font-size:12px; color:var(--red); margin:30px 0 15px; font-family:'Orbitron';">📤 WITHDRAWAL REQUESTS</h2>
             <div id="withdrawList"></div>
         </div>
     </div>
@@ -67,18 +66,16 @@
     <div id="editModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:5000; padding:20px;">
         <div style="background:var(--card); padding:25px; border-radius:20px; width:100%; max-width:350px; border:1px solid var(--primary);">
             <h3 id="mUserPhone" style="color:var(--primary); font-size:14px; margin-bottom:15px;">Phone: ---</h3>
-            <label style="font-size:11px; color:#94a3b8;">User Name</label>
-            <input type="text" id="mUserName">
-            <label style="font-size:11px; color:#94a3b8;">Wallet Balance (₹)</label>
-            <input type="number" id="mUserBal">
+            <input type="text" id="mUserName" placeholder="Name">
+            <input type="number" id="mUserBal" placeholder="Balance">
             <button class="btn btn-pay" style="width:100%; margin-top:10px;" onclick="saveUserEdit()">SAVE CHANGES</button>
-            <button class="btn" style="width:100%; margin-top:8px; background:grey; color:white;" onclick="closeEdit()">CANCEL</button>
+            <button class="btn" style="width:100%; margin-top:8px; background:grey; color:white;" onclick="document.getElementById('editModal').style.display='none'">CANCEL</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showTab('tab-users', this)"><i class="fas fa-users"></i>USERS</a>
-        <a href="#" class="nav-item" onclick="showTab('tab-payments', this)"><i class="fas fa-wallet"></i>PAYMENTS</a>
+        <div class="nav-item active" onclick="showTab('tab-users', this)"><i class="fas fa-users"></i>USERS</div>
+        <div class="nav-item" onclick="showTab('tab-payments', this)"><i class="fas fa-wallet"></i>PAYMENTS</div>
     </nav>
 
     <script>
@@ -86,16 +83,25 @@
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
 
-        // TELEGRAM CONFIG
         const botToken = "8491369948:AAH_EBchjJgwlNrWA6noqj8zNXsItuk20-o";
         const chatId = "7852788120";
 
         let allUsersData = {};
-        let notifiedRequests = JSON.parse(localStorage.getItem('notifiedRequests') || "[]");
+
+        // Notification Sender Function
+        async function pushNotification(phone, title, message, type) {
+            const newNotif = {
+                title: title,
+                message: message,
+                time: new Date().toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }),
+                type: type // 'money', 'reject', 'match'
+            };
+            await db.ref('user_notifications/' + phone).push(newNotif);
+        }
 
         async function sendTelegram(msg) {
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`;
-            await fetch(url);
+            fetch(url);
         }
 
         function showTab(id, el) {
@@ -105,9 +111,11 @@
             el.classList.add('active');
         }
 
+        // --- USER MANAGEMENT ---
         db.ref('users').on('value', snap => {
             allUsersData = snap.val() || {};
             renderUsers(allUsersData);
+            document.getElementById('stats').innerText = `TOTAL USERS: ${Object.keys(allUsersData).length}`;
         });
 
         function renderUsers(users) {
@@ -115,33 +123,41 @@
             list.innerHTML = "";
             Object.keys(users).forEach(phone => {
                 const u = users[phone];
-                const banned = u.isBanned ? "BANNED" : "ACTIVE";
-                const banColor = u.isBanned ? "var(--red)" : "var(--green)";
+                const isBanned = u.isBanned || false;
                 list.innerHTML += `
-                    <div class="user-row">
-                        <div class="u-info"><b>${u.name || 'Unknown'}</b><span>${phone} | <span style="color:${banColor}">${banned}</span></span></div>
-                        <div style="text-align:right;">
-                            <div class="u-bal">₹${u.balance || 0}</div>
+                    <div class="user-row" style="${isBanned ? 'opacity:0.6; border-color:var(--red);' : ''}">
+                        <div class="u-info">
+                            <b>${u.name || 'User'} ${isBanned ? '🚫' : ''}</b>
+                            <span>${phone} | Bal: ₹${u.balance || 0}</span>
+                        </div>
+                        <div style="display:flex; gap:5px;">
                             <button class="btn-edit" onclick="openEdit('${phone}', '${u.name}', ${u.balance})">EDIT</button>
-                            <button class="btn-edit" style="background:${u.isBanned ? 'var(--green)':'var(--red)'}" onclick="toggleBan('${phone}', ${u.isBanned})">${u.isBanned ? 'UNBAN':'BAN'}</button>
+                            <button class="btn-edit" style="background:${isBanned ? 'var(--green)':'var(--red)'}" 
+                                onclick="handleBan('${phone}', ${isBanned})">${isBanned ? 'UNBAN':'BAN'}</button>
                         </div>
                     </div>`;
             });
         }
 
-        function searchUsers() {
-            const query = document.getElementById('userSearch').value.toLowerCase();
-            const filtered = {};
-            Object.keys(allUsersData).forEach(phone => {
-                if(phone.includes(query) || (allUsersData[phone].name && allUsersData[phone].name.toLowerCase().includes(query))) { filtered[phone] = allUsersData[phone]; }
-            });
-            renderUsers(filtered);
+        async function handleBan(phone, currentStatus) {
+            if(!currentStatus) {
+                if(confirm("Confirm Ban? This will block user and clear sensitive data history.")){
+                    await db.ref('users/'+phone).update({ isBanned: true });
+                    // Clear history but keep basic info for blocking
+                    await db.ref('deposits').orderByChild('userPhone').equalTo(phone).ref.remove(); 
+                    await db.ref('withdrawals').orderByChild('userPhone').equalTo(phone).ref.remove();
+                    alert("User Banned & Data Wiped");
+                }
+            } else {
+                await db.ref('users/'+phone).update({ isBanned: false });
+                alert("User Unbanned");
+            }
         }
 
         function openEdit(phone, name, bal) {
             document.getElementById('mUserPhone').innerText = "Phone: " + phone;
-            document.getElementById('mUserName').value = name || "";
-            document.getElementById('mUserBal').value = bal || 0;
+            document.getElementById('mUserName').value = name;
+            document.getElementById('mUserBal').value = bal;
             document.getElementById('editModal').style.display = 'flex';
         }
 
@@ -150,101 +166,87 @@
             const name = document.getElementById('mUserName').value;
             const bal = Number(document.getElementById('mUserBal').value);
             await db.ref('users/'+phone).update({ name: name, balance: bal });
-            closeEdit();
+            document.getElementById('editModal').style.display='none';
         }
 
-        function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
-        async function toggleBan(phone, status) { await db.ref('users/'+phone).update({ isBanned: !status }); }
-
-        // --- DEPOSITS WITH TELEGRAM NOTIFICATION ---
+        // --- DEPOSITS ---
         db.ref('deposits').on('value', snap => {
             const list = document.getElementById('depositList'); list.innerHTML = "";
             snap.forEach(child => {
                 const d = child.val();
                 if(d.status === 'pending') {
-                    const phone = d.userPhone || d.phone || "Unknown";
-                    const uName = d.userName || "Unknown";
-                    
-                    // Send notification if not sent before
-                    if(!notifiedRequests.includes(child.key)) {
-                        const msg = `💰 <b>NEW DEPOSIT</b>\n\n👤 Name: ${uName}\n📞 Phone: ${phone}\n💵 Amount: ₹${d.amount}\n📝 UTR: ${d.utr}`;
-                        sendTelegram(msg);
-                        notifiedRequests.push(child.key);
-                        localStorage.setItem('notifiedRequests', JSON.stringify(notifiedRequests));
-                    }
-
                     list.innerHTML += `
                     <div class="action-card">
                         <div class="ac-header"><span>DEPOSIT REQUEST</span><span style="color:var(--accent)">₹${d.amount}</span></div>
-                        <div class="ac-body"><b>Name:</b> ${uName}<br><b>Phone:</b> ${phone}<br><b>UTR:</b> ${d.utr || 'N/A'}</div>
+                        <div class="ac-body"><b>Phone:</b> ${d.userPhone}<br><b>UTR:</b> ${d.utr}</div>
                         <div class="ac-footer">
-                            <button class="btn btn-pay" onclick="handleDeposit('${child.key}','${phone}',${d.amount},'approved')">APPROVE</button>
-                            <button class="btn btn-rej" onclick="handleDeposit('${child.key}','${phone}',0,'rejected')">REJECT</button>
+                            <button class="btn btn-pay" onclick="approveDeposit('${child.key}','${d.userPhone}',${d.amount})">APPROVE</button>
+                            <button class="btn btn-rej" onclick="rejectDeposit('${child.key}','${d.userPhone}')">REJECT</button>
                         </div>
                     </div>`;
                 }
             });
         });
 
-        async function handleDeposit(id, phone, amt, status) {
-            if(status === 'approved' && phone !== "Unknown") {
-                const uRef = db.ref('users/'+phone);
-                const uSnap = await uRef.once('value');
-                if(uSnap.exists()) {
-                    let newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
-                    await uRef.update({ balance: newBal });
-                    sendTelegram(`✅ <b>DEPOSIT APPROVED</b>\n👤 User: ${phone}\n💰 Amount: ₹${amt}`);
-                }
+        async function approveDeposit(id, phone, amt) {
+            const uSnap = await db.ref('users/'+phone).once('value');
+            if(uSnap.exists()){
+                let newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
+                await db.ref('users/'+phone).update({ balance: newBal });
+                await db.ref('deposits/'+id).update({ status: 'approved' });
+                await pushNotification(phone, "Deposit Approved! ✅", `₹${amt} added to your wallet. Enjoy gaming!`, "money");
+                sendTelegram(`✅ DEPOSIT APPROVED: ₹${amt} to ${phone}`);
             }
-            await db.ref('deposits/'+id).update({ status: status });
-            alert("Deposit " + status);
         }
 
-        // --- WITHDRAWALS WITH TELEGRAM NOTIFICATION ---
+        async function rejectDeposit(id, phone) {
+            await db.ref('deposits/'+id).update({ status: 'rejected' });
+            await pushNotification(phone, "Deposit Rejected! ❌", "Your deposit request was rejected. Check UTR or contact support.", "reject");
+            alert("Deposit Rejected");
+        }
+
+        // --- WITHDRAWALS ---
         db.ref('withdrawals').on('value', snap => {
             const list = document.getElementById('withdrawList'); list.innerHTML = "";
             snap.forEach(child => {
                 const w = child.val();
                 if(w.status === 'pending') {
-                    const phone = w.userPhone || w.phone || "Unknown";
-                    const uName = w.userName || "Unknown";
-
-                    if(!notifiedRequests.includes(child.key)) {
-                        const msg = `💸 <b>NEW WITHDRAWAL</b>\n\n👤 Name: ${uName}\n📞 Phone: ${phone}\n💵 Amount: ₹${w.amount}\n💳 UPI: ${w.upiID}`;
-                        sendTelegram(msg);
-                        notifiedRequests.push(child.key);
-                        localStorage.setItem('notifiedRequests', JSON.stringify(notifiedRequests));
-                    }
-
                     list.innerHTML += `
                     <div class="action-card" style="border-left-color:var(--red)">
                         <div class="ac-header"><span>WITHDRAW REQUEST</span><span style="color:var(--red)">₹${w.amount}</span></div>
-                        <div class="ac-body"><b>Name:</b> ${uName}<br><b>Phone:</b> ${phone}<br><b>UPI ID:</b> ${w.upiID || 'N/A'}</div>
+                        <div class="ac-body"><b>Phone:</b> ${w.userPhone}<br><b>UPI:</b> ${w.upiID}</div>
                         <div class="ac-footer">
-                            <button class="btn btn-pay" style="background:var(--blue); color:white" onclick="handleWithdraw('${child.key}','approved')">MARK PAID</button>
-                            <button class="btn btn-rej" onclick="handleWithdraw('${child.key}','rejected')">REFUND</button>
+                            <button class="btn btn-pay" style="background:var(--blue); color:white" onclick="approveWithdraw('${child.key}','${w.userPhone}',${w.amount})">MARK PAID</button>
+                            <button class="btn btn-rej" onclick="rejectWithdraw('${child.key}','${w.userPhone}',${w.amount})">REJECT/REFUND</button>
                         </div>
                     </div>`;
                 }
             });
         });
 
-        async function handleWithdraw(id, status) {
-            const wSnap = await db.ref('withdrawals/'+id).once('value');
-            const w = wSnap.val();
-            const phone = w.userPhone || w.phone || "Unknown";
+        async function approveWithdraw(id, phone, amt) {
+            await db.ref('withdrawals/'+id).update({ status: 'approved' });
+            await pushNotification(phone, "Withdrawal Success! 💸", `₹${amt} has been sent to your UPI ID.`, "money");
+            sendTelegram(`💸 WITHDRAWAL PAID: ₹${amt} to ${phone}`);
+        }
 
-            if(status === 'rejected' && phone !== "Unknown") {
-                const uRef = db.ref('users/'+phone);
-                const uSnap = await uRef.once('value');
-                if(uSnap.exists()) {
-                    let refBal = (Number(uSnap.val().balance) || 0) + Number(w.amount);
-                    await uRef.update({ balance: refBal });
-                }
+        async function rejectWithdraw(id, phone, amt) {
+            const uSnap = await db.ref('users/'+phone).once('value');
+            if(uSnap.exists()){
+                let refBal = (Number(uSnap.val().balance) || 0) + Number(amt);
+                await db.ref('users/'+phone).update({ balance: refBal });
+                await db.ref('withdrawals/'+id).update({ status: 'rejected' });
+                await pushNotification(phone, "Withdrawal Refunded! 🔄", `Request rejected. ₹${amt} refunded to wallet.`, "reject");
             }
-            await db.ref('withdrawals/'+id).update({ status: status });
-            sendTelegram(`📢 <b>WITHDRAWAL ${status.toUpperCase()}</b>\n👤 User: ${phone}\n💰 Amount: ₹${w.amount}`);
-            alert("Withdrawal " + status);
+        }
+
+        function searchUsers() {
+            let q = document.getElementById('userSearch').value.toLowerCase();
+            let filtered = {};
+            Object.keys(allUsersData).forEach(p => {
+                if(p.includes(q) || (allUsersData[p].name && allUsersData[p].name.toLowerCase().includes(q))) filtered[p] = allUsersData[p];
+            });
+            renderUsers(filtered);
         }
     </script>
 </body>
