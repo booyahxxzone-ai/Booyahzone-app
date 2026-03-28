@@ -15,23 +15,23 @@
         :root { 
             --primary: #ff6a00; 
             --primary-grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
-            --bg: #f8fafc; 
+            --win-grad: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            --bg: linear-gradient(180deg, #fff4ec 0%, #ffffff 100%); 
             --text-main: #0f172a; 
             --text-muted: #64748b; 
-            --card-shadow: 0 10px 25px rgba(255, 106, 0, 0.08);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body { 
             background: var(--bg);
+            background-attachment: fixed;
             color: var(--text-main); min-height: 100vh; padding-bottom: 50px;
         }
 
-        /* Premium Header */
         .header {
             background: #fff; height: 70px; display: flex; align-items: center; padding: 0 20px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 15px rgba(255, 106, 0, 0.1); position: sticky; top: 0; z-index: 100;
         }
         .header .back-btn { 
             width: 40px; height: 40px; border-radius: 12px; background: #fff1e6;
@@ -45,56 +45,65 @@
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* Modernized History Card */
+        /* Professional History Card */
         .history-card {
-            background: #fff; border-radius: 20px; padding: 18px; margin-bottom: 16px;
-            box-shadow: var(--card-shadow); border: 1px solid rgba(255, 106, 0, 0.05);
-            position: relative; border-left: 5px solid var(--primary);
+            background: #fff; border-radius: 24px; padding: 20px; margin-bottom: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04); border: 1px solid rgba(255, 106, 0, 0.1);
+            position: relative; transition: 0.3s;
             animation: fadeIn 0.5s ease forwards; opacity: 0;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Winner Card Special Styling */
+        .history-card.winner-card {
+            border: 2px solid #ffd700;
+            background: linear-gradient(to bottom, #ffffff, #fffdf0);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
+        }
 
-        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .match-badge { font-family: 'Orbitron'; font-size: 9px; padding: 4px 10px; background: #fff1e6; color: var(--primary); border-radius: 6px; font-weight: 900; }
-        .status-pill { font-size: 9px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
-        .status-joined { background: #e0f2fe; color: #0284c7; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .match-badge { font-family: 'Orbitron'; font-size: 10px; padding: 5px 12px; background: #f1f5f9; color: #475569; border-radius: 8px; font-weight: 700; }
+        
+        .winner-card .match-badge { background: #fff1e6; color: #b45309; }
+
+        .status-pill { font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-joined { background: #fff1e6; color: var(--primary); }
         .status-completed { background: #f0fdf4; color: #16a34a; }
 
         .match-info { display: flex; justify-content: space-between; align-items: flex-end; }
-        .match-details h4 { font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 5px; }
-        .match-meta { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-        .match-meta i { margin-right: 4px; color: var(--primary); }
+        .match-details h4 { font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
+        .match-meta { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .match-meta i { margin-right: 6px; color: var(--primary); }
 
         .price-tag { text-align: right; }
-        .price-tag small { display: block; font-size: 8px; font-weight: 800; color: var(--text-muted); margin-bottom: 2px; }
-        .price-tag b { font-family: 'Orbitron'; font-size: 16px; color: var(--text-main); }
+        .price-tag small { display: block; font-size: 9px; font-weight: 800; color: var(--text-muted); margin-bottom: 3px; }
+        .price-tag b { font-family: 'Orbitron'; font-size: 18px; color: var(--text-main); }
 
-        /* Booyah Badge */
-        .booyah-tag {
-            position: absolute; top: -10px; right: 15px; background: var(--primary-grad);
-            color: #fff; font-family: 'Orbitron'; font-size: 9px; padding: 4px 12px;
-            border-radius: 50px; box-shadow: 0 4px 10px rgba(255, 106, 0, 0.3); font-weight: 900;
+        /* Professional Winner Badge */
+        .champion-badge {
+            position: absolute; top: -12px; right: 20px; background: var(--win-grad);
+            color: #fff; font-family: 'Orbitron'; font-size: 10px; padding: 6px 15px;
+            border-radius: 50px; box-shadow: 0 5px 15px rgba(255, 165, 0, 0.4); 
+            font-weight: 900; display: flex; align-items: center; gap: 6px;
         }
 
-        /* Empty States */
         .loading-box { text-align: center; margin-top: 100px; }
         .empty-box { text-align: center; margin-top: 100px; padding: 0 30px; }
-        .empty-box i { font-size: 50px; color: #cbd5e1; margin-bottom: 15px; }
-        .empty-box h3 { font-family: 'Orbitron'; font-size: 14px; color: var(--text-main); margin-bottom: 8px; }
-        .empty-box p { font-size: 12px; color: var(--text-muted); }
+        .empty-box i { font-size: 60px; color: #ffd8b8; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
-        <h2>MY BATTLES</h2>
+        <h2>MATCH HISTORY</h2>
     </header>
 
     <div class="container" id="history-list">
         <div class="loading-box">
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 30px; color: var(--primary);"></i>
-            <p style="font-size:12px; margin-top:15px; color:var(--text-muted); font-weight:600;">LOADING RECORDS...</p>
+            <i class="fas fa-spinner fa-spin" style="font-size: 35px; color: var(--primary);"></i>
+            <p style="font-size:13px; margin-top:15px; color:var(--text-muted); font-weight:600; font-family:'Orbitron'; letter-spacing:1px;">FETCHING DATA...</p>
         </div>
     </div>
 
@@ -109,11 +118,10 @@
             const list = document.getElementById('history-list');
 
             if(!userPhone) {
-                list.innerHTML = `<div class="empty-box"><i class="fas fa-lock"></i><h3>ACCESS DENIED</h3><p>Please login to see your battle history.</p></div>`;
+                list.innerHTML = `<div class="empty-box"><i class="fas fa-user-shield"></i><h3>LOGIN REQUIRED</h3><p>Please login to view your records.</p></div>`;
                 return;
             }
 
-            // Fixed: Now listens to user_history specifically so it won't disappear if match is deleted from admin
             db.ref('user_history/' + userPhone).on('value', (snap) => {
                 list.innerHTML = "";
 
@@ -121,19 +129,19 @@
                     let items = [];
                     snap.forEach(child => {
                         let data = child.val();
-                        data.key = child.key;
                         items.push(data);
                     });
 
-                    // Newest Match First
                     items.reverse().forEach(data => {
                         const isWin = data.status === "WINNER" || data.result === "WINNER";
                         const isFinished = data.status === "finished" || data.status === "WINNER";
 
                         const card = document.createElement('div');
-                        card.className = 'history-card';
+                        // Winner hone par card ki class change hogi
+                        card.className = `history-card ${isWin ? 'winner-card' : ''}`;
+                        
                         card.innerHTML = `
-                            ${isWin ? '<div class="booyah-tag">BOOYAH</div>' : ''}
+                            ${isWin ? '<div class="champion-badge"><i class="fas fa-crown"></i> CHAMPION</div>' : ''}
                             <div class="card-top">
                                 <span class="match-badge">${data.mode || 'SOLO'} BATTLE</span>
                                 <span class="status-pill ${isFinished ? 'status-completed' : 'status-joined'}">
@@ -148,7 +156,7 @@
                                     </div>
                                 </div>
                                 <div class="price-tag">
-                                    <small>ENTRY FEE</small>
+                                    <small>ENTRY PAID</small>
                                     <b>₹${data.amountDeducted || data.entry || '0'}</b>
                                 </div>
                             </div>
@@ -158,9 +166,9 @@
                 } else {
                     list.innerHTML = `
                         <div class="empty-box">
-                            <i class="fas fa-gamepad"></i>
-                            <h3>NO RECORDS</h3>
-                            <p>You haven't joined any battles yet. Join a match to start your journey!</p>
+                            <i class="fas fa-ghost"></i>
+                            <h3 style="font-family:'Orbitron'; font-size:14px;">NO RECORDS</h3>
+                            <p>Abhi tak koi match nahi khela gaya hai.</p>
                         </div>`;
                 }
             });
