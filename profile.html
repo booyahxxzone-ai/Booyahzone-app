@@ -12,83 +12,88 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --gray: #888; --soft-orange: #fff5e6; --success: #10b981; }
+        :root { --primary: #ff9900; --dark: #0f0f0f; --white: #ffffff; --gray: #888; --soft-orange: #fff5e6; --accent: #2ecc71; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body { 
-            background: linear-gradient(to bottom, var(--dark) 20%, #f8f9fa 100%);
-            color: var(--dark); min-height: 100vh; padding-bottom: 50px;
+            background: #f4f7f6;
+            color: var(--dark); min-height: 100vh; padding-bottom: 30px;
         }
 
-        .profile-header { padding: 40px 20px 60px; text-align: center; color: #fff; position: relative; }
+        .profile-header { 
+            background: var(--dark); 
+            padding: 50px 20px 70px; 
+            text-align: center; 
+            color: #fff; 
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
         .user-avatar {
-            width: 90px; height: 90px; background: var(--primary);
-            border-radius: 50%; margin: 0 auto 15px; border: 4px solid rgba(255,255,255,0.1);
-            display: flex; align-items: center; justify-content: center; font-size: 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            width: 95px; height: 95px; background: var(--primary);
+            border-radius: 50%; margin: 0 auto 15px; border: 4px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center; font-size: 45px;
+            box-shadow: 0 8px 15px rgba(255, 153, 0, 0.3);
         }
-        .user-name { font-family: 'Orbitron'; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .user-id { font-size: 13px; opacity: 0.8; font-weight: 700; margin-top: 5px; }
+        .user-name { font-family: 'Orbitron'; font-size: 22px; text-transform: uppercase; letter-spacing: 1.5px; }
+        .user-id { font-size: 14px; opacity: 0.7; font-weight: 700; margin-top: 5px; background: rgba(255,255,255,0.1); display: inline-block; padding: 2px 12px; border-radius: 20px; }
 
-        .container { padding: 0 20px; max-width: 500px; margin: -30px auto 0; }
+        .container { padding: 0 20px; max-width: 500px; margin: -40px auto 0; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
         .stat-card {
-            background: var(--white); padding: 18px; border-radius: 20px;
-            text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            border-bottom: 3px solid var(--primary); transition: 0.2s; cursor: pointer;
+            background: var(--white); padding: 20px; border-radius: 25px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #eee; transition: 0.3s; cursor: pointer;
         }
-        .stat-card i { color: var(--primary); font-size: 20px; margin-bottom: 8px; }
-        .stat-card h4 { font-family: 'Orbitron'; font-size: 16px; }
-        .stat-card p { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-top: 2px; }
+        .stat-card i { color: var(--primary); font-size: 22px; margin-bottom: 10px; }
+        .stat-card h4 { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); }
+        .stat-card p { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; }
 
-        .menu-box { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+        .menu-box { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f9f9f9; cursor: pointer; }
         .menu-link { display: flex; align-items: center; gap: 15px; }
         .menu-link i { width: 25px; color: var(--primary); font-size: 18px; }
-        .menu-link span { font-weight: 700; font-size: 15px; }
+        .menu-link span { font-weight: 700; font-size: 16px; color: #333; }
 
-        /* Social Section */
-        .social-card { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .social-card h5 { font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; color: var(--gray); letter-spacing: 1px; }
-        .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .s-btn { padding: 12px; border-radius: 15px; text-decoration: none; color: white; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .section-label { font-family: 'Orbitron'; font-size: 11px; color: var(--gray); margin: 20px 0 10px 10px; letter-spacing: 1px; }
+
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .s-btn { padding: 14px; border-radius: 20px; text-decoration: none; color: white; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .yt-btn { background: #ff0000; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2); }
         .tg-btn { background: #0088cc; box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2); }
 
-        /* Policies */
-        .policy-card { background: var(--white); border-radius: 20px; padding: 5px 15px; margin-bottom: 10px; border: 1px solid #eee; }
-        .policy-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; font-family: 'Rajdhani'; font-size: 14px; font-weight: 800; cursor: pointer; padding: 15px 0; color: #444; }
-        .policy-btn i { font-size: 12px; color: var(--gray); transition: 0.3s; }
-        .policy-text { display: none; padding-bottom: 15px; font-size: 12px; color: #666; border-top: 1px solid #f5f5f5; padding-top: 10px; text-align: left; line-height: 1.6; }
+        .policy-card { background: var(--white); border-radius: 20px; padding: 5px 15px; margin-bottom: 12px; border: 1px solid #eee; }
+        .policy-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; font-family: 'Rajdhani'; font-size: 15px; font-weight: 800; cursor: pointer; padding: 15px 0; color: #444; }
+        .policy-text { display: none; padding-bottom: 15px; font-size: 13px; color: #666; border-top: 1px solid #f5f5f5; padding-top: 10px; line-height: 1.6; }
 
-        /* Modal & Notice */
+        .logout-btn { width: 100%; padding: 16px; background: #fff; color: #eb4d4b; border: 2px solid #eb4d4b; border-radius: 20px; font-family: 'Orbitron'; font-weight: 900; margin-top: 15px; cursor: pointer; transition: 0.3s; }
+
         #details-modal, #custom-notice {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
-            display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(5px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+            display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(8px);
         }
-        .modal-content, .notice-card { width: 90%; max-width: 350px; background: #fff; border-radius: 30px; padding: 25px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { font-size: 11px; font-weight: 800; color: var(--gray); display: block; margin-bottom: 5px; margin-left: 5px; }
-        .input-group input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1.5px solid #eee; font-weight: 700; outline: none; font-size: 14px; }
+        .modal-content { width: 90%; max-width: 360px; background: #fff; border-radius: 30px; padding: 30px; position: relative; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { font-size: 11px; font-weight: 800; color: var(--gray); display: block; margin-bottom: 6px; }
+        .input-group input { width: 100%; padding: 14px; border-radius: 15px; border: 1.5px solid #eee; font-weight: 700; outline: none; background: #fdfdfd; }
         
-        .save-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .logout-btn { width: 100%; padding: 15px; background: #fff1f1; color: #eb4d4b; border: 1.5px dashed #eb4d4b; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; margin-top: 10px; cursor: pointer; font-size: 13px; }
+        .save-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 16px; border-radius: 18px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="custom-notice">
-        <div class="notice-card" style="text-align: center;">
-            <h2 id="n-title" style="font-family:'Orbitron'; color:var(--primary); font-size:18px;">NOTICE</h2>
-            <p id="n-msg" style="margin: 15px 0; font-size: 14px; color: #444; font-weight: 600;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--primary); border:none; border-radius:12px; color:#fff; font-weight:900; cursor:pointer;">OKAY</button>
+        <div class="modal-content" style="text-align: center;">
+            <h2 id="n-title" style="font-family:'Orbitron'; color:var(--primary); font-size:20px;">NOTICE</h2>
+            <p id="n-msg" style="margin: 20px 0; font-size: 15px; color: #444; font-weight: 600;"></p>
+            <button onclick="closeNotice()" class="save-btn">OKAY</button>
         </div>
     </div>
 
     <div id="details-modal">
         <div class="modal-content">
-            <h3 style="font-family:'Orbitron'; margin-bottom:20px; color:var(--primary); text-align: center;">EDIT PROFILE</h3>
+            <h3 style="font-family:'Orbitron'; margin-bottom:25px; color:var(--dark); text-align: center;">EDIT PROFILE</h3>
             <div class="input-group">
                 <label>FULL NAME</label>
                 <input type="text" id="edit-name" placeholder="Enter Name">
@@ -98,75 +103,83 @@
                 <input type="text" id="edit-uid" placeholder="Your FF UID">
             </div>
             <div class="input-group">
-                <label>UPI ID (FOR WITHDRAWAL)</label>
+                <label>UPI ID (FOR PAYOUTS)</label>
                 <input type="text" id="edit-upi" placeholder="example@upi">
             </div>
-            <button class="save-btn" onclick="saveProfile()">UPDATE DATA</button>
-            <p onclick="closeModal()" style="margin-top:15px; font-size:12px; font-weight:900; cursor:pointer; color:var(--gray); text-align: center;">CANCEL</p>
+            <button class="save-btn" onclick="saveProfile()">SAVE CHANGES</button>
+            <p onclick="closeModal()" style="margin-top:20px; font-size:13px; font-weight:900; cursor:pointer; color:var(--gray); text-align: center;">CANCEL</p>
         </div>
     </div>
 
     <div class="profile-header">
-        <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+        <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
         <h2 class="user-name" id="disp-name">PLAYER</h2>
-        <p class="user-id">ID: <span id="disp-uid">000000</span></p>
+        <p class="user-id">UID: <span id="disp-uid">000000</span></p>
     </div>
 
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-card" onclick="location.href='history.html'">
-                <p>Available Balance</p>
+            <div class="stat-card" onclick="location.href='wallet.html'">
+                <p>Balance</p>
                 <h4 id="disp-balance">₹0</h4>
             </div>
-            <div class="stat-card" onclick="location.href='wallet.html#history'">
+            <div class="stat-card" onclick="location.href='history.html'">
                 <i class="fas fa-history"></i>
                 <h4>HISTORY</h4>
                 <p>Match & Trans.</p>
             </div>
         </div>
 
+        <div class="section-label">ACCOUNT SETTINGS</div>
         <div class="menu-box">
             <div class="menu-item" onclick="openModal()">
-                <div class="menu-link"><i class="fas fa-user-edit"></i><span>Profile Details</span></div>
+                <div class="menu-link"><i class="fas fa-id-card"></i><span>Edit Profile Info</span></div>
                 <i class="fas fa-chevron-right" style="font-size:12px; color:#ddd;"></i>
             </div>
-            <div class="menu-item" onclick="location.href='refer.html'">
-                <div class="menu-link"><i class="fas fa-gift"></i><span>Refer & Earn</span></div>
-                <i class="fas fa-chevron-right" style="font-size:12px; color:#ddd;"></i>
-            </div>
-            <div class="menu-item" onclick="window.open('https://wa.me/918968146117')">
-                <div class="menu-link"><i class="fab fa-whatsapp"></i><span>Support Squad</span></div>
+            <div class="menu-item" onclick="location.href='wallet.html'">
+                <div class="menu-link"><i class="fas fa-wallet"></i><span>Withdraw Funds</span></div>
                 <i class="fas fa-chevron-right" style="font-size:12px; color:#ddd;"></i>
             </div>
         </div>
 
-        <div class="social-card">
-            <h5>FOR MORE UPDATES</h5>
-            <div class="social-btns">
-                <a href="https://youtube.com/@YourChannel" target="_blank" class="s-btn yt-btn">
-                    <i class="fab fa-youtube"></i> YOUTUBE
-                </a>
-                <a href="https://t.me/YourChannel" target="_blank" class="s-btn tg-btn">
-                    <i class="fab fa-telegram-plane"></i> TELEGRAM
-                </a>
-            </div>
+        <div class="section-label">FOLLOW FOR UPDATES</div>
+        <div class="social-grid">
+            <a href="https://youtube.com/@YourChannel" target="_blank" class="s-btn yt-btn"><i class="fab fa-youtube"></i> YOUTUBE</a>
+            <a href="https://t.me/akashkohli01" target="_blank" class="s-btn tg-btn"><i class="fab fa-telegram-plane"></i> TELEGRAM</a>
         </div>
 
+        <div class="section-label">LEGAL & SAFETY</div>
         <div class="policy-card">
-            <button class="policy-btn" onclick="togglePol('refund-pol')">REFUND POLICY <i class="fas fa-caret-down"></i></button>
+            <button class="policy-btn" onclick="togglePol('terms-cond')">TERMS & CONDITIONS <i class="fas fa-plus"></i></button>
+            <div id="terms-cond" class="policy-text">
+                • You must be 18+ to enter paid tournaments.<br>
+                • Abuse, hacking, or bad behavior will result in a permanent ban.<br>
+                • BOOYAH ZONE is not responsible for any in-game loss.<br>
+                • Ensure your UID is correct before joining.
+            </div>
+        </div>
+        <div class="policy-card">
+            <button class="policy-btn" onclick="togglePol('refund-pol')">REFUND POLICY <i class="fas fa-plus"></i></button>
             <div id="refund-pol" class="policy-text">
-                • Refunds are only issued if a match is cancelled by the Admin.<br>
-                • If you join a match but fail to enter the room, no refund will be provided.<br>
-                • Technical issues from the player's side (Internet, Device) are not eligible for refunds.
+                • Refunds only if match is cancelled by Admin.<br>
+                • No refund if you fail to join the room in time.<br>
+                • No refund for internet or device issues.
+            </div>
+        </div>
+        <div class="policy-card">
+            <button class="policy-btn" onclick="togglePol('fair-play')">FAIR PLAY RULES <i class="fas fa-plus"></i></button>
+            <div id="fair-play" class="policy-text">
+                • Mobile Only. Emulators are strictly forbidden.<br>
+                • Scripts or Hack use = Instant Account Termination.<br>
+                • Team-up or Teaming in solo matches is a punishable offense.
             </div>
         </div>
 
-        <div class="policy-card">
-            <button class="policy-btn" onclick="togglePol('fair-play')">FAIR PLAY RULES <i class="fas fa-caret-down"></i></button>
-            <div id="fair-play" class="policy-text">
-                • Use of Hacks, Scripts, or GFX tools will lead to a permanent ban without refund.<br>
-                • Teaming up with opponents in Solo matches is strictly prohibited.<br>
-                • Only Mobile players are allowed. Emulators/PC players will be kicked without refund.
+        <div class="section-label">GET HELP</div>
+        <div class="menu-box">
+            <div class="menu-item" onclick="window.open('https://wa.me/918968146117')">
+                <div class="menu-link"><i class="fab fa-whatsapp"></i><span>WhatsApp Support</span></div>
+                <i class="fas fa-external-link-alt" style="font-size:12px; color:#ddd;"></i>
             </div>
         </div>
 
@@ -212,7 +225,7 @@
             const newUPI = document.getElementById('edit-upi').value;
 
             if(!newName || !newUID) { 
-                showNotice("ERROR", "Name and UID are required!"); 
+                showNotice("MISSING INFO", "Name and UID are compulsory!"); 
                 return; 
             }
 
@@ -223,9 +236,9 @@
                     upi: newUPI
                 });
                 closeModal();
-                showNotice("SUCCESS", "Profile Updated!");
+                showNotice("SUCCESS", "Your profile has been updated.");
             } catch (e) {
-                showNotice("ERROR", "Failed to update profile.");
+                showNotice("ERROR", "Something went wrong.");
             }
         }
 
