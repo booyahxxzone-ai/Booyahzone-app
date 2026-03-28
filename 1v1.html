@@ -27,7 +27,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
-        /* Header Style */
         .header {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
             height: 70px; display: flex; align-items: center; padding: 0 20px;
@@ -37,15 +36,13 @@
         .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
-        /* Filters */
         .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
         .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
         .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
-        /* Match Cards */
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; transition: 0.3s; }
+        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; }
         
         .m-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; }
         .m-tag.live { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
@@ -59,13 +56,12 @@
         .stat-card { text-align: center; background: #fffcf9; padding: 10px; border-radius: 15px; border: 1px solid #fff5eb; }
         .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
         .stat-card b { font-size: 14px; color: var(--text-main); }
+        .prize-text { color: var(--success) !important; font-weight: 800; }
 
-        /* Buttons */
         .action-btn { width: 100%; padding: 16px; border: none; border-radius: 18px; background: var(--primary-grad); color: white; font-weight: 800; font-size: 13px; text-transform: uppercase; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25); }
         .action-btn:disabled { background: #cbd5e1; box-shadow: none; color: #64748b; cursor: not-allowed; }
         .action-btn.joined { background: var(--success); }
 
-        /* Overlays */
         .overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
         .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
@@ -151,9 +147,6 @@
                         <div><small style="display:block; font-size:9px; color:var(--text-muted);">PASSWORD</small><b id="roomPass">WAITING</b></div>
                         <i class="fas fa-copy"></i>
                     </div>
-                    <p style="font-size:10px; color:var(--text-muted); text-align:center; margin-top:15px; line-height:1.5;">
-                        <i class="fas fa-clock"></i> ID & Password updates 15 mins before match starts.
-                    </p>
                 </div>
             </div>
         </div>
@@ -181,13 +174,6 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        function copyText(id, label) {
-            const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
-            navigator.clipboard.writeText(val);
-            triggerToast(label + " Copied!");
-        }
-
         function updateFilter(type, el) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
@@ -195,7 +181,6 @@
             renderMatches();
         }
 
-        // --- Realtime Listener for 1V1 ---
         db.ref('matches_1v1').on('value', snap => {
             matchDataStore = snap.val() || {};
             renderMatches();
@@ -212,8 +197,6 @@
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
                 const playersJoined = m.players ? Object.keys(m.players).length : 0;
-                const maxPlayers = 2; // Logic: 1vs1 (2 Players Total)
-                const isFull = playersJoined >= maxPlayers;
                 const isLive = m.status === 'live';
                 
                 let isJoined = false;
@@ -229,13 +212,10 @@
                 let btnClass = 'action-btn';
 
                 if(isJoined) {
-                    btnText = "View ID & Password";
+                    btnText = "VIEW INFO";
                     btnClass = "action-btn joined";
                 } else if(isLive) {
-                    btnText = "MATCH LIVE";
-                    btnAttr = "disabled";
-                } else if(isFull) {
-                    btnText = "MATCH FULL";
+                    btnText = "LIVE";
                     btnAttr = "disabled";
                 }
 
@@ -244,33 +224,18 @@
                     <h2 style="font-size:16px; font-weight:800; margin-bottom:12px; width:75%; color:#1e293b;">${m.title}</h2>
                     <div class="timer-box">
                         <i class="fas fa-clock"></i>
-                        <span class="countdown-timer" data-time="${m.time}">Loading...</span>
+                        <span class="countdown-timer" data-time="${m.time}">${m.time}</span>
                     </div>
                     <div class="stats-grid">
-                        <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
+                        <div class="stat-card"><small>Prize</small><b class="prize-text">₹${m.prize}</b></div>
                         <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Players</small><b>${playersJoined}/${maxPlayers}</b></div>
+                        <div class="stat-card"><small>Joined</small><b>${playersJoined} Players</b></div>
                     </div>
                     <button class="${btnClass}" ${btnAttr}>${btnText}</button>
                 `;
                 container.appendChild(card);
             });
         }
-
-        setInterval(() => {
-            document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
-                const diff = target - new Date().getTime();
-                if(diff <= 0) { 
-                    el.innerText = "Match Started"; 
-                } else {
-                    const h = Math.floor(diff/3600000);
-                    const m = Math.floor((diff%3600000)/60000);
-                    const s = Math.floor((diff%60000)/1000);
-                    el.innerText = `${h}h ${m}m ${s}s Remaining`;
-                }
-            });
-        }, 1000);
 
         function openMatchView(id, fee, title) {
             if(!userPhone) return triggerToast("Please login first!");
@@ -281,10 +246,8 @@
 
             db.ref(`matches_1v1/${id}`).on('value', snap => {
                 const data = snap.val();
-                if(!data) return;
-                
                 let myData = null;
-                if(data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
+                if(data && data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
                 if(myData) {
                     document.getElementById('joinForm').style.display = 'none';
@@ -307,20 +270,9 @@
             if(!agree) return triggerToast("Agree to Fair Play rules!");
 
             const btn = document.getElementById('payBtn');
-            btn.disabled = true; 
-            btn.innerText = "Processing...";
+            btn.disabled = true; btn.innerText = "Processing...";
 
             try {
-                const matchRef = db.ref(`matches_1v1/${activeMID}`);
-                const mSnap = await matchRef.get();
-                const currentPlayers = mSnap.val().players ? Object.keys(mSnap.val().players).length : 0;
-
-                if(currentPlayers >= 2) {
-                    triggerToast("Match is now Full!");
-                    closeOverlay();
-                    return;
-                }
-
                 const userRef = db.ref(`users/${userPhone}`);
                 const uSnap = await userRef.get();
                 const bal = parseFloat(uSnap.val().balance || 0);
@@ -331,47 +283,52 @@
                     return;
                 }
 
-                // Deduct & Update History
                 await userRef.update({ balance: (bal - activeEntryFee).toFixed(2) });
 
-                // Battle Records Sync
                 await db.ref(`user_history/${userPhone}`).push({
-                    matchTitle: activeTitle,
-                    entry: activeEntryFee,
-                    mode: "1V1 SOLO",
-                    date: new Date().toLocaleDateString(),
-                    time: new Date().toLocaleTimeString(),
-                    status: "joined",
-                    winnerName: "WAITING",
-                    matchId: activeMID
+                    matchTitle: activeTitle, entry: activeEntryFee, mode: "1V1 SOLO",
+                    date: new Date().toLocaleDateString(), status: "joined", matchId: activeMID
                 });
 
-                // Add Player to Match
                 await db.ref(`matches_1v1/${activeMID}/players`).push({
                     phone: userPhone, uid: uid, timestamp: Date.now()
                 });
 
-                // Telegram Alert
-                const updatedCount = currentPlayers + 1;
-                let teleMsg = `⚔️ <b>1V1 SOLO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 UID: ${uid}\n💰 Fee: ₹${activeEntryFee}\n📊 Slots: ${updatedCount}/2`;
-                
-                if(updatedCount >= 2) {
-                    teleMsg += `\n\n🚫 <b>STATUS: MATCH FULL</b>`;
-                }
-
+                let teleMsg = `⚔️ <b>1V1 SOLO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 UID: ${uid}\n💰 Fee: ₹${activeEntryFee}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
 
-                triggerToast("Joined Battle! Good luck.");
+                triggerToast("Joined Successfully!");
             } catch(e) {
-                triggerToast("Error! Try again.");
+                triggerToast("System Error!");
                 btn.disabled = false;
             }
+        }
+
+        function copyText(id, label) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
+            navigator.clipboard.writeText(val);
+            triggerToast(label + " Copied!");
         }
 
         function closeOverlay() {
             document.getElementById('mainOverlay').style.display = 'none';
             if(activeMID) db.ref(`matches_1v1/${activeMID}`).off();
         }
+
+        setInterval(() => {
+            document.querySelectorAll('.countdown-timer').forEach(el => {
+                const target = new Date(el.getAttribute('data-time')).getTime();
+                const diff = target - new Date().getTime();
+                if(diff <= 0) { el.innerText = "Match Started"; } 
+                else {
+                    const h = Math.floor(diff/3600000);
+                    const m = Math.floor((diff%3600000)/60000);
+                    const s = Math.floor((diff%60000)/1000);
+                    el.innerText = `${h}h ${m}m ${s}s Remaining`;
+                }
+            });
+        }, 1000);
     </script>
 </body>
 </html>
