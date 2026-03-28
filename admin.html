@@ -308,5 +308,36 @@
 
         function confirmFinish() {
             const wName = document.getElementById('winName').value;
-            const wPrize = document.
+            const wPrize = document.getElementById('winPrize').value;
+            if(!wName) return alert("Winner ka naam dalo!");
+            
+            db.ref(`${activePath}/${activeMID}`).update({ 
+                status: 'finished', 
+                winner_name: wName, 
+                winner_prize: wPrize 
+            });
+            alert("Battle Finished Successfully!");
+            closeModal(); loadMatches();
+        }
+
+        function deleteMatch(path, key) {
+            if(confirm("Confirm Delete? Ye match permanent delete ho jayega.")) {
+                db.ref(`${path}/${key}`).remove();
+                loadMatches();
+            }
+        }
+
+        function filterBy(cat, el) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            currentFilter = cat;
+            loadMatches();
+        }
+
+        function closeModal() { 
+            document.querySelectorAll('.modal').forEach(m => m.style.display='none'); 
+        }
+    </script>
+</body>
+</html>
         
