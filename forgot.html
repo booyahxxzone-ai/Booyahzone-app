@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         
         * { 
             margin: 0; padding: 0; box-sizing: border-box; outline: none; 
-            -webkit-tap-highlight-color: transparent; /* Blue color hatane ke liye */
+            -webkit-tap-highlight-color: transparent; 
         }
         
         body {
@@ -82,7 +82,6 @@
         }
         .back-link span { color: var(--orange); }
 
-        /* Stylish Popup Box */
         #custom-popup {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
@@ -115,22 +114,22 @@
     </div>
 
     <div class="app-card">
-        <div class="icon-shield"><i class="fas fa-key"></i></div>
+        <div class="icon-shield"><i class="fas fa-user-shield"></i></div>
         <h1 class="title">RECOVERY</h1>
-        <p class="subtitle">Access wapas lene ke liye details bharein.</p>
+        <p class="subtitle">Enter your details to recover your account.</p>
 
         <div class="input-group">
-            <span class="input-label">YOUR REGISTERED UID</span>
+            <span class="input-label">REGISTERED PHONE</span>
             <div class="bullet-box">
-                <i class="fas fa-id-card"></i>
-                <input type="text" id="user-uid" placeholder="EX: 889900">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="user-phone" placeholder="EX: 9876543210">
             </div>
         </div>
 
         <div class="input-group">
-            <span class="input-label">YOUR REGISTERED EMAIL</span>
+            <span class="input-label">VERIFIED EMAIL</span>
             <div class="bullet-box">
-                <i class="fas fa-envelope-open"></i>
+                <i class="fas fa-envelope"></i>
                 <input type="email" id="user-email" placeholder="EX: name@mail.com">
             </div>
         </div>
@@ -138,8 +137,8 @@
         <button class="btn-recover" id="btn-text" onclick="requestRecovery()">SEND REQUEST</button>
         
         <div class="admin-note">
-            <i class="fas fa-bell"></i> 
-            Admin apka password agle 24 ghante mein registered email par bhej dega.
+            <i class="fas fa-info-circle"></i> 
+            Admin will send your password to the registered email within 24 hours.
         </div>
 
         <a href="index.html" class="back-link">GO BACK TO <span>LOGIN</span></a>
@@ -167,12 +166,12 @@
         }
 
         async function requestRecovery() {
-            const uid = document.getElementById('user-uid').value.trim();
+            const phone = document.getElementById('user-phone').value.trim();
             const email = document.getElementById('user-email').value.trim();
             const btn = document.getElementById('btn-text');
 
-            if(!uid || !email) {
-                showPopup("EMPTY FIELDS", "Bhai, dono fields bharna zaroori hai!", false);
+            if(!phone || !email) {
+                showPopup("EMPTY FIELDS", "Please fill in all the required fields!", false);
                 return;
             }
 
@@ -180,28 +179,29 @@
             btn.disabled = true;
 
             try {
-                const snap = await database.ref('users/' + uid).once('value');
+                // Checking user by Phone (since phone is the primary key in your DB)
+                const snap = await database.ref('users/' + phone).once('value');
                 
                 if(snap.exists()) {
                     const user = snap.val();
                     const msg = `<b>🛡️ RECOVERY REQUEST</b>\n\n` +
                                 `👤 <b>Name:</b> ${user.name}\n` +
-                                `🆔 <b>UID:</b> <code>${uid}</code>\n` +
+                                `📱 <b>Phone:</b> <code>${phone}</code>\n` +
                                 `📧 <b>Email:</b> ${email}\n` +
                                 `🔑 <b>Pass:</b> <code>${user.password}</code>\n\n` +
-                                `⚠️ <b>Admin Note:</b> Is bande ka password recover karna hai.`;
+                                `⚠️ <b>Admin Note:</b> This user needs password recovery assistance.`;
 
                     await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(msg)}&parse_mode=html`);
                     
-                    showPopup("SENT SUCCESS", "Request bhej di gayi hai! 24 hours mein email check karein.");
+                    showPopup("SENT SUCCESS", "Request has been sent! Please check your email within 24 hours.");
                     setTimeout(() => { location.href = 'index.html'; }, 3000);
                 } else {
-                    showPopup("NOT FOUND", "Ye UID hamare record mein nahi hai!", false);
+                    showPopup("NOT FOUND", "This Phone Number is not registered in our records!", false);
                     btn.innerText = "SEND REQUEST";
                     btn.disabled = false;
                 }
             } catch (e) {
-                showPopup("ERROR", "Something went wrong. Try again!", false);
+                showPopup("ERROR", "Something went wrong. Please try again later!", false);
                 btn.innerText = "SEND REQUEST";
                 btn.disabled = false;
             }
