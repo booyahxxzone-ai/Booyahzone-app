@@ -280,7 +280,6 @@
                 const m = matchDataStore[id];
                 const isLive = m.status === 'live';
                 
-                // Filter Logic
                 if(currentFilter === 'upcoming' && isLive) return;
                 if(currentFilter === 'live' && !isLive) return;
 
@@ -347,7 +346,7 @@
 
         async function processSquadJoin() {
             const p1 = document.getElementById('p1UID').value;
-            const agree = document.getElementById('finalRuleCheck').checked;
+                        const agree = document.getElementById('finalRuleCheck').checked;
             if(!p1) return triggerToast("Leader UID is required!");
             if(!agree) return triggerToast("Please agree to the match rules!");
 
@@ -384,6 +383,14 @@
                     date: new Date().toLocaleDateString(), status: "joined"
                 });
 
+                // --- Notification Logic ---
+                await db.ref(`user_notifications/${userPhone}`).push({
+                    title: "Squad Joined Successfully!",
+                    message: `You registered for ${activeTitle} with ${bill.count} members. Stay ready!`,
+                    type: "match",
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+
                 const msg = `🔥 <b>SQUAD JOINED (4V4)</b>\n\n` +
                             `📱 Phone: ${userPhone}\n` +
                             `👥 Players: ${bill.count}\n` +
@@ -396,7 +403,10 @@
                 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
                 triggerToast("Joined Successfully!");
-            } catch(e) { triggerToast("Error!"); btn.disabled = false; }
+            } catch(e) { 
+                triggerToast("Error!"); 
+                btn.disabled = false; 
+            }
         }
 
         function copyText(id, label) {
