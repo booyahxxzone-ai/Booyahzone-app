@@ -195,6 +195,10 @@
             try {
                 const checkUser = await database.ref('users/' + phone).once('value');
                 if(checkUser.exists()) {
+                    // SECURE CHECK: Banned users cannot re-register
+                    if(checkUser.val().isBanned === true) {
+                        showNotice("BANNED", "This phone number is blocked by Admin!"); return;
+                    }
                     showNotice("DENIED", "This Phone Number is already registered!"); return;
                 }
 
@@ -205,10 +209,10 @@
                     password: pass,
                     phone: phone,
                     balance: 0,
-                    joinedOn: new Date().toLocaleString()
+                    joinedOn: new Date().toLocaleString(),
+                    isBanned: false // Default false
                 });
 
-                // INITIALIZE NOTIFICATION NODE (Critical for fixing your notification issue)
                 await database.ref('user_notifications/' + phone).push({
                     title: "Welcome to Booyah Zone! 🏆",
                     message: "Join daily battles and win real cash rewards. Good luck!",
@@ -243,11 +247,18 @@
                 const snap = await database.ref('users/' + phone).once('value');
                 if(snap.exists() && snap.val().password === pass) {
                     const userData = snap.val();
+
+                    // CRITICAL: BAN CHECK
+                    if(userData.isBanned === true) {
+                        showNotice("ACCESS DENIED", "🚫 Your account is BANNED! Contact support for details.");
+                        localStorage.clear();
+                        return;
+                    }
+
                     localStorage.setItem('userPhone', phone);
                     localStorage.setItem('gameID', phone); 
                     localStorage.setItem('userName', userData.name);
                     
-                    // Trigger a login sync for notifications
                     database.ref('user_notifications/' + phone).update({ last_login: new Date().toLocaleString() });
                     
                     location.href = 'home.html';
