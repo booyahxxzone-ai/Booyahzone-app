@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,6 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
 
+        /* Header */
         .header { 
             padding: 20px; text-align: center; background: var(--card); 
             border-bottom: 2px solid var(--primary); display: flex; 
@@ -29,27 +30,31 @@
 
         .container { padding: 15px; max-width: 600px; margin: auto; }
 
+        /* Card Design */
         .card { 
             background: var(--card); border-radius: 20px; padding: 22px; 
             margin-bottom: 20px; border: 1px solid rgba(0,255,204,0.1);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        h2 { font-family: 'Orbitron'; font-size: 12px; color: var(--accent); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { font-family: 'Orbitron'; font-size: 13px; color: var(--accent); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* Inputs */
         input, select { 
             background: #1e2536; border: 1px solid #334155; color: #fff; 
             padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,204,0.1); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,204,0.2); }
 
+        /* Buttons */
         .btn { 
             border: none; border-radius: 12px; font-family: 'Orbitron'; 
             cursor: pointer; font-weight: 900; padding: 15px; transition: 0.3s; 
             font-size: 11px; text-transform: uppercase;
         }
         .btn-main { background: var(--primary); color: #000; width: 100%; box-shadow: 0 5px 15px rgba(0,255,204,0.2); }
-        .btn-sm { padding: 8px 12px; font-size: 9px; color: #fff; border-radius: 8px; border: none; font-weight: 700; }
+        .btn-sm { padding: 8px 12px; font-size: 9px; color: #fff; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; }
 
+        /* Filter */
         .cat-filter { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 15px; scrollbar-width: none; }
         .cat-btn { 
             padding: 10px 20px; background: #1e2536; border-radius: 50px; 
@@ -57,30 +62,28 @@
         }
         .cat-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
+        /* Match Row */
         .match-row {
             background: #1e2536; border-radius: 18px; padding: 18px; margin-bottom: 15px;
             display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary);
-            animation: fadeIn 0.4s ease;
+            animation: slideIn 0.3s ease-out;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-        .match-info b { font-size: 14px; display: block; color: var(--primary); margin-bottom: 4px; }
-        .match-info small { color: #94a3b8; font-size: 10px; display: block; margin-bottom: 8px; }
-        .status-tag { font-size: 8px; padding: 4px 10px; border-radius: 6px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .match-info b { font-size: 15px; display: block; color: var(--primary); margin-bottom: 4px; }
+        .match-info small { color: #94a3b8; font-size: 11px; display: block; margin-bottom: 8px; }
+        .status-tag { font-size: 9px; padding: 4px 10px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 420px; border: 1px solid rgba(0,255,204,0.3); position: relative; }
-        
-        .search-container { position: sticky; top: -25px; background: var(--card); padding: 10px 0; z-index: 10; margin-bottom: 15px; display: none; }
-        
-        .team-card { 
-            background: #1e2536; border-radius: 15px; padding: 15px; margin-bottom: 12px; 
-            border: 1px solid #334155; border-left: 3px solid var(--accent);
-        }
-        .team-card h4 { color: var(--primary); font-size: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; }
-        .p-row { font-size: 11px; color: #cbd5e1; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .p-row b { color: var(--accent); }
+        /* Modals */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; backdrop-filter: blur(10px); }
+        .modal-box { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 420px; border: 1px solid rgba(0,255,204,0.3); box-shadow: 0 0 40px rgba(0,0,0,1); }
 
+        /* Player Cards in Modal */
+        .p-card { background: #1e2536; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #334155; }
+        .p-card p { font-size: 12px; color: #cbd5e1; }
+        .p-card b { color: var(--primary); }
+
+        /* Navigation */
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 80px; 
             background: var(--card); display: flex; justify-content: space-around; 
@@ -88,7 +91,7 @@
         }
         .nav-item { text-align: center; color: #64748b; font-size: 9px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .nav-item i { font-size: 22px; margin-bottom: 6px; display: block; }
-        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px rgba(0,255,204,0.5); }
     </style>
 </head>
 <body>
@@ -102,7 +105,7 @@
         <div id="tab-add" class="tab-content">
             <div class="card">
                 <h2>CREATE NEW BATTLE</h2>
-                <input type="text" id="mTitle" placeholder="Match Title (e.g. Sunday Mega War)">
+                <input type="text" id="mTitle" placeholder="Enter Match Title...">
                 <select id="mMode">
                     <option value="1V1">1V1 SOLO</option>
                     <option value="2V2">2V2 DUO</option>
@@ -111,32 +114,20 @@
                 <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
                 <input type="number" id="mPrize" placeholder="Win Prize Pool (₹)">
                 <input type="datetime-local" id="mTime">
-                <button class="btn btn-main" onclick="publishMatch()">PUBLISH MATCH</button>
+                <button class="btn btn-main" onclick="publishMatch()">PUBLISH & SEND NOTIF</button>
             </div>
         </div>
 
         <div id="tab-matches" class="tab-content" style="display:none;">
             <div class="cat-filter">
-                <div class="cat-btn active" onclick="filterBy('all', this)">ALL BATTLES</div>
-                <div class="cat-btn" onclick="filterBy('matches_1v1', this)">1V1 SOLO</div>
-                <div class="cat-btn" onclick="filterBy('matches_2v2', this)">2V2 DUO</div>
-                <div class="cat-btn" onclick="filterBy('matches_4v4', this)">4V4 SQUAD</div>
+                <div class="cat-btn active" onclick="filterBy('all', this)">ALL</div>
+                <div class="cat-btn" onclick="filterBy('matches_1v1', this)">1V1</div>
+                <div class="cat-btn" onclick="filterBy('matches_2v2', this)">2V2</div>
+                <div class="cat-btn" onclick="filterBy('matches_4v4', this)">4V4</div>
             </div>
-            
             <div id="matchListContainer">
-                <p style="text-align:center; color:#64748b; margin-top:20px;">Loading data...</p>
+                <p style="text-align:center; padding:20px; color:#64748b;">No battles loaded.</p>
             </div>
-        </div>
-    </div>
-
-    <div class="modal" id="playerModal">
-        <div class="modal-box" style="max-height: 85vh; overflow-y: auto;">
-            <div class="search-container" id="searchBox">
-                <input type="text" id="pSearch" placeholder="Search Team Name or UID..." onkeyup="searchTeam()">
-            </div>
-            <h2 id="pTitle">JOINED PLAYERS</h2>
-            <div id="playerList"></div>
-            <button class="btn btn-main" style="margin-top:15px;" onclick="closeModal()">CLOSE PANEL</button>
         </div>
     </div>
 
@@ -149,45 +140,51 @@
                 <button class="btn btn-main" style="background:var(--red); color:#fff;" onclick="confirmLive()">SET LIVE 🔴</button>
             </div>
             <div id="finishInputs" style="display:none;">
-                <input type="text" id="winName" placeholder="Winner Team/Name">
-                <input type="number" id="winPrize" placeholder="Total Won (₹)">
-                <button class="btn btn-main" style="background:var(--green); color:#fff;" onclick="confirmFinish()">COMPLETE & SAVE 🏆</button>
+                <input type="text" id="winName" placeholder="Winner Name / Team Name">
+                <button class="btn btn-main" style="background:var(--green); color:#fff;" onclick="confirmFinish()">COMPLETE BATTLE 🏆</button>
             </div>
-            <button class="btn btn-sm" style="background:transparent; width:100%; margin-top:15px; color:#94a3b8;" onclick="closeModal()">BACK</button>
+            <button class="btn btn-sm" style="background:transparent; width:100%; margin-top:15px; color:#94a3b8;" onclick="closeModal()">CANCEL</button>
+        </div>
+    </div>
+
+    <div class="modal" id="playerModal">
+        <div class="modal-box" style="max-height: 80vh; overflow-y: auto;">
+            <h2 id="pTitle">JOINED PLAYERS</h2>
+            <div id="playerList"></div>
+            <button class="btn btn-main" style="margin-top:15px;" onclick="closeModal()">CLOSE PANEL</button>
         </div>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active" onclick="showTab('tab-add', this)"><i class="fas fa-plus-circle"></i>CREATE</div>
-        <div class="nav-item" onclick="showTab('tab-matches', this)"><i class="fas fa-gamepad"></i>MANAGE</div>
+        <div class="nav-item" onclick="showTab('tab-matches', this)"><i class="fas fa-tasks"></i>MANAGE</div>
     </nav>
 
     <script>
-        const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) firebase.initializeApp(fbConfig);
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        
-        let activeMID = ""; 
-        let activePath = ""; 
-        let currentFilter = "all";
 
-        // Global function to trigger notifications
-        function pushGlobalNotification(title, message, type) {
-            db.ref('user_notifications').once('value', (snapshot) => {
-                if (snapshot.exists()) {
-                    snapshot.forEach((userSnap) => {
-                        const userPhone = userSnap.key;
+        let activeMID = "", activePath = "", activeTitle = "", currentFilter = "all";
+
+        // Push Notifications to ALL registered users
+        function sendNotificationToAll(title, msg, type) {
+            db.ref('users').once('value', (snap) => {
+                if (snap.exists()) {
+                    snap.forEach((user) => {
+                        const userPhone = user.key;
                         db.ref('user_notifications/' + userPhone).push({
                             title: title,
-                            message: message,
+                            message: msg,
                             type: type,
-                            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + ", " + new Date().toLocaleDateString()
+                            time: new Date().toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })
                         });
                     });
                 }
             });
         }
 
+        // Tab System
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -196,37 +193,33 @@
             if(id === 'tab-matches') loadMatches();
         }
 
+        // Publish New Match
         async function publishMatch() {
-            const mode = document.getElementById('mMode').value;
-            const mid = "M" + Date.now();
             const title = document.getElementById('mTitle').value;
+            const mode = document.getElementById('mMode').value;
+            const entry = document.getElementById('mEntry').value;
+            const prize = document.getElementById('mPrize').value;
+            const time = document.getElementById('mTime').value;
+            const mid = "M" + Date.now();
             let path = mode === '1V1' ? 'matches_1v1' : (mode === '2V2' ? 'matches_2v2' : 'matches_4v4');
 
-            const data = {
-                mId: mid,
-                title: title,
-                mode: mode,
-                entry: document.getElementById('mEntry').value,
-                prize: document.getElementById('mPrize').value,
-                time: document.getElementById('mTime').value,
-                status: "upcoming"
-            };
+            if(!title || !entry || !time) return alert("Bhai fields fill kar!");
 
-            if(!data.title || !data.entry || !data.time) return alert("Bhai sabhi details bharna zaroori hai!");
+            const data = { mId: mid, title, mode, entry, prize, time, status: "upcoming" };
             
-            await db.ref(`${path}/${mid}`).set(data);
-            
-            // Global Notif: New Match
-            pushGlobalNotification("New Battle Added! 🎮", `${title} (${mode}) is now open. Join fast!`, "match");
-            
-            alert("Success: Battle Published!");
-            document.getElementById('mTitle').value = "";
-            showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
+            try {
+                await db.ref(`${path}/${mid}`).set(data);
+                sendNotificationToAll("New Battle Added! 🎮", `${title} (${mode}) join now at ₹${entry}!`, "match");
+                alert("Match Created & Users Notified!");
+                document.getElementById('mTitle').value = "";
+                showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
+            } catch (e) { alert("Error: " + e.message); }
         }
 
+        // Load and Render Matches
         async function loadMatches() {
             const container = document.getElementById('matchListContainer');
-            container.innerHTML = "<p style='text-align:center; padding:20px;'>Refreshing Battles...</p>";
+            container.innerHTML = "<p style='text-align:center; padding:20px; color:var(--primary);'>Fetching Battles...</p>";
             
             const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4'];
             let html = "";
@@ -249,69 +242,62 @@
                             <div style="display:flex; flex-direction:column; gap:6px;">
                                 <button class="btn-sm" style="background:var(--blue)" onclick="viewPlayers('${p}', '${m.mId}', '${m.mode}')">PLAYERS (${pCount})</button>
                                 ${m.status=='upcoming' ? `<button class="btn-sm" style="background:var(--green)" onclick="openControl('${p}', '${m.mId}', 'live', '${m.title}')">GO LIVE</button>` : ''}
-                                ${m.status=='live' ? `<button class="btn-sm" style="background:var(--accent); color:black" onclick="openControl('${p}', '${m.mId}', 'finish', '${m.title}')">FINISH</button>` : ''}
-                                <button class="btn-sm" style="background:var(--red)" onclick="deleteMatch('${p}', '${child.key}')"><i class="fas fa-trash"></i></button>
+                                ${m.status=='live' ? `<button class="btn-sm" style="background:var(--accent); color:#000" onclick="openControl('${p}', '${m.mId}', 'finish', '${m.title}')">FINISH</button>` : ''}
+                                <button class="btn-sm" style="background:var(--red)" onclick="deleteMatch('${p}', '${m.mId}')"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>`;
                 });
             }
-            container.innerHTML = html || "<p style='text-align:center; padding:30px; color:#64748b;'>No Battles Found.</p>";
+            container.innerHTML = html || "<p style='text-align:center; padding:30px; color:#64748b;'>No matches found.</p>";
         }
 
-        function viewPlayers(path, id, mode) {
-            document.getElementById('searchBox').style.display = (mode === '4V4') ? 'block' : 'none';
-            db.ref(`${path}/${id}/players`).once('value', snap => {
+        // View Players Logic
+        function viewPlayers(path, mid, mode) {
+            db.ref(`${path}/${mid}/players`).once('value', snap => {
                 const list = document.getElementById('playerList');
                 list.innerHTML = "";
-                if(!snap.exists()) { list.innerHTML = "<p style='text-align:center; color:#64748b;'>No one joined yet.</p>"; }
+                if(!snap.exists()) list.innerHTML = "<p style='text-align:center; color:#64748b;'>Zero joinings.</p>";
+                
                 snap.forEach(p => {
                     const v = p.val();
-                    let cardContent = (mode === '1V1') ? `<div class="p-row">Name: <b>${v.name}</b></div><div class="p-row">UID: <b>${v.uid}</b></div>` : (mode === '2V2') ? `<div class="p-row">Leader: <b>${v.name}</b></div><div class="p-row">UIDs: <b>${v.uid1}, ${v.uid2}</b></div>` : `<div class="p-row">Leader: <b>${v.leader_name}</b></div><div class="p-row">Team UIDs: <b>${v.uid1}, ${v.uid2}, ${v.uid3}, ${v.uid4}</b></div>`;
-                    list.innerHTML += `<div class="team-card"><h4><i class="fas fa-user-shield"></i> MEMBER/TEAM</h4>${cardContent}</div>`;
+                    let content = mode === '1V1' ? `<p>Name: <b>${v.name}</b></p><p>UID: <b>${v.uid}</b></p>` : `<p>Leader: <b>${v.leader_name || v.name}</b></p><p>Team UIDs: <b>${v.uid1}, ${v.uid2}...</b></p>`;
+                    list.innerHTML += `<div class="p-card">${content}</div>`;
                 });
                 document.getElementById('playerModal').style.display = 'flex';
             });
         }
 
-        let activeTitle = "";
+        // Match Actions (Live/Finish)
         function openControl(path, id, type, title) {
             activeMID = id; activePath = path; activeTitle = title;
-            document.getElementById('controlModal').style.display='flex';
-            if(type === 'live') {
-                document.getElementById('liveInputs').style.display='block';
-                document.getElementById('finishInputs').style.display='none';
-            } else {
-                document.getElementById('liveInputs').style.display='none';
-                document.getElementById('finishInputs').style.display='block';
-            }
+            document.getElementById('controlModal').style.display = 'flex';
+            document.getElementById('liveInputs').style.display = type === 'live' ? 'block' : 'none';
+            document.getElementById('finishInputs').style.display = type === 'finish' ? 'block' : 'none';
         }
 
-        function confirmLive() {
+        async function confirmLive() {
             const rid = document.getElementById('roomId').value;
             const rps = document.getElementById('roomPass').value;
-            if(!rid || !rps) return alert("Fill Room Details!");
-            db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
+            if(!rid || !rps) return alert("Room ID/Pass missing!");
             
-            // Global Notif: Live
-            pushGlobalNotification("Match is LIVE! 🔴", `${activeTitle} has started. Check Room ID/Pass!`, "match");
-            
+            await db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
+            sendNotificationToAll("Room Ready! 🔴", `Room Details updated for ${activeTitle}. Join now!`, "live");
             closeModal(); loadMatches();
         }
 
-        function confirmFinish() {
-            const wName = document.getElementById('winName').value;
-            if(!wName) return alert("Enter Winner Name!");
-            db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner_name: wName });
+        async function confirmFinish() {
+            const winner = document.getElementById('winName').value;
+            if(!winner) return alert("Winner name?");
             
-            // Global Notif: Finished
-            pushGlobalNotification("Match Finished 🏆", `${wName} won the ${activeTitle}! Congrats!`, "match");
-            
-            alert("Battle Finished!");
+            await db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner_name: winner });
+            sendNotificationToAll("Winner Winner! 🏆", `${winner} won the ${activeTitle}! Congrats!`, "finish");
             closeModal(); loadMatches();
         }
 
-        function deleteMatch(path, key) {
-            if(confirm("Permanent Delete?")) { db.ref(`${path}/${key}`).remove(); loadMatches(); }
+        function deleteMatch(path, mid) {
+            if(confirm("Bhai delete karun? Refund ka dhyan rakhna!")) {
+                db.ref(`${path}/${mid}`).remove(); loadMatches();
+            }
         }
 
         function filterBy(cat, el) {
@@ -319,11 +305,7 @@
             el.classList.add('active'); currentFilter = cat; loadMatches();
         }
 
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
-        function searchTeam() {
-            let f = document.getElementById('pSearch').value.toUpperCase();
-            document.querySelectorAll('.team-card').forEach(c => c.style.display = c.innerText.toUpperCase().includes(f) ? "" : "none");
-        }
+        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     </script>
 </body>
 </html>
