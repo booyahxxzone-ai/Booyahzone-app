@@ -2,202 +2,200 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BZ | USER MASTER CONTROL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BZ | MASTER CONTROL PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
-        :root { --primary: #00ffcc; --red: #ff4d4d; --card: #0f172a; --bg: #050810; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani'; }
-        body { background: var(--bg); color: #fff; padding: 15px; padding-bottom: 80px; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--primary); }
+        :root { --primary: #00ffcc; --bg: #050810; --card: #0f172a; --accent: #f59e0b; --red: #ff4d4d; --green: #10b981; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: #fff; padding-bottom: 90px; }
 
-        .card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #232a3d; }
-        h2 { font-size: 13px; color: var(--primary); font-family: 'Orbitron'; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        /* HEADER */
+        .header { padding: 20px; background: var(--card); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .header h1 { font-family: 'Orbitron'; font-size: 16px; color: var(--primary); }
 
-        /* Search Section */
-        .search-bar { display: flex; gap: 10px; margin-bottom: 5px; }
-        input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 10px; width: 100%; font-size: 15px; }
-        
-        /* User Profile Style */
-        .user-profile { display: none; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .info-item { background: #161e31; padding: 10px; border-radius: 8px; border: 1px solid #1e293b; }
-        .info-item label { display: block; font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
-        .info-item span { font-weight: bold; font-size: 16px; color: #e2e8f0; }
-        .info-item input { padding: 5px; background: transparent; border: none; border-bottom: 1px solid var(--primary); border-radius: 0; font-size: 16px; margin-bottom: 0; }
+        .container { padding: 15px; max-width: 800px; margin: auto; }
 
-        .status-badge { padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; }
-        .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-banned { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        /* TABS */
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .btn-action { border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; padding: 12px; cursor: pointer; transition: 0.3s; }
-        .btn-save { background: var(--primary); color: #000; width: 100%; margin-top: 15px; }
-        .btn-ban { background: var(--red); color: #fff; width: 100%; margin-top: 8px; }
+        /* USER LIST CARD */
+        .user-row { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #1e293b; }
+        .u-info b { display: block; font-size: 14px; color: var(--primary); }
+        .u-info span { font-size: 11px; color: #94a3b8; }
+        .u-bal { font-weight: 800; color: var(--accent); font-size: 15px; }
 
-        /* Tables */
-        .table-wrap { overflow-x: auto; margin-top: 5px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { text-align: left; padding: 10px; background: #1e293b; color: #94a3b8; }
-        td { padding: 10px; border-bottom: 1px solid #1e293b; }
-        
-        .btn-sm { padding: 6px 10px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 11px; }
+        /* ACTION CARDS (Deposit/Withdraw) */
+        .action-card { background: #1e2536; border-radius: 18px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 600; }
+        .ac-body { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; }
+        .ac-footer { display: flex; gap: 10px; }
+
+        /* INPUTS & BUTTONS */
+        input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px; font-size: 13px; }
+        .btn { border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s; }
+        .btn-pay { background: var(--green); color: #000; flex: 1; }
+        .btn-rej { background: var(--red); color: #fff; flex: 1; }
+        .btn-edit { background: #38b6ff; color: #fff; padding: 5px 10px; font-size: 10px; }
+
+        /* BOTTOM NAV */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; }
+        .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-item.active { color: var(--primary); }
+
+        /* SEARCH BAR */
+        .search-box { display: flex; gap: 8px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BZ MASTER ADMIN</h1>
-        <button onclick="location.href='admin.html'" style="background:var(--primary); padding:6px 12px; border:none; border-radius:8px; font-weight:bold;">GAMES ➔</button>
+        <h1>BZ MASTER <span style="color:white">CONTROL</span></h1>
+        <button onclick="location.href='admin.html'" style="background:var(--primary); padding:6px 15px; border:none; border-radius:8px; font-weight:bold; font-size:12px;">GAMES ➔</button>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-id-card"></i> USER FULL DETAILS</h2>
-        <div class="search-bar">
-            <input type="text" id="uSearchPhone" placeholder="Enter Phone Number (e.g. 98765...)">
-            <button class="btn-sm" style="background:var(--primary); color:#000; padding:0 15px;" onclick="fetchUserData()">SEARCH</button>
-        </div>
-
-        <div id="userProfile" class="user-profile">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">
-                <h3 id="profNameTitle" style="font-family: 'Orbitron'; font-size: 16px;">USERNAME</h3>
-                <span id="profStatus" class="status-badge">ACTIVE</span>
+    <div class="container">
+        <div id="tab-users" class="tab-content" style="display:block;">
+            <div class="search-box">
+                <input type="text" id="userSearch" placeholder="Search by name or phone..." onkeyup="searchUsers()">
             </div>
-
-            <div class="profile-grid">
-                <div class="info-item">
-                    <label>Full Name</label>
-                    <input type="text" id="editName">
-                </div>
-                <div class="info-item">
-                    <label>Phone Number</label>
-                    <span id="profPhone">0000000000</span>
-                </div>
-                <div class="info-item">
-                    <label>App Password</label>
-                    <input type="text" id="editPass">
-                </div>
-                <div class="info-item">
-                    <label>Wallet Balance</label>
-                    <input type="number" id="editBalance">
-                </div>
+            <div id="allUsersList">
+                <p style="text-align:center; color:#64748b;">Loading User Database...</p>
             </div>
+        </div>
 
-            <button class="btn-action btn-save" onclick="updateUserData()">SAVE ALL CHANGES</button>
-            <button id="banBtn" class="btn-action btn-ban" onclick="toggleUserBan()">BAN USER</button>
+        <div id="tab-payments" class="tab-content">
+            <h2 style="font-size:14px; color:var(--primary); margin-bottom:15px; font-family:'Orbitron';">PENDING DEPOSITS</h2>
+            <div id="depositList"></div>
+            
+            <h2 style="font-size:14px; color:var(--red); margin:25px 0 15px; font-family:'Orbitron';">PENDING WITHDRAWALS</h2>
+            <div id="withdrawList"></div>
         </div>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-arrow-down"></i> DEPOSITS (PENDING)</h2>
-        <div class="table-wrap">
-            <table>
-                <thead><tr><th>Phone</th><th>Amount</th><th>UTR</th><th>Action</th></tr></thead>
-                <tbody id="depBox"></tbody>
-            </table>
+    <div id="editModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:5000; padding:20px;">
+        <div style="background:var(--card); padding:25px; border-radius:20px; width:100%; max-width:350px; border:1px solid var(--primary);">
+            <h3 id="mUserPhone" style="color:var(--primary); font-size:14px; margin-bottom:15px;">Phone: 00000</h3>
+            <label style="font-size:11px; color:#94a3b8;">User Name</label>
+            <input type="text" id="mUserName">
+            <label style="font-size:11px; color:#94a3b8;">Wallet Balance (₹)</label>
+            <input type="number" id="mUserBal">
+            <button class="btn btn-pay" style="width:100%; margin-top:10px;" onclick="saveUserEdit()">SAVE CHANGES</button>
+            <button class="btn" style="width:100%; margin-top:8px; background:grey; color:white;" onclick="closeEdit()">CANCEL</button>
         </div>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-arrow-up"></i> WITHDRAWALS (PENDING)</h2>
-        <div class="table-wrap">
-            <table>
-                <thead><tr><th>Phone</th><th>Amount</th><th>UPI</th><th>Action</th></tr></thead>
-                <tbody id="witBox"></tbody>
-            </table>
-        </div>
-    </div>
+    <nav class="nav-bar">
+        <a href="#" class="nav-item active" onclick="showTab('tab-users', this)"><i class="fas fa-users"></i>USERS</a>
+        <a href="#" class="nav-item" onclick="showTab('tab-payments', this)"><i class="fas fa-wallet"></i>PAYMENTS</a>
+    </nav>
 
     <script>
         const fbConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
 
-        let currentSearchPhone = "";
-        let isBanned = false;
+        let allUsersData = {};
 
-        // --- FETCH USER DATA ---
-        async function fetchUserData() {
-            const phone = document.getElementById('uSearchPhone').value.trim();
-            if(!phone) return alert("Pehle number daalo bhai!");
-
-            const snap = await db.ref('users/' + phone).once('value');
-            if(snap.exists()) {
-                const u = snap.val();
-                currentSearchPhone = phone;
-                isBanned = u.isBanned || false;
-
-                // UI Update
-                document.getElementById('profNameTitle').innerText = u.name || "Gamer";
-                document.getElementById('editName').value = u.name || "";
-                document.getElementById('profPhone').innerText = phone;
-                document.getElementById('editPass').value = u.password || "";
-                document.getElementById('editBalance').value = u.balance || 0;
-
-                const st = document.getElementById('profStatus');
-                st.innerText = isBanned ? "BANNED" : "ACTIVE";
-                st.className = "status-badge " + (isBanned ? "status-banned" : "status-active");
-
-                const bBtn = document.getElementById('banBtn');
-                bBtn.innerText = isBanned ? "UNBAN USER" : "BAN USER";
-                bBtn.style.background = isBanned ? "#10b981" : "#ef4444";
-
-                document.getElementById('userProfile').style.display = 'block';
-            } else {
-                alert("User nahi mila!");
-                document.getElementById('userProfile').style.display = 'none';
-            }
+        function showTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).style.display = 'block';
+            el.classList.add('active');
         }
 
-        // --- UPDATE DATA ---
-        async function updateUserData() {
-            if(!currentSearchPhone) return;
-            const up = {
-                name: document.getElementById('editName').value,
-                password: document.getElementById('editPass').value,
-                balance: Number(document.getElementById('editBalance').value)
-            };
-            await db.ref('users/' + currentSearchPhone).update(up);
-            alert("Data updated! Ab user ke pass nayi details dikhengi.");
-            fetchUserData();
+        // --- ALL USERS LOGIC ---
+        db.ref('users').on('value', snap => {
+            allUsersData = snap.val() || {};
+            renderUsers(allUsersData);
+        });
+
+        function renderUsers(users) {
+            const list = document.getElementById('allUsersList');
+            list.innerHTML = "";
+            Object.keys(users).forEach(phone => {
+                const u = users[phone];
+                const banned = u.isBanned ? "BANNED" : "ACTIVE";
+                const banColor = u.isBanned ? "var(--red)" : "var(--green)";
+                
+                list.innerHTML += `
+                    <div class="user-row">
+                        <div class="u-info">
+                            <b>${u.name || 'Gamer'}</b>
+                            <span>${phone} | <span style="color:${banColor}">${banned}</span></span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="u-bal">₹${u.balance || 0}</div>
+                            <button class="btn btn-edit" onclick="openEdit('${phone}', '${u.name}', ${u.balance})">EDIT</button>
+                            <button class="btn btn-edit" style="background:${u.isBanned ? 'green':'red'}" onclick="toggleBan('${phone}', ${u.isBanned})">${u.isBanned ? 'UNBAN':'BAN'}</button>
+                        </div>
+                    </div>`;
+            });
         }
 
-        // --- BAN / UNBAN ---
-        async function toggleUserBan() {
-            if(!currentSearchPhone) return;
-            const newStatus = !isBanned;
-            await db.ref('users/' + currentSearchPhone).update({ isBanned: newStatus });
-            alert(newStatus ? "User Banned successfully!" : "User is now Active!");
-            fetchUserData();
+        function searchUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = {};
+            Object.keys(allUsersData).forEach(phone => {
+                if(phone.includes(query) || (allUsersData[phone].name && allUsersData[phone].name.toLowerCase().includes(query))) {
+                    filtered[phone] = allUsersData[phone];
+                }
+            });
+            renderUsers(filtered);
         }
 
-        // --- DEPOSITS & WITHDRAWALS (BAKKI LOGIC SAME HAI) ---
+        // --- EDIT USER ---
+        function openEdit(phone, name, bal) {
+            document.getElementById('mUserPhone').innerText = "Phone: " + phone;
+            document.getElementById('mUserName').value = name;
+            document.getElementById('mUserBal').value = bal;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        async function saveUserEdit() {
+            const phone = document.getElementById('mUserPhone').innerText.replace("Phone: ", "");
+            const name = document.getElementById('mUserName').value;
+            const bal = Number(document.getElementById('mUserBal').value);
+            await db.ref('users/'+phone).update({ name: name, balance: bal });
+            closeEdit();
+        }
+        function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
+        async function toggleBan(phone, status) {
+            await db.ref('users/'+phone).update({ isBanned: !status });
+        }
+
+        // --- DEPOSITS & WITHDRAWALS ---
         db.ref('deposits').on('value', snap => {
-            const box = document.getElementById('depBox'); box.innerHTML = "";
+            const list = document.getElementById('depositList'); list.innerHTML = "";
             snap.forEach(child => {
                 const d = child.val();
                 if(d.status === 'pending') {
-                    box.innerHTML += `<tr><td>${d.userPhone}</td><td>₹${d.amount}</td><td>${d.utr}</td>
-                    <td>
-                        <button class="btn-sm" style="background:#10b981; color:#000" onclick="actionDep('${child.key}','${d.userPhone}',${d.amount},'approved')">✔</button>
-                        <button class="btn-sm" style="background:#ef4444; color:#fff" onclick="actionDep('${child.key}','${d.userPhone}',0,'rejected')">✖</button>
-                    </td></tr>`;
+                    list.innerHTML += `
+                    <div class="action-card">
+                        <div class="ac-header"><span>DEPOSIT REQUEST</span><span style="color:var(--accent)">₹${d.amount}</span></div>
+                        <div class="ac-body">User: ${d.userPhone}<br>UTR: ${d.utr}</div>
+                        <div class="ac-footer">
+                            <button class="btn btn-pay" onclick="handleDeposit('${child.key}','${d.userPhone}',${d.amount},'approved')">APPROVE</button>
+                            <button class="btn btn-rej" onclick="handleDeposit('${child.key}','${d.userPhone}',0,'rejected')">REJECT</button>
+                        </div>
+                    </div>`;
                 }
             });
         });
 
-        async function actionDep(id, phone, amt, status) {
+        async function handleDeposit(id, phone, amt, status) {
             if(status === 'approved') {
-                const userRef = db.ref('users/' + phone);
-                const uSnap = await userRef.once('value');
-                if(uSnap.exists()){
+                const uRef = db.ref('users/'+phone);
+                const uSnap = await uRef.once('value');
+                if(uSnap.exists()) {
                     let newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
-                    await userRef.update({ balance: newBal });
+                    await uRef.update({ balance: newBal });
                 }
             }
             await db.ref('deposits/'+id).update({ status: status });
@@ -205,27 +203,31 @@
         }
 
         db.ref('withdrawals').on('value', snap => {
-            const box = document.getElementById('witBox'); box.innerHTML = "";
+            const list = document.getElementById('withdrawList'); list.innerHTML = "";
             snap.forEach(child => {
                 const w = child.val();
                 if(w.status === 'pending') {
-                    box.innerHTML += `<tr><td>${w.userPhone}</td><td>₹${w.amount}</td><td>${w.upiID}</td>
-                    <td>
-                        <button class="btn-sm" style="background:#3b82f6; color:#fff" onclick="actionWit('${child.key}','approved')">PAY</button>
-                        <button class="btn-sm" style="background:#ef4444; color:#fff" onclick="actionWit('${child.key}','rejected')">REFUND</button>
-                    </td></tr>`;
+                    list.innerHTML += `
+                    <div class="action-card" style="border-left-color:var(--red)">
+                        <div class="ac-header"><span>WITHDRAW REQUEST</span><span style="color:var(--red)">₹${w.amount}</span></div>
+                        <div class="ac-body">User: ${w.userPhone}<br>UPI ID: ${w.upiID}</div>
+                        <div class="ac-footer">
+                            <button class="btn btn-pay" style="background:var(--blue); color:white" onclick="handleWithdraw('${child.key}','approved')">MARK PAID</button>
+                            <button class="btn btn-rej" onclick="handleWithdraw('${child.key}','rejected')">REFUND</button>
+                        </div>
+                    </div>`;
                 }
             });
         });
 
-        async function actionWit(id, status) {
+        async function handleWithdraw(id, status) {
             if(status === 'rejected') {
-                const wRef = await db.ref('withdrawals/'+id).once('value');
-                const wData = wRef.val();
-                const uRef = db.ref('users/'+wData.userPhone);
+                const wSnap = await db.ref('withdrawals/'+id).once('value');
+                const w = wSnap.val();
+                const uRef = db.ref('users/'+w.userPhone);
                 const uSnap = await uRef.once('value');
-                let refundBal = (Number(uSnap.val().balance) || 0) + Number(wData.amount);
-                await uRef.update({ balance: refundBal });
+                let refBal = (Number(uSnap.val().balance) || 0) + Number(w.amount);
+                await uRef.update({ balance: refBal });
             }
             await db.ref('withdrawals/'+id).update({ status: status });
             alert("Withdrawal " + status);
