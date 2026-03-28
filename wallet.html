@@ -24,7 +24,7 @@
         .container { padding: 0 20px; max-width: 500px; margin: 0 auto; }
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab-btn { flex: 1; padding: 15px 10px; border-radius: 18px; border: 1.5px solid #ffd8a8; background: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gray); }
-        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.2); }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,153,0,0.25); }
         .section { display: none; animation: slideUp 0.4s ease-out; }
         .section.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -50,7 +50,7 @@
             <i id="n-icon" class="fas fa-check-circle" style="font-size: 50px; margin-bottom: 15px;"></i>
             <h3 id="n-title" style="font-family:'Orbitron';">TITLE</h3>
             <p id="n-msg" style="margin: 10px 0 20px; font-weight: 700; color: #666;"></p>
-            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-family:'Orbitron';">OK</button>
+            <button onclick="closeNotice()" style="width:100%; padding:15px; background:var(--dark); color:#fff; border:none; border-radius:15px; font-family:'Orbitron';">CONFIRM</button>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
 
         <div id="hist-sec" class="section">
             <div class="ui-box" id="logs-container">
-                <p style="text-align:center; color:#ccc;">Loading History...</p>
+                <p style="text-align:center; color:#ccc;">Fetching Records...</p>
             </div>
         </div>
     </div>
@@ -119,7 +119,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Consistent Phone & Name usage for Admin Panel
         const myPhone = localStorage.getItem('userPhone'); 
         const myName = localStorage.getItem('userName') || "Gamer";
 
@@ -128,7 +127,6 @@
             window.location.href = "index.html"; 
         }
 
-        // Real-time Balance Sync
         db.ref(`users/${myPhone}/balance`).on('value', snap => {
             document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
@@ -153,16 +151,17 @@
 
         function openUPIIntent() {
             const amt = document.getElementById('dep-amt-input').value;
-            if(!amt || amt < 1) return showNotice("ERROR", "Please enter amount first!", false);
+            if(!amt || amt < 1) return showNotice("ERROR", "Please enter a valid amount!", false);
             window.location.href = `upi://pay?pa=8968146117@ybl&pn=BOOYAH%20ZONE&am=${amt}&cu=INR`;
         }
 
         function handleDepositSubmit() {
             const amt = document.getElementById('dep-amt-input').value;
             const utr = document.getElementById('dep-utr-input').value;
-            if(!amt || !utr) return showNotice("WAIT", "Amount aur UTR dono bhariye!", false);
+            if(!amt || !utr) return showNotice("REQUIRED", "Amount and UTR are mandatory!", false);
 
-            db.ref('deposits').push({
+            const depRef = db.ref('deposits').push();
+            depRef.set({
                 userPhone: myPhone,
                 userName: myName,
                 amount: Number(amt),
@@ -170,7 +169,15 @@
                 status: "pending",
                 time: new Date().toLocaleString()
             }).then(() => {
-                showNotice("SUCCESS", "Request Sent! Verification pending.");
+                // Send Local Notification
+                db.ref(`user_notifications/${myPhone}`).push({
+                    title: "Deposit Requested",
+                    message: `Your deposit request of ₹${amt} is submitted. UTR: ${utr}`,
+                    type: "deposit",
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+
+                showNotice("SUCCESS", "Request Submitted! Awaiting verification.");
                 document.getElementById('dep-amt-input').value = "";
                 document.getElementById('dep-utr-input').value = "";
             });
@@ -180,13 +187,12 @@
             const amt = parseFloat(document.getElementById('wd-amt-input').value);
             const upi = document.getElementById('wd-upi-input').value;
 
-            if(!amt || !upi.includes('@')) return showNotice("ERROR", "Details sahi bhariye!", false);
+            if(!amt || !upi.includes('@')) return showNotice("INVALID", "Please enter valid payment details!", false);
 
             db.ref(`users/${myPhone}/balance`).get().then(snap => {
                 const bal = snap.val() || 0;
-                if(amt > bal) return showNotice("FAILED", "Balance kam hai!", false);
+                if(amt > bal) return showNotice("FAILED", "Insufficient balance for withdrawal!", false);
 
-                // Dedicting balance immediately and sending to Admin
                 db.ref(`users/${myPhone}/balance`).set(bal - amt).then(() => {
                     db.ref('withdrawals').push({
                         userPhone: myPhone,
@@ -196,7 +202,16 @@
                         status: "pending",
                         time: new Date().toLocaleString()
                     });
-                    showNotice("DONE", "₹" + amt + " request lag gayi hai.");
+
+                    // Send Local Notification
+                    db.ref(`user_notifications/${myPhone}`).push({
+                        title: "Withdrawal Initiated",
+                        message: `Withdrawal of ₹${amt} has been placed. Balance deducted.`,
+                        type: "withdraw",
+                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    });
+
+                    showNotice("DONE", "Withdrawal of ₹" + amt + " is successful.");
                     document.getElementById('wd-amt-input').value = "";
                     document.getElementById('wd-upi-input').value = "";
                 });
@@ -205,7 +220,7 @@
 
         function fetchHistory() {
             const container = document.getElementById('logs-container');
-            container.innerHTML = "<p style='text-align:center'>Loading History...</p>";
+            container.innerHTML = "<p style='text-align:center'>Updating Logs...</p>";
             
             let allLogs = [];
 
@@ -227,7 +242,7 @@
                 });
 
                 if(allLogs.length === 0) {
-                    container.innerHTML = "<p style='text-align:center; color:#999;'>No history found.</p>";
+                    container.innerHTML = "<p style='text-align:center; color:#999;'>No transaction history yet.</p>";
                     return;
                 }
 
