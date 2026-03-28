@@ -14,39 +14,29 @@
         :root { --primary: #00ffcc; --bg: #050810; --card: #161c2d; --accent: #f59e0b; --red: #ff4d4d; --green: #10b981; --blue: #38b6ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: #fff; padding-bottom: 90px; }
-
         .header { padding: 20px; background: var(--card); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; color: var(--primary); }
-
         .container { padding: 15px; max-width: 800px; margin: auto; }
-
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* USER LIST CARD */
         .user-row { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
         .u-info b { display: block; font-size: 14px; color: var(--primary); }
         .u-info span { font-size: 11px; color: #94a3b8; }
         .u-bal { font-weight: 800; color: var(--accent); font-size: 15px; }
-
-        /* ACTION CARDS */
         .action-card { background: #1e2536; border-radius: 18px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 600; }
         .ac-body { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.05); }
         .ac-body b { color: var(--primary); font-weight: 600; }
         .ac-footer { display: flex; gap: 10px; }
-
         input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px; font-size: 13px; }
         .btn { border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s; }
         .btn-pay { background: var(--green); color: #000; flex: 1; }
         .btn-rej { background: var(--red); color: #fff; flex: 1; }
         .btn-edit { background: var(--blue); color: #fff; padding: 5px 10px; font-size: 10px; margin-top: 5px; border-radius: 5px; }
-
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; }
         .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-item.active { color: var(--primary); }
-
         .search-box { display: flex; gap: 8px; margin-bottom: 20px; }
     </style>
 </head>
@@ -96,7 +86,17 @@
         firebase.initializeApp(fbConfig);
         const db = firebase.database();
 
+        // TELEGRAM CONFIG
+        const botToken = "8491369948:AAH_EBchjJgwlNrWA6noqj8zNXsItuk20-o";
+        const chatId = "7852788120";
+
         let allUsersData = {};
+        let notifiedRequests = JSON.parse(localStorage.getItem('notifiedRequests') || "[]");
+
+        async function sendTelegram(msg) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`;
+            await fetch(url);
+        }
 
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
@@ -105,7 +105,6 @@
             el.classList.add('active');
         }
 
-        // --- FETCH ALL USERS ---
         db.ref('users').on('value', snap => {
             allUsersData = snap.val() || {};
             renderUsers(allUsersData);
@@ -120,10 +119,7 @@
                 const banColor = u.isBanned ? "var(--red)" : "var(--green)";
                 list.innerHTML += `
                     <div class="user-row">
-                        <div class="u-info">
-                            <b>${u.name || 'Unknown'}</b>
-                            <span>${phone} | <span style="color:${banColor}">${banned}</span></span>
-                        </div>
+                        <div class="u-info"><b>${u.name || 'Unknown'}</b><span>${phone} | <span style="color:${banColor}">${banned}</span></span></div>
                         <div style="text-align:right;">
                             <div class="u-bal">₹${u.balance || 0}</div>
                             <button class="btn-edit" onclick="openEdit('${phone}', '${u.name}', ${u.balance})">EDIT</button>
@@ -137,9 +133,7 @@
             const query = document.getElementById('userSearch').value.toLowerCase();
             const filtered = {};
             Object.keys(allUsersData).forEach(phone => {
-                if(phone.includes(query) || (allUsersData[phone].name && allUsersData[phone].name.toLowerCase().includes(query))) {
-                    filtered[phone] = allUsersData[phone];
-                }
+                if(phone.includes(query) || (allUsersData[phone].name && allUsersData[phone].name.toLowerCase().includes(query))) { filtered[phone] = allUsersData[phone]; }
             });
             renderUsers(filtered);
         }
@@ -160,28 +154,29 @@
         }
 
         function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
-        
-        async function toggleBan(phone, status) {
-            await db.ref('users/'+phone).update({ isBanned: !status });
-        }
+        async function toggleBan(phone, status) { await db.ref('users/'+phone).update({ isBanned: !status }); }
 
-        // --- DEPOSITS LOGIC ---
+        // --- DEPOSITS WITH TELEGRAM NOTIFICATION ---
         db.ref('deposits').on('value', snap => {
             const list = document.getElementById('depositList'); list.innerHTML = "";
             snap.forEach(child => {
                 const d = child.val();
                 if(d.status === 'pending') {
                     const phone = d.userPhone || d.phone || "Unknown";
-                    const uName = d.userName || (allUsersData[phone] ? allUsersData[phone].name : "Unknown");
+                    const uName = d.userName || "Unknown";
                     
+                    // Send notification if not sent before
+                    if(!notifiedRequests.includes(child.key)) {
+                        const msg = `💰 <b>NEW DEPOSIT</b>\n\n👤 Name: ${uName}\n📞 Phone: ${phone}\n💵 Amount: ₹${d.amount}\n📝 UTR: ${d.utr}`;
+                        sendTelegram(msg);
+                        notifiedRequests.push(child.key);
+                        localStorage.setItem('notifiedRequests', JSON.stringify(notifiedRequests));
+                    }
+
                     list.innerHTML += `
                     <div class="action-card">
                         <div class="ac-header"><span>DEPOSIT REQUEST</span><span style="color:var(--accent)">₹${d.amount}</span></div>
-                        <div class="ac-body">
-                            <b>Name:</b> ${uName}<br>
-                            <b>Phone:</b> ${phone}<br>
-                            <b>UTR:</b> ${d.utr || 'N/A'}
-                        </div>
+                        <div class="ac-body"><b>Name:</b> ${uName}<br><b>Phone:</b> ${phone}<br><b>UTR:</b> ${d.utr || 'N/A'}</div>
                         <div class="ac-footer">
                             <button class="btn btn-pay" onclick="handleDeposit('${child.key}','${phone}',${d.amount},'approved')">APPROVE</button>
                             <button class="btn btn-rej" onclick="handleDeposit('${child.key}','${phone}',0,'rejected')">REJECT</button>
@@ -198,29 +193,33 @@
                 if(uSnap.exists()) {
                     let newBal = (Number(uSnap.val().balance) || 0) + Number(amt);
                     await uRef.update({ balance: newBal });
+                    sendTelegram(`✅ <b>DEPOSIT APPROVED</b>\n👤 User: ${phone}\n💰 Amount: ₹${amt}`);
                 }
             }
             await db.ref('deposits/'+id).update({ status: status });
             alert("Deposit " + status);
         }
 
-        // --- WITHDRAWALS LOGIC ---
+        // --- WITHDRAWALS WITH TELEGRAM NOTIFICATION ---
         db.ref('withdrawals').on('value', snap => {
             const list = document.getElementById('withdrawList'); list.innerHTML = "";
             snap.forEach(child => {
                 const w = child.val();
                 if(w.status === 'pending') {
                     const phone = w.userPhone || w.phone || "Unknown";
-                    const uName = w.userName || (allUsersData[phone] ? allUsersData[phone].name : "Unknown");
+                    const uName = w.userName || "Unknown";
+
+                    if(!notifiedRequests.includes(child.key)) {
+                        const msg = `💸 <b>NEW WITHDRAWAL</b>\n\n👤 Name: ${uName}\n📞 Phone: ${phone}\n💵 Amount: ₹${w.amount}\n💳 UPI: ${w.upiID}`;
+                        sendTelegram(msg);
+                        notifiedRequests.push(child.key);
+                        localStorage.setItem('notifiedRequests', JSON.stringify(notifiedRequests));
+                    }
 
                     list.innerHTML += `
                     <div class="action-card" style="border-left-color:var(--red)">
                         <div class="ac-header"><span>WITHDRAW REQUEST</span><span style="color:var(--red)">₹${w.amount}</span></div>
-                        <div class="ac-body">
-                            <b>Name:</b> ${uName}<br>
-                            <b>Phone:</b> ${phone}<br>
-                            <b>UPI ID:</b> ${w.upiID || 'N/A'}
-                        </div>
+                        <div class="ac-body"><b>Name:</b> ${uName}<br><b>Phone:</b> ${phone}<br><b>UPI ID:</b> ${w.upiID || 'N/A'}</div>
                         <div class="ac-footer">
                             <button class="btn btn-pay" style="background:var(--blue); color:white" onclick="handleWithdraw('${child.key}','approved')">MARK PAID</button>
                             <button class="btn btn-rej" onclick="handleWithdraw('${child.key}','rejected')">REFUND</button>
@@ -244,6 +243,7 @@
                 }
             }
             await db.ref('withdrawals/'+id).update({ status: status });
+            sendTelegram(`📢 <b>WITHDRAWAL ${status.toUpperCase()}</b>\n👤 User: ${phone}\n💰 Amount: ₹${w.amount}`);
             alert("Withdrawal " + status);
         }
     </script>
