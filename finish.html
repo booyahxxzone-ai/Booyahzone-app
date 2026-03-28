@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FINISHED MATCHES | BOOYAH ZONE</title>
+    <title>Match Results | BOOYAH ZONE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
@@ -13,149 +13,169 @@
 
     <style>
         :root {
-            --primary: #ff9900;
-            --bg: #f5f7fa;
+            --primary: #ff6a00;
+            --primary-grad: linear-gradient(135deg, #ff8c00 0%, #ff4b2b 100%);
+            --bg-mix: linear-gradient(180deg, #ffffff 0%, #fff4ec 100%);
             --white: #ffffff;
-            --dark: #121212;
-            --gray: #95a5a6;
-            --finished: #27ae60;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --winner-gold: #fbbf24;
+            --card-shadow: 0 15px 35px rgba(255, 106, 0, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding-bottom: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; }
 
-        /* --- Header --- */
-        .top-nav {
-            background: var(--white); padding: 20px;
-            display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            height: 70px; display: flex; align-items: center; padding: 0 20px;
+            position: sticky; top: 0; z-index: 1000; gap: 15px;
+            border-bottom: 1px solid rgba(255, 106, 0, 0.1);
         }
-        .top-nav i { font-size: 20px; color: var(--primary); cursor: pointer; }
-        .top-nav h2 { font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
+        .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; border: none; }
+        .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
-
-        /* --- Match Card --- */
-        .match-card {
-            background: var(--white); border-radius: 25px;
-            overflow: hidden; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-bottom: 4px solid var(--finished);
-            position: relative;
-        }
-
-        .finish-badge {
-            position: absolute; top: 10px; right: 10px;
-            background: var(--finished); color: #fff;
-            padding: 4px 12px; border-radius: 50px;
-            font-size: 10px; font-weight: 900;
-        }
-
-        .card-header { background: #1a1a1a; padding: 15px 20px; }
-        .match-title { color: #fff; font-family: 'Orbitron'; font-size: 14px; font-weight: 700; }
-
-        .card-body { padding: 20px; }
+        /* Results Area */
+        .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
         
-        .winner-section {
-            background: #f8f9fa; border-radius: 15px;
-            padding: 15px; text-align: center;
-            border: 1px solid #eee; margin-bottom: 15px;
+        .result-card { background: white; border-radius: 30px; padding: 25px; margin-bottom: 25px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; overflow: hidden; animation: slideUp 0.6s ease; }
+        
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Trophy Decoration */
+        .trophy-bg { position: absolute; right: -20px; bottom: -20px; font-size: 100px; color: rgba(255, 106, 0, 0.05); transform: rotate(-15deg); z-index: 0; }
+
+        .m-header { position: relative; z-index: 1; border-bottom: 1px dashed #eee; padding-bottom: 15px; margin-bottom: 20px; }
+        .m-title { font-size: 16px; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 5px; }
+        .m-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+        /* Winner Section */
+        .winner-box { 
+            background: linear-gradient(135deg, #fffcf0 0%, #fff8e6 100%);
+            border: 2px solid #fde68a; border-radius: 20px; padding: 20px; 
+            text-align: center; position: relative; z-index: 1; margin-bottom: 20px;
         }
-        .winner-section i { color: #f1c40f; font-size: 24px; margin-bottom: 5px; }
-        .winner-name { font-family: 'Orbitron'; font-size: 18px; color: var(--dark); display: block; }
-        .winner-label { font-size: 10px; color: var(--gray); font-weight: 800; text-transform: uppercase; }
+        .winner-label { font-size: 10px; font-weight: 900; color: #b45309; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+        .winner-name { font-family: 'Orbitron'; font-size: 22px; color: var(--text-main); margin-bottom: 5px; display: block; }
+        .prize-won { font-size: 18px; font-weight: 800; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .prize-won i { font-size: 14px; }
 
-        .match-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .detail-item { font-size: 12px; font-weight: 700; color: var(--gray); }
-        .detail-item span { color: var(--dark); font-weight: 900; }
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; position: relative; z-index: 1; }
+        .stat-item { text-align: center; background: #fffaff; padding: 12px; border-radius: 15px; border: 1px solid #fff5eb; }
+        .stat-item small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+        .stat-item b { font-size: 13px; color: var(--text-main); }
 
-        .result-btn {
-            width: 100%; margin-top: 15px;
-            background: var(--dark); color: #fff; border: none;
-            padding: 12px; border-radius: 15px;
-            font-family: 'Orbitron'; font-size: 12px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .result-btn:active { transform: scale(0.95); background: var(--primary); }
+        .type-tag { position: absolute; top: 15px; right: 20px; background: var(--primary); color: white; font-size: 9px; font-weight: 900; padding: 4px 12px; border-radius: 50px; text-transform: uppercase; }
 
-        .no-match { text-align: center; margin-top: 100px; color: var(--gray); }
+        #emptyState { text-align: center; padding: 100px 20px; display: none; }
+        #emptyState i { font-size: 50px; color: #cbd5e1; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <i class="fas fa-arrow-left" onclick="location.href='home.html'"></i>
-        <h2>PAST BATTLES & RESULTS</h2>
-    </div>
+    <header class="header">
+        <button class="back-btn" onclick="window.history.back()"><i class="fas fa-chevron-left"></i></button>
+        <h1>Match Results</h1>
+    </header>
 
-    <div class="container" id="finishList">
-        <div class="no-match">
-            <i class="fas fa-sync fa-spin fa-2x"></i>
-            <p style="margin-top:10px">Loading History...</p>
+    <div class="content-area">
+        <div id="resultsList"></div>
+        <div id="emptyState">
+            <i class="fas fa-award"></i>
+            <p style="color:var(--text-muted); font-weight:600; margin-top:10px;">No results published yet!</p>
         </div>
     </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        database.ref('matches').on('value', (snapshot) => {
-            const container = document.getElementById('finishList');
-            container.innerHTML = "";
-            let found = false;
+        function loadFinishedMatches() {
+            const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4'];
+            let allFinished = [];
+            let loaded = 0;
 
-            snapshot.forEach((child) => {
-                const match = child.val();
-
-                if(match.status === "finish" || match.status === "finished") {
-                    found = true;
-                    container.innerHTML += `
-                        <div class="match-card">
-                            <div class="finish-badge">COMPLETED</div>
-                            <div class="card-header">
-                                <span class="match-title">${match.title}</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="winner-section">
-                                    <i class="fas fa-trophy"></i>
-                                    <span class="winner-label">Match Winner</span>
-                                    <span class="winner-name">${match.winner || 'TBA'}</span>
-                                </div>
-                                
-                                <div class="match-details">
-                                    <div class="detail-item">Mode: <span>${match.mode}</span></div>
-                                    <div class="detail-item">Prize: <span>₹${match.prize}</span></div>
-                                </div>
-
-                                <button class="result-btn" onclick="openResult('${match.resultUrl || '#'}')">
-                                    VIEW FULL RESULT
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
+            paths.forEach(path => {
+                db.ref(path).on('value', snap => {
+                    const type = path.replace('matches_', '');
+                    const data = snap.val();
+                    
+                    allFinished = allFinished.filter(m => m.type !== type);
+                    
+                    if(data) {
+                        Object.keys(data).forEach(id => {
+                            // Hum sirf 'finished' status dikhayenge
+                            if(data[id].status === 'finished') {
+                                allFinished.push({ ...data[id], id, type });
+                            }
+                        });
+                    }
+                    
+                    loaded++;
+                    if(loaded >= 3) renderUI(allFinished);
+                });
             });
+        }
 
-            if(!found) {
-                container.innerHTML = `
-                    <div class="no-match">
-                        <i class="fas fa-history fa-3x" style="color:#eee"></i>
-                        <p style="margin-top:15px; font-weight:700;">No History Available!</p>
-                        <p style="font-size:12px;">Completed matches will show up here.</p>
+        function renderUI(matches) {
+            const list = document.getElementById('resultsList');
+            const empty = document.getElementById('emptyState');
+            list.innerHTML = "";
+
+            if(matches.length === 0) {
+                empty.style.display = "block";
+                return;
+            }
+
+            empty.style.display = "none";
+            
+            // Latest results first
+            matches.reverse();
+
+            matches.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <i class="fas fa-trophy trophy-bg"></i>
+                    <div class="type-tag">${m.type}</div>
+                    
+                    <div class="m-header">
+                        <div class="m-title">${m.title}</div>
+                        <div class="m-date">Match Ended: ${m.time || 'Completed'}</div>
+                    </div>
+
+                    <div class="winner-box">
+                        <span class="winner-label">🏆 Winner Winner 🏆</span>
+                        <span class="winner-name">${m.winner_name || 'TBD'}</span>
+                        <div class="prize-won">
+                            <i class="fas fa-wallet"></i>
+                            ₹${m.winner_prize || m.prize} Won
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <small>ENTRY</small>
+                            <b>₹${m.entry}</b>
+                        </div>
+                        <div class="stat-item">
+                            <small>MAP</small>
+                            <b>BERMUDA</b>
+                        </div>
+                        <div class="stat-item">
+                            <small>TOTAL PRIZE</small>
+                            <b>₹${m.prize}</b>
+                        </div>
                     </div>
                 `;
-            }
-        });
-
-        function openResult(url) {
-            if(url === "#" || url === "") {
-                alert("Leaderboard is being updated. Please wait!");
-            } else {
-                window.location.href = url;
-            }
+                list.appendChild(card);
+            });
         }
+
+        loadFinishedMatches();
     </script>
 </body>
 </html>
