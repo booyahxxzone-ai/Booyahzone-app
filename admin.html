@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -112,7 +112,7 @@
         <div id="tab-matches" class="tab-content" style="display:none;">
             <div class="cat-filter">
                 <div class="cat-btn active" onclick="filterBy('all', this)">ALL</div>
-                <div class="cat-btn" onclick="filterBy('matches', this)">1V1</div>
+                <div class="cat-btn" onclick="filterBy('matches_1v1', this)">1V1</div>
                 <div class="cat-btn" onclick="filterBy('matches_2v2', this)">2V2</div>
                 <div class="cat-btn" onclick="filterBy('matches_4v4', this)">4V4</div>
             </div>
@@ -125,7 +125,7 @@
 
     <div class="modal" id="roomModal">
         <div class="modal-box">
-            <h2 id="modalTitle">ROOM MANAGEMENT</h2>
+            <h2 id="modalTitle">MATCH CONTROL</h2>
             <div id="roomInputs">
                 <input type="text" id="roomId" placeholder="Room ID">
                 <input type="text" id="roomPass" placeholder="Room Password">
@@ -133,6 +133,7 @@
             </div>
             <div id="winnerInputs" style="display:none;">
                 <input type="text" id="winName" placeholder="Winner Name/UID">
+                <input type="number" id="winPrize" placeholder="Won Amount (₹)">
                 <button class="btn btn-main" style="background:var(--accent); color:#000;" onclick="confirmFinish()">FINISH & PAY 🏆</button>
             </div>
             <button class="btn btn-sm" style="background:transparent; width:100%; margin-top:10px; color:#94a3b8;" onclick="closeModal()">CANCEL</button>
@@ -157,8 +158,6 @@
         if (!firebase.apps.length) { firebase.initializeApp(fbConfig); }
         const db = firebase.database();
         
-        const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
-        const chatId = "7852788120";
         let activeMID = "";
         let activePath = ""; 
         let currentFilter = "all";
@@ -175,8 +174,8 @@
             const mode = document.getElementById('mMode').value;
             const id = "M" + Date.now();
             
-            // 🔥 SMART ROUTING: Mode ke hisaab se sahi folder path
-            let path = 'matches'; 
+            // 🔥 Path update for correct fetching in finish.html
+            let path = 'matches_1v1'; 
             if(mode === '2V2') path = 'matches_2v2';
             if(mode === '4V4') path = 'matches_4v4';
 
@@ -187,14 +186,13 @@
                 entry: document.getElementById('mEntry').value,
                 prize: document.getElementById('mPrize').value,
                 time: document.getElementById('mTime').value,
-                status: "upcoming",
-                dbPath: path // Track path for future updates
+                status: "upcoming"
             };
 
             if(!data.title || !data.entry) return alert("Bhai details toh bharo!");
             
             await db.ref(path + '/' + id).set(data);
-            alert("Match Sahi Folder (" + path + ") Mein Live Ho Gaya!");
+            alert("Match Created in " + path);
             showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
         }
 
@@ -207,9 +205,9 @@
 
         async function loadMatches() {
             const container = document.getElementById('matchListContainer');
-            container.innerHTML = "<p style='text-align:center; color:#64748b;'>Loading...</p>";
+            container.innerHTML = "Loading...";
             
-            const paths = ['matches', 'matches_2v2', 'matches_4v4'];
+            const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4'];
             let allHtml = "";
 
             for(let p of paths) {
@@ -224,8 +222,7 @@
                         <div class="match-row">
                             <div class="match-info">
                                 <b>${m.title}</b>
-                                <small>Mode: ${m.mode} | Time: ${m.time}</small>
-                                <small>👥 Joined: ${pCount} | Path: ${p}</small>
+                                <small>${m.mode} | ${m.time} | ${p}</small>
                                 <span class="status-tag" style="background:${m.status=='live'?'var(--red)':'#334155'}">
                                     ${m.status}
                                 </span>
@@ -239,18 +236,17 @@
                         </div>`;
                 });
             }
-            container.innerHTML = allHtml || "<p style='text-align:center; padding:20px;'>No matches found.</p>";
+            container.innerHTML = allHtml || "<p style='text-align:center;'>No matches.</p>";
         }
 
         function viewPlayers(path, id) {
             db.ref(`${path}/${id}/players`).once('value', snap => {
                 const list = document.getElementById('playerList');
                 list.innerHTML = "";
-                if(!snap.exists()) list.innerHTML = "No players joined.";
+                if(!snap.exists()) list.innerHTML = "No players.";
                 snap.forEach(p => {
-                    const val = p.val();
-                    let pDetail = val.uid ? `UID: ${val.uid}` : `UID1: ${val.uid1} | UID2: ${val.uid2}`;
-                    list.innerHTML += `<div class="p-item"><b>${val.phone || 'Unknown'}</b><br>${pDetail}</div>`;
+                    const v = p.val();
+                    list.innerHTML += `<div class="p-item"><b>${v.phone || 'N/A'}</b><br>UID: ${v.uid || v.uid1}</div>`;
                 });
                 document.getElementById('playerModal').style.display = 'flex';
             });
@@ -267,7 +263,6 @@
             const rid = document.getElementById('roomId').value;
             const rps = document.getElementById('roomPass').value;
             db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🔴 Match Live!\nPath: ${activePath}\nID: ${rid}\nPass: ${rps}`);
             closeModal(); loadMatches();
         }
 
@@ -279,14 +274,23 @@
         }
 
         function confirmFinish() {
-            const win = document.getElementById('winName').value;
-            db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner: win });
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=🏆 Winner Announced!\nPath: ${activePath}\nWinner: ${win}`);
-            closeModal(); loadMatches();
+            const name = document.getElementById('winName').value;
+            const prize = document.getElementById('winPrize').value;
+            
+            // 🔥 FIXED: Sending winner_name and winner_prize for finish.html
+            db.ref(`${activePath}/${activeMID}`).update({ 
+                status: 'finished', 
+                winner_name: name, 
+                winner_prize: prize 
+            });
+            
+            alert("Winner Updated!");
+            closeModal(); 
+            loadMatches();
         }
 
         function deleteMatch(path, id) {
-            if(confirm("Bhai sach mein delete karun?")) {
+            if(confirm("Delete?")) {
                 db.ref(`${path}/${id}`).remove();
                 loadMatches();
             }
