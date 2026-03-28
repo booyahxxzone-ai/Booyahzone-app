@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
-        /* Header Style */
         .header {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
             height: 70px; display: flex; align-items: center; padding: 0 20px;
@@ -37,13 +36,11 @@
         .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
-        /* Filters */
         .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
         .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
         .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
-        /* Match Cards */
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
         .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; transition: 0.3s; }
         
@@ -60,12 +57,10 @@
         .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
         .stat-card b { font-size: 14px; color: var(--text-main); }
 
-        /* Buttons */
         .action-btn { width: 100%; padding: 16px; border: none; border-radius: 18px; background: var(--primary-grad); color: white; font-weight: 800; font-size: 13px; text-transform: uppercase; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25); }
         .action-btn:disabled { background: #cbd5e1; box-shadow: none; color: #64748b; cursor: not-allowed; }
         .action-btn.joined { background: var(--success); }
 
-        /* Overlays */
         .overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
         .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
@@ -164,12 +159,10 @@
     </div>
 
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        // --- User & Bot Config ---
         const userPhone = localStorage.getItem('userPhone');
         const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const chatId = "7852788120"; 
@@ -177,9 +170,9 @@
         let matchDataStore = {};
         let activeMID = null;
         let activeEntryFee = 0;
+        let activeTitle = "";
         let currentFilter = 'all';
 
-        // --- UI Utilities ---
         function triggerToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
@@ -201,13 +194,11 @@
             renderMatches();
         }
 
-        // --- Realtime Listener ---
         db.ref('matches_2v2').on('value', snap => {
             matchDataStore = snap.val() || {};
             renderMatches();
         });
 
-        // --- Render Function ---
         function renderMatches() {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
@@ -219,7 +210,7 @@
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
                 const teamsJoined = m.players ? Object.keys(m.players).length : 0;
-                const maxTeams = 2; // Logic: Duo vs Duo (2 Teams Total)
+                const maxTeams = 2; 
                 const isFull = teamsJoined >= maxTeams;
                 const isLive = m.status === 'live';
                 
@@ -231,7 +222,6 @@
                 const card = document.createElement('div');
                 card.className = 'm-card';
                 
-                // Disable button logic
                 let btnText = `Join Duo (₹${m.entry})`;
                 let btnAttr = `onclick="openMatchView('${id}', ${m.entry}, '${m.title}')"`;
                 let btnClass = 'action-btn';
@@ -265,7 +255,6 @@
             });
         }
 
-        // --- Timer Engine ---
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
                 const target = new Date(el.getAttribute('data-time')).getTime();
@@ -282,10 +271,9 @@
             });
         }, 1000);
 
-        // --- Open View Logic ---
         function openMatchView(id, fee, title) {
             if(!userPhone) return triggerToast("Please login first!");
-            activeMID = id; activeEntryFee = fee;
+            activeMID = id; activeEntryFee = fee; activeTitle = title;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
             document.getElementById('ruleCheck').checked = false;
@@ -310,7 +298,6 @@
             });
         }
 
-        // --- Join Process Logic ---
         async function processDuoJoin() {
             const u1 = document.getElementById('p1UID').value;
             const u2 = document.getElementById('p2UID').value;
@@ -323,7 +310,6 @@
             btn.disabled = true; btn.innerText = "Checking Slots...";
 
             try {
-                // Double check slot availability
                 const matchRef = db.ref(`matches_2v2/${activeMID}`);
                 const mSnap = await matchRef.get();
                 const currentPlayers = mSnap.val().players ? Object.keys(mSnap.val().players).length : 0;
@@ -345,16 +331,19 @@
                     return;
                 }
 
-                // Deduct Balance
                 const finalBal = (bal - activeEntryFee).toFixed(2);
                 await userRef.update({ balance: finalBal });
 
-                // Transaction History
-                await db.ref(`users/${userPhone}/history`).push({
-                    amount: activeEntryFee,
-                    type: "Debited",
-                    remark: "Joined 2V2 Duo: " + activeMID,
-                    date: new Date().toLocaleString()
+                // --- RECORD HISTORY (For Battle Records Page) ---
+                await db.ref(`user_history/${userPhone}`).push({
+                    matchTitle: activeTitle,
+                    entry: activeEntryFee,
+                    mode: "2V2 DUO",
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString(),
+                    status: "joined",
+                    winnerName: "WAITING",
+                    matchId: activeMID
                 });
 
                 // Add to Match
@@ -362,14 +351,9 @@
                     phone: userPhone, uid1: u1, uid2: u2, timestamp: Date.now()
                 });
 
-                // Telegram Notification
                 const updatedCount = currentPlayers + 1;
                 let teleMsg = `✅ <b>2V2 DUO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 P1 UID: ${u1}\n🎮 P2 UID: ${u2}\n💰 Fee: ₹${activeEntryFee}\n📊 Slots: ${updatedCount}/2`;
                 
-                if(updatedCount >= 2) {
-                    teleMsg += `\n\n🚫 <b>STATUS: MATCH FULL</b>`;
-                }
-
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
 
                 triggerToast("Joined Successfully! All the best.");
