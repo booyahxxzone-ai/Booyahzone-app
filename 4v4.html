@@ -36,11 +36,6 @@
         .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; }
 
-        .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
-        .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
-        .filter-btn { padding: 10px 22px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; }
-        .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
-
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
         .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; }
         
@@ -77,12 +72,11 @@
         .input-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 10px; }
         .input-group input { width: 100%; padding: 15px; border-radius: 15px; border: 1.5px solid #edf2f7; outline: none; background: #f8fafc; font-weight: 600; font-size: 14px; color: var(--text-main); }
 
-        .uid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .uid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; display: none; } /* Hidden by default */
 
-        .checkbox-container { display: flex; align-items: center; gap: 12px; margin: 25px 5px; }
-        /* Fix Checkbox Size & Interaction */
-        .checkbox-container input[type="checkbox"] { width: 24px; height: 24px; cursor: pointer; accent-color: var(--primary); }
-        .checkbox-container label { font-size: 13px; font-weight: 700; color: var(--text-main); cursor: pointer; flex: 1; }
+        .checkbox-container { display: flex; align-items: center; gap: 12px; margin: 15px 5px; background: #fff1e6; padding: 12px; border-radius: 15px; }
+        .checkbox-container input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
+        .checkbox-container label { font-size: 13px; font-weight: 700; color: var(--primary); cursor: pointer; flex: 1; }
 
         .copy-box { background: #ffffff; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1.5px solid #edf2f7; }
         .copy-box b { font-family: 'Orbitron'; font-size: 15px; color: var(--text-main); }
@@ -111,32 +105,45 @@
             
             <div id="joinForm">
                 <div class="input-card">
-                    <h3>Squad Member UIDs</h3>
+                    <h3>Player Details</h3>
                     <div class="input-group">
-                        <label>LEADER UID (PLAYER 1)</label>
-                        <input type="number" id="p1UID" placeholder="Main Player UID">
-                    </div>
-                    
-                    <div class="uid-grid">
-                        <div class="input-group">
-                            <label>PLAYER 2 UID</label>
-                            <input type="number" id="p2UID" placeholder="UID P2">
-                        </div>
-                        <div class="input-group">
-                            <label>PLAYER 3 UID</label>
-                            <input type="number" id="p3UID" placeholder="UID P3">
-                        </div>
+                        <label>YOUR GAME UID (LEADER)</label>
+                        <input type="number" id="p1UID" placeholder="Enter Your UID" oninput="calculateBill()">
                     </div>
 
-                    <div class="input-group" style="margin-bottom:0;">
-                        <label>PLAYER 4 UID</label>
-                        <input type="number" id="p4UID" placeholder="UID P4">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="addTeammates" onchange="toggleTeammates()">
+                        <label for="addTeammates">ADD YOUR TEAMMATES (+ UID)</label>
+                    </div>
+                    
+                    <div id="teammateFields" style="display:none;">
+                        <div class="uid-grid" style="display:grid; margin-top:15px;">
+                            <div class="input-group">
+                                <label>PLAYER 2 UID</label>
+                                <input type="number" id="p2UID" placeholder="UID P2" oninput="calculateBill()">
+                            </div>
+                            <div class="input-group">
+                                <label>PLAYER 3 UID</label>
+                                <input type="number" id="p3UID" placeholder="UID P3" oninput="calculateBill()">
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-bottom:0;">
+                            <label>PLAYER 4 UID</label>
+                            <input type="number" id="p4UID" placeholder="UID P4" oninput="calculateBill()">
+                        </div>
                     </div>
                 </div>
 
-                <div class="checkbox-container">
-                    <input type="checkbox" id="ruleCheck">
-                    <label for="ruleCheck">Our Squad is ready for Battle.</label>
+                <div class="input-card" style="background: #f8fafc;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="font-size:12px; font-weight:600;">Players Joining:</span>
+                        <b id="billPlayers" style="color:var(--primary);">1</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; pt-10; margin-top:10px; padding-top:10px;">
+                        <span style="font-size:14px; font-weight:800;">Total Amount:</span>
+                        <b id="billAmount" style="font-family:'Orbitron'; color:var(--text-main);">₹0</b>
+                    </div>
                 </div>
 
                 <button class="action-btn" id="payBtn" onclick="processSquadJoin()">PAY & JOIN SQUAD</button>
@@ -184,11 +191,24 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        function copyText(id, label) {
-            const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
-            navigator.clipboard.writeText(val);
-            triggerToast(label + " Copied!");
+        function toggleTeammates() {
+            const isChecked = document.getElementById('addTeammates').checked;
+            document.getElementById('teammateFields').style.display = isChecked ? 'block' : 'none';
+            calculateBill();
+        }
+
+        function calculateBill() {
+            let count = 1; // Always Leader
+            if(document.getElementById('addTeammates').checked) {
+                if(document.getElementById('p2UID').value) count++;
+                if(document.getElementById('p3UID').value) count++;
+                if(document.getElementById('p4UID').value) count++;
+            }
+            const total = activeEntryFee * count;
+            document.getElementById('billPlayers').innerText = count;
+            document.getElementById('billAmount').innerText = "₹" + total;
+            document.getElementById('payBtn').innerText = `PAY ₹${total} & JOIN SQUAD`;
+            return { count, total };
         }
 
         db.ref('matches_4v4').on('value', snap => {
@@ -201,8 +221,15 @@
             container.innerHTML = "";
             Object.keys(matchDataStore).reverse().forEach(id => {
                 const m = matchDataStore[id];
-                const teamsJoined = m.players ? Object.keys(m.players).length : 0;
-                const isFull = teamsJoined >= 25;
+                
+                // Calculate Total Players Joined
+                let totalPlayersJoined = 0;
+                if(m.players) {
+                    Object.values(m.players).forEach(p => {
+                        totalPlayersJoined += parseInt(p.playerCount || 1);
+                    });
+                }
+
                 const isLive = m.status === 'live';
                 let isJoined = false;
                 if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) isJoined = true; });
@@ -215,13 +242,13 @@
                     <div class="timer-box"><i class="fas fa-clock"></i><span>${m.time}</span></div>
                     <div class="stats-grid">
                         <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
-                        <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Slots</small><b>${teamsJoined}/25</b></div>
+                        <div class="stat-card"><small>Entry/Player</small><b>₹${m.entry}</b></div>
+                        <div class="stat-card"><small>Joined</small><b>${totalPlayersJoined} Players</b></div>
                     </div>
                     <button class="action-btn ${isJoined ? 'joined' : ''}" 
-                        ${(isFull || isLive) && !isJoined ? 'disabled' : ''} 
+                        ${isLive && !isJoined ? 'disabled' : ''} 
                         onclick="openMatchView('${id}', ${m.entry}, '${m.title}')">
-                        ${isJoined ? 'VIEW INFO' : isLive ? 'LIVE' : isFull ? 'FULL' : 'JOIN SQUAD'}
+                        ${isJoined ? 'VIEW INFO' : isLive ? 'LIVE' : 'JOIN SQUAD'}
                     </button>
                 `;
                 container.appendChild(card);
@@ -233,6 +260,15 @@
             activeMID = id; activeEntryFee = fee; activeTitle = title;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
+            
+            // Reset Form
+            document.getElementById('addTeammates').checked = false;
+            document.getElementById('teammateFields').style.display = 'none';
+            document.getElementById('p1UID').value = "";
+            document.getElementById('p2UID').value = "";
+            document.getElementById('p3UID').value = "";
+            document.getElementById('p4UID').value = "";
+            calculateBill();
 
             db.ref(`matches_4v4/${id}`).on('value', snap => {
                 const data = snap.val();
@@ -257,11 +293,10 @@
             const p2 = document.getElementById('p2UID').value;
             const p3 = document.getElementById('p3UID').value;
             const p4 = document.getElementById('p4UID').value;
-            const agree = document.getElementById('ruleCheck').checked;
+            
+            if(!p1) return triggerToast("Leader UID is required!");
 
-            if(!p1 || !p2 || !p3 || !p4) return triggerToast("Enter all 4 UIDs!");
-            if(!agree) return triggerToast("Tick the checkbox!");
-
+            const bill = calculateBill();
             const btn = document.getElementById('payBtn');
             btn.disabled = true; btn.innerText = "Processing...";
 
@@ -270,38 +305,47 @@
                 const uSnap = await userRef.get();
                 const bal = parseFloat(uSnap.val().balance || 0);
 
-                if(bal < activeEntryFee) {
-                    triggerToast("Low Balance!"); btn.disabled = false; btn.innerText = "PAY & JOIN SQUAD"; return;
+                if(bal < bill.total) {
+                    triggerToast("Low Balance!"); btn.disabled = false; calculateBill(); return;
                 }
 
-                await userRef.update({ balance: (bal - activeEntryFee).toFixed(2) });
+                await userRef.update({ balance: (bal - bill.total).toFixed(2) });
 
-                // Database me charo bando ki UID save karna
-                await db.ref(`matches_4v4/${activeMID}/players`).push({
+                const squadData = {
                     phone: userPhone,
-                    uids: { p1, p2, p3, p4 },
+                    playerCount: bill.count,
+                    uids: { p1, p2: p2||'N/A', p3: p3||'N/A', p4: p4||'N/A' },
                     timestamp: Date.now()
-                });
+                };
+
+                await db.ref(`matches_4v4/${activeMID}/players`).push(squadData);
 
                 await db.ref(`user_history/${userPhone}`).push({
-                    matchTitle: activeTitle, entry: activeEntryFee, mode: "4V4 SQUAD",
+                    matchTitle: activeTitle, entry: bill.total, mode: "4V4 SQUAD",
                     date: new Date().toLocaleDateString(), status: "joined"
                 });
 
-                // Telegram Alert me charo UIDs
                 const msg = `🔥 <b>SQUAD JOINED (4V4)</b>\n\n` +
                             `📱 Phone: ${userPhone}\n` +
-                            `💰 Fee: ₹${activeEntryFee}\n\n` +
-                            `🎮 <b>PLAYERS:</b>\n` +
+                            `👥 Total Players: ${bill.count}\n` +
+                            `💰 Total Paid: ₹${bill.total}\n\n` +
+                            `🎮 <b>UIDs:</b>\n` +
                             `1️⃣ ${p1} (L)\n` +
-                            `2️⃣ ${p2}\n` +
-                            `3️⃣ ${p3}\n` +
-                            `4️⃣ ${p4}`;
+                            (p2 ? `2️⃣ ${p2}\n` : '') +
+                            (p3 ? `3️⃣ ${p3}\n` : '') +
+                            (p4 ? `4️⃣ ${p4}` : '');
                 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
 
                 triggerToast("Joined Successfully!");
             } catch(e) { triggerToast("Error!"); btn.disabled = false; }
+        }
+
+        function copyText(id, label) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
+            navigator.clipboard.writeText(val);
+            triggerToast(label + " Copied!");
         }
 
         function closeOverlay() {
