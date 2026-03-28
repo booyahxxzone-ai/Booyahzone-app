@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -115,22 +115,21 @@
     </div>
 
     <script>
-        // FIREBASE SYNC
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // KEY FIX: Arena uses 'userPhone'
-        const myID = localStorage.getItem('userPhone'); 
+        // Consistent Phone & Name usage for Admin Panel
+        const myPhone = localStorage.getItem('userPhone'); 
         const myName = localStorage.getItem('userName') || "Gamer";
 
-        if(!myID) { 
+        if(!myPhone) { 
             alert("Session expired! Please login again.");
             window.location.href = "index.html"; 
         }
 
-        // REAL-TIME BALANCE SYNC
-        db.ref(`users/${myID}/balance`).on('value', snap => {
+        // Real-time Balance Sync
+        db.ref(`users/${myPhone}/balance`).on('value', snap => {
             document.getElementById('user-balance').innerText = "₹" + (snap.val() || 0);
         });
 
@@ -164,9 +163,9 @@
             if(!amt || !utr) return showNotice("WAIT", "Amount aur UTR dono bhariye!", false);
 
             db.ref('deposits').push({
-                userUID: myID,
+                userPhone: myPhone,
                 userName: myName,
-                amount: amt,
+                amount: Number(amt),
                 utr: utr,
                 status: "pending",
                 time: new Date().toLocaleString()
@@ -183,13 +182,14 @@
 
             if(!amt || !upi.includes('@')) return showNotice("ERROR", "Details sahi bhariye!", false);
 
-            db.ref(`users/${myID}/balance`).get().then(snap => {
+            db.ref(`users/${myPhone}/balance`).get().then(snap => {
                 const bal = snap.val() || 0;
                 if(amt > bal) return showNotice("FAILED", "Balance kam hai!", false);
 
-                db.ref(`users/${myID}/balance`).set(bal - amt).then(() => {
+                // Dedicting balance immediately and sending to Admin
+                db.ref(`users/${myPhone}/balance`).set(bal - amt).then(() => {
                     db.ref('withdrawals').push({
-                        userUID: myID,
+                        userPhone: myPhone,
                         userName: myName,
                         amount: amt,
                         upiID: upi,
@@ -198,23 +198,20 @@
                     });
                     showNotice("DONE", "₹" + amt + " request lag gayi hai.");
                     document.getElementById('wd-amt-input').value = "";
+                    document.getElementById('wd-upi-input').value = "";
                 });
             });
         }
 
-        // FETCH ALL LOGS (Deposits + Withdrawals + Arena Matches)
         function fetchHistory() {
             const container = document.getElementById('logs-container');
             container.innerHTML = "<p style='text-align:center'>Loading History...</p>";
             
             let allLogs = [];
 
-            // 1. Fetch Deposits
-            const depTask = db.ref('deposits').orderByChild('userUID').equalTo(myID).once('value');
-            // 2. Fetch Withdrawals
-            const wdTask = db.ref('withdrawals').orderByChild('userUID').equalTo(myID).once('value');
-            // 3. Fetch Arena Match History (Jo Match Join kiya)
-            const matchTask = db.ref(`users/${myID}/matchHistory`).once('value');
+            const depTask = db.ref('deposits').orderByChild('userPhone').equalTo(myPhone).once('value');
+            const wdTask = db.ref('withdrawals').orderByChild('userPhone').equalTo(myPhone).once('value');
+            const matchTask = db.ref(`users/${myPhone}/matchHistory`).once('value');
 
             Promise.all([depTask, wdTask, matchTask]).then(results => {
                 container.innerHTML = "";
@@ -234,7 +231,6 @@
                     return;
                 }
 
-                // Sort by time (latest first)
                 allLogs.sort((a,b) => new Date(b.time) - new Date(a.time));
 
                 allLogs.forEach(log => {
@@ -242,7 +238,7 @@
                     item.className = 'history-item';
                     item.innerHTML = `
                         <div>
-                            <h4 style="font-size:14px;">${log.title || log.type}</h4>
+                            <h4 style="font-size:14px;">${log.type}</h4>
                             <p style="font-size:10px; color:#999;">${log.time}</p>
                         </div>
                         <div style="text-align:right">
