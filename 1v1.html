@@ -64,7 +64,7 @@
             box-shadow: var(--card-shadow); border: 1px solid rgba(255, 106, 0, 0.05);
             position: relative; transition: 0.3s; animation: fadeIn 0.5s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10s); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .m-tag {
             position: absolute; top: 0; right: 0; background: #fff1e6;
@@ -117,12 +117,10 @@
         }
         .input-card input:focus { border-color: var(--primary); background: #fff; }
         
-        /* RULES CHECKBOX */
         .rules-wrapper { margin: 20px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
         .rules-wrapper input { width: 20px; height: 20px; accent-color: var(--primary); margin-top: 2px; }
         .rules-wrapper span { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
 
-        /* DETAILS BOX */
         .info-box { background: #f1f5f9; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border: 1px solid #e2e8f0; }
         .info-box b { font-family: 'Orbitron'; letter-spacing: 1px; color: var(--text-main); font-size: 15px; }
         .copy-btn { background: var(--primary); color: white; border: none; padding: 7px 15px; border-radius: 10px; font-size: 11px; font-weight: 800; cursor: pointer; }
@@ -204,12 +202,14 @@
     <script>
         // 1. Firebase Initialization
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
+        
+        // --- BOT DETAILS (AS PER YOUR REQUEST) ---
         const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
-        const chatId = "6631855648"; 
+        const chatId = "7852788120"; 
 
         let currentFilter = 'all';
         let matchDataStore = {};
@@ -249,6 +249,8 @@
             matchKeys.forEach(mid => {
                 const m = matchDataStore[mid];
                 
+                // --- CUSTOM FILTERS (1V1 ONLY & HIDE FINISHED) ---
+                if(!m.title.toUpperCase().includes("1V1")) return; 
                 if(m.status === 'finished') return;
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
@@ -258,7 +260,6 @@
                     Object.values(m.players).forEach(p => { if(p.phone === userPhone) userHasJoined = true; });
                 }
 
-                // 1V1 Logic: If 2 players join, match is full
                 let isFull = playerCount >= 2;
                 let isLive = m.status === 'live';
 
@@ -320,7 +321,7 @@
             db.ref(`matches/${id}`).on('value', snap => {
                 const match = snap.val();
                 let myEntry = null;
-                if(match.players) {
+                if(match && match.players) {
                     Object.values(match.players).forEach(p => { if(p.phone === userPhone) myEntry = p; });
                 }
 
@@ -373,9 +374,9 @@
                     phone: userPhone, uid: uid, name: userData.name || "Unknown Player", joinDate: new Date().toISOString()
                 });
 
-                // Telegram Notification
-                const msg = `🎯 *New 1V1 Entry!*\n━━━━━━━━━━━━━━━\n🏆 Match: ${document.getElementById('oMatchTitle').innerText}\n👤 Player: ${userData.name}\n📞 Phone: ${userPhone}\n🆔 UID: ${uid}`;
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+                // --- TELEGRAM NOTIFICATION (HTML MODE) ---
+                const msg = `🎯 <b>NEW 1V1 ENTRY!</b>\n━━━━━━━━━━━━━━━\n🏆 <b>Match:</b> ${document.getElementById('oMatchTitle').innerText}\n👤 <b>Player:</b> ${userData.name}\n📞 <b>Phone:</b> ${userPhone}\n🆔 <b>UID:</b> ${uid}\n💰 <b>Fee:</b> ₹${activeEntryFee}`;
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
 
                 showToast("Match Joined Successfully! 🔥");
             } catch (e) {
@@ -398,3 +399,4 @@
     </script>
 </body>
 </html>
+        
