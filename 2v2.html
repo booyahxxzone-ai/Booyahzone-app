@@ -25,8 +25,9 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; }
+        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
+        /* Header Style */
         .header {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
             height: 70px; display: flex; align-items: center; padding: 0 20px;
@@ -36,23 +37,20 @@
         .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
+        /* Filters */
         .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
         .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
-        .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; }
+        .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; }
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
+        /* Match Cards */
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .m-card { 
-            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; 
-        }
+        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; transition: 0.3s; }
         
         .m-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; }
         .m-tag.live { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
-        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; color: #1e293b; width: 80%; }
-        
         .timer-box { background: #f8fafc; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border: 1px dashed #cbd5e1; }
         .timer-box i { color: var(--primary); }
         .timer-box span { font-size: 13px; font-weight: 700; color: #475569; }
@@ -62,35 +60,25 @@
         .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
         .stat-card b { font-size: 14px; color: var(--text-main); }
 
-        .action-btn { 
-            width: 100%; padding: 16px; border: none; border-radius: 18px; 
-            background: var(--primary-grad); color: white; font-weight: 800; 
-            font-size: 13px; text-transform: uppercase; cursor: pointer; 
-            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25);
-        }
-        .action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        /* Buttons */
+        .action-btn { width: 100%; padding: 16px; border: none; border-radius: 18px; background: var(--primary-grad); color: white; font-weight: 800; font-size: 13px; text-transform: uppercase; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25); }
+        .action-btn:disabled { background: #cbd5e1; box-shadow: none; color: #64748b; cursor: not-allowed; }
         .action-btn.joined { background: var(--success); }
 
+        /* Overlays */
         .overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
         .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
-        .o-header h2 { font-size: 15px; text-transform: uppercase; font-family: 'Orbitron'; }
         .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
 
         .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .input-group input { width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 15px; font-size: 15px; font-weight: 600; outline: none; background: #f8fafc; }
+        .input-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px; }
+        .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: #f8fafc; font-weight: 600; }
 
-        .rules-list { font-size: 12px; color: var(--text-muted); padding: 15px; }
-        .rules-list li { margin-bottom: 8px; list-style: none; display: flex; gap: 10px; }
-        .rules-list i { color: var(--primary); font-size: 10px; margin-top: 3px; }
+        .rules-list { font-size: 12px; color: var(--text-muted); padding: 10px 0; }
+        .rules-list li { margin-bottom: 8px; list-style: none; display: flex; gap: 10px; line-height: 1.4; }
+        .rules-list i { color: var(--danger); font-size: 10px; margin-top: 4px; }
 
-        .check-container { display: flex; align-items: center; gap: 10px; padding: 15px; background: #fff1e6; border-radius: 15px; margin-bottom: 20px; }
-        .check-container input { width: 20px; height: 20px; accent-color: var(--primary); }
-        .check-container label { font-size: 12px; font-weight: 600; color: var(--primary); }
-
-        .copy-box { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .copy-box i { color: var(--primary); }
+        .copy-box { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; border: 1px solid #e2e8f0; }
 
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 12px; z-index: 9999; transition: 0.4s; }
         #toast.show { transform: translateX(-50%) translateY(0); }
@@ -118,74 +106,80 @@
     <div class="overlay" id="mainOverlay">
         <div class="o-header">
             <i class="fas fa-arrow-left" onclick="closeOverlay()" style="color:var(--primary); cursor:pointer;"></i>
-            <h2 id="oMatchTitle">Match Details</h2>
+            <h2 id="oMatchTitle" style="font-family:'Orbitron'; font-size:14px;">Match Details</h2>
         </div>
         <div class="o-body">
+            
             <div id="joinForm">
                 <div class="input-card">
-                    <div class="input-group">
-                        <label>Leader (P1) UID</label>
-                        <input type="number" id="p1UID" placeholder="Enter UID 1">
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <label>LEADER (P1) UID</label>
+                        <input type="number" id="p1UID" placeholder="Enter P1 Game UID">
                     </div>
                     <div class="input-group">
-                        <label>Partner (P2) UID</label>
-                        <input type="number" id="p2UID" placeholder="Enter UID 2">
+                        <label>PARTNER (P2) UID</label>
+                        <input type="number" id="p2UID" placeholder="Enter P2 Game UID">
                     </div>
                 </div>
 
                 <div class="input-card">
-                    <h2 style="font-size:12px; margin-bottom:10px;">MATCH RULES</h2>
+                    <h2 style="font-size:12px; color:var(--danger); font-weight:800;">⚠️ MANDATORY RULES</h2>
                     <ul class="rules-list">
-                        <li><i class="fas fa-circle"></i> No PC Players Allowed.</li>
-                        <li><i class="fas fa-circle"></i> No Grenades/Hacks.</li>
-                        <li><i class="fas fa-circle"></i> Room will start on exact time.</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> Fair Play Only: Use of hacks, scripts, or glitches = Instant Ban.</li>
+                        <li><i class="fas fa-mobile-alt"></i> Mobile Only: Emulator/PC players are not allowed in 2V2.</li>
+                        <li><i class="fas fa-undo"></i> Cancellation: Full refund if the match is canceled by Admin.</li>
                     </ul>
                 </div>
 
-                <div class="check-container">
-                    <input type="checkbox" id="ruleCheck">
-                    <label for="ruleCheck">I agree to all rules & conditions.</label>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:0 10px;">
+                    <input type="checkbox" id="ruleCheck" style="width:20px; height:20px; accent-color:var(--primary);">
+                    <label for="ruleCheck" style="font-size:12px; font-weight:700; color:var(--text-main);">I agree to the Fair Play policy.</label>
                 </div>
 
-                <button class="action-btn" id="payBtn" onclick="processDuoJoin()">JOIN DUO BATTLE</button>
+                <button class="action-btn" id="payBtn" onclick="processDuoJoin()">PAY & JOIN BATTLE</button>
             </div>
 
             <div id="matchDetails" style="display:none;">
-                <div class="input-card" style="text-align: center;">
-                    <small style="font-weight:800; color:var(--text-muted);">TEAM REGISTERED UIDS</small>
-                    <h2 id="displayUIDs" style="font-family:'Orbitron'; margin: 10px 0; color:var(--primary);">---</h2>
+                <div class="input-card" style="text-align: center; border: 2px dashed var(--primary); background: #fffbf0;">
+                    <small style="font-weight:800; color:var(--text-muted); letter-spacing:1px;">REGISTERED TEAM</small>
+                    <h2 id="displayUIDs" style="font-family:'Orbitron'; margin: 10px 0; color:var(--primary); font-size:18px;">---</h2>
                 </div>
 
                 <div class="input-card">
-                    <h2 style="font-size:12px; margin-bottom:15px;">ROOM DETAILS</h2>
+                    <h2 style="font-size:12px; margin-bottom:15px; color:var(--text-main);">ROOM ACCESS</h2>
                     <div class="copy-box" onclick="copyText('roomID', 'Room ID')">
-                        <div><small style="display:block; font-size:9px;">ROOM ID</small><b id="roomID">WAITING</b></div>
+                        <div><small style="display:block; font-size:9px; color:var(--text-muted);">ROOM ID</small><b id="roomID">WAITING</b></div>
                         <i class="fas fa-copy"></i>
                     </div>
                     <div class="copy-box" onclick="copyText('roomPass', 'Password')">
-                        <div><small style="display:block; font-size:9px;">PASSWORD</small><b id="roomPass">WAITING</b></div>
+                        <div><small style="display:block; font-size:9px; color:var(--text-muted);">PASSWORD</small><b id="roomPass">WAITING</b></div>
                         <i class="fas fa-copy"></i>
                     </div>
-                    <p style="font-size:10px; color:var(--text-muted); text-align:center; margin-top:10px;">ID Pass will appear 5-10 mins before match.</p>
+                    <p style="font-size:10px; color:var(--text-muted); text-align:center; margin-top:15px; line-height:1.5;">
+                        <i class="fas fa-clock"></i> ID & Password will be updated here exactly 15 minutes before the match start time.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
+        // --- User & Bot Config ---
         const userPhone = localStorage.getItem('userPhone');
         const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const chatId = "7852788120"; 
 
-        let currentFilter = 'all';
         let matchDataStore = {};
         let activeMID = null;
         let activeEntryFee = 0;
+        let currentFilter = 'all';
 
+        // --- UI Utilities ---
         function triggerToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
@@ -195,7 +189,7 @@
 
         function copyText(id, label) {
             const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return;
+            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
             navigator.clipboard.writeText(val);
             triggerToast(label + " Copied!");
         }
@@ -207,11 +201,13 @@
             renderMatches();
         }
 
+        // --- Realtime Listener ---
         db.ref('matches_2v2').on('value', snap => {
             matchDataStore = snap.val() || {};
             renderMatches();
         });
 
+        // --- Render Function ---
         function renderMatches() {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
@@ -223,7 +219,7 @@
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
                 const teamsJoined = m.players ? Object.keys(m.players).length : 0;
-                const maxTeams = 24; // Standard Duo Room
+                const maxTeams = 2; // Logic: Duo vs Duo (2 Teams Total)
                 const isFull = teamsJoined >= maxTeams;
                 const isLive = m.status === 'live';
                 
@@ -234,34 +230,50 @@
 
                 const card = document.createElement('div');
                 card.className = 'm-card';
+                
+                // Disable button logic
+                let btnText = `Join Duo (₹${m.entry})`;
+                let btnAttr = `onclick="openMatchView('${id}', ${m.entry}, '${m.title}')"`;
+                let btnClass = 'action-btn';
+
+                if(isJoined) {
+                    btnText = "View ID & Password";
+                    btnClass = "action-btn joined";
+                } else if(isLive) {
+                    btnText = "MATCH LIVE (Closed)";
+                    btnAttr = "disabled";
+                } else if(isFull) {
+                    btnText = "MATCH FULL";
+                    btnAttr = "disabled";
+                }
+
                 card.innerHTML = `
                     <div class="m-tag ${isLive ? 'live' : ''}">${isLive ? '● Live' : 'Upcoming'}</div>
-                    <h2 class="m-title">${m.title}</h2>
+                    <h2 style="font-size:16px; font-weight:800; margin-bottom:12px; width:75%; color:#1e293b;">${m.title}</h2>
                     <div class="timer-box">
                         <i class="fas fa-clock"></i>
-                        <span class="countdown-timer" data-time="${m.time}">Calculating...</span>
+                        <span class="countdown-timer" data-time="${m.time}">Loading...</span>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
                         <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Joined</small><b>${teamsJoined}/${maxTeams}</b></div>
+                        <div class="stat-card"><small>Teams</small><b>${teamsJoined}/${maxTeams}</b></div>
                     </div>
-                    <button class="action-btn ${isJoined ? 'joined' : ''}" ${isFull && !isJoined ? 'disabled' : ''} 
-                        onclick="openMatchView('${id}', ${m.entry}, '${m.title}')">
-                        ${isJoined ? 'View ID & Password' : (isFull ? 'Match Full' : 'Join Duo (₹'+m.entry+')')}
-                    </button>
+                    <button class="${btnClass}" ${btnAttr}>${btnText}</button>
                 `;
                 container.appendChild(card);
             });
         }
 
+        // --- Timer Engine ---
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
                 const target = new Date(el.getAttribute('data-time')).getTime();
-                const now = new Date().getTime();
-                const diff = target - now;
-                if(diff <= 0) { el.innerText = "Match Started"; el.style.color = "var(--success)"; }
-                else {
+                const diff = target - new Date().getTime();
+                if(diff <= 0) { 
+                    el.innerText = "Match Started"; 
+                    el.style.color = "var(--success)"; 
+                } else {
                     const h = Math.floor(diff/3600000);
                     const m = Math.floor((diff%3600000)/60000);
                     const s = Math.floor((diff%60000)/1000);
@@ -270,8 +282,9 @@
             });
         }, 1000);
 
+        // --- Open View Logic ---
         function openMatchView(id, fee, title) {
-            if(!userPhone) { triggerToast("Please login!"); return; }
+            if(!userPhone) return triggerToast("Please login first!");
             activeMID = id; activeEntryFee = fee;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
@@ -279,6 +292,8 @@
 
             db.ref(`matches_2v2/${id}`).on('value', snap => {
                 const data = snap.val();
+                if(!data) return;
+                
                 let myData = null;
                 if(data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
@@ -295,38 +310,50 @@
             });
         }
 
+        // --- Join Process Logic ---
         async function processDuoJoin() {
             const u1 = document.getElementById('p1UID').value;
             const u2 = document.getElementById('p2UID').value;
             const agree = document.getElementById('ruleCheck').checked;
 
-            if(u1.length < 5 || u2.length < 5) return triggerToast("Enter both UIDs!");
-            if(!agree) return triggerToast("Please agree to rules!");
-            
+            if(u1.length < 5 || u2.length < 5) return triggerToast("Enter both valid UIDs!");
+            if(!agree) return triggerToast("Agree to Fair Play rules!");
+
             const btn = document.getElementById('payBtn');
-            btn.disabled = true; btn.innerText = "Checking Balance...";
+            btn.disabled = true; btn.innerText = "Checking Slots...";
 
             try {
+                // Double check slot availability
+                const matchRef = db.ref(`matches_2v2/${activeMID}`);
+                const mSnap = await matchRef.get();
+                const currentPlayers = mSnap.val().players ? Object.keys(mSnap.val().players).length : 0;
+
+                if(currentPlayers >= 2) {
+                    triggerToast("Sorry, Match just got full!");
+                    closeOverlay();
+                    return;
+                }
+
+                btn.innerText = "Verifying Balance...";
                 const userRef = db.ref(`users/${userPhone}`);
-                const snap = await userRef.get();
-                const bal = parseFloat(snap.val().balance || 0);
+                const uSnap = await userRef.get();
+                const bal = parseFloat(uSnap.val().balance || 0);
 
                 if(bal < activeEntryFee) {
-                    triggerToast("Low Balance! Add Money.");
-                    btn.disabled = false; btn.innerText = "JOIN DUO BATTLE";
+                    triggerToast("Low Balance! Please recharge.");
+                    btn.disabled = false; btn.innerText = "PAY & JOIN BATTLE";
                     return;
                 }
 
                 // Deduct Balance
-                const newBal = (bal - activeEntryFee).toFixed(2);
-                await userRef.update({ balance: newBal });
+                const finalBal = (bal - activeEntryFee).toFixed(2);
+                await userRef.update({ balance: finalBal });
 
-                // Add History Folder Update
-                const histRef = db.ref(`users/${userPhone}/history`).push();
-                await histRef.set({
+                // Transaction History
+                await db.ref(`users/${userPhone}/history`).push({
                     amount: activeEntryFee,
                     type: "Debited",
-                    remark: "Joined 2V2: " + document.getElementById('oMatchTitle').innerText,
+                    remark: "Joined 2V2 Duo: " + activeMID,
                     date: new Date().toLocaleString()
                 });
 
@@ -335,14 +362,26 @@
                     phone: userPhone, uid1: u1, uid2: u2, timestamp: Date.now()
                 });
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent("✅ 2V2 JOINED\nPhone: "+userPhone+"\nUIDs: "+u1+", "+u2+"\nFee: ₹"+activeEntryFee)}`);
+                // Telegram Notification
+                const updatedCount = currentPlayers + 1;
+                let teleMsg = `✅ <b>2V2 DUO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 P1 UID: ${u1}\n🎮 P2 UID: ${u2}\n💰 Fee: ₹${activeEntryFee}\n📊 Slots: ${updatedCount}/2`;
                 
-                triggerToast("Joined Successfully!");
-            } catch(e) { triggerToast("Error! Try again."); btn.disabled = false; }
+                if(updatedCount >= 2) {
+                    teleMsg += `\n\n🚫 <b>STATUS: MATCH FULL</b>`;
+                }
+
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
+
+                triggerToast("Joined Successfully! All the best.");
+            } catch(e) { 
+                console.error(e);
+                triggerToast("System Error! Try again."); 
+                btn.disabled = false; 
+            }
         }
 
-        function closeOverlay() { 
-            document.getElementById('mainOverlay').style.display = 'none'; 
+        function closeOverlay() {
+            document.getElementById('mainOverlay').style.display = 'none';
             if(activeMID) db.ref(`matches_2v2/${activeMID}`).off();
         }
     </script>
