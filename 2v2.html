@@ -42,7 +42,7 @@
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; transition: 0.3s; }
+        .m-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; }
         
         .m-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; }
         .m-tag.live { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
@@ -63,17 +63,24 @@
 
         .overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
         .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
-        .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
+        .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; padding-bottom: 100px; }
 
         .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .input-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px; }
-        .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: #f8fafc; font-weight: 600; }
+        .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: #f8fafc; font-weight: 600; font-size: 14px; }
+
+        .checkbox-container { display: flex; align-items: center; gap: 12px; margin: 15px 5px; background: #fff1e6; padding: 12px; border-radius: 15px; border: 1px solid #ffe5d0; }
+        .checkbox-container input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
+        .checkbox-container label { font-size: 13px; font-weight: 700; color: var(--primary); cursor: pointer; flex: 1; }
 
         .rules-list { font-size: 12px; color: var(--text-muted); padding: 10px 0; }
         .rules-list li { margin-bottom: 8px; list-style: none; display: flex; gap: 10px; line-height: 1.4; }
         .rules-list i { color: var(--danger); font-size: 10px; margin-top: 4px; }
 
         .copy-box { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; border: 1px solid #e2e8f0; }
+
+        .bill-summary { background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #edf2f7; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
 
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 12px; z-index: 9999; transition: 0.4s; }
         #toast.show { transform: translateX(-50%) translateY(0); }
@@ -107,28 +114,41 @@
             
             <div id="joinForm">
                 <div class="input-card">
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label>LEADER (P1) UID</label>
-                        <input type="number" id="p1UID" placeholder="Enter P1 Game UID">
-                    </div>
                     <div class="input-group">
+                        <label>ENTER YOUR GAME UID (LEADER)</label>
+                        <input type="number" id="p1UID" placeholder="Ex: 123456789" oninput="calculateDuoBill()">
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="addPartner" onchange="togglePartnerField()">
+                        <label for="addPartner">ADD YOUR PARTNER (+ UID)</label>
+                    </div>
+
+                    <div id="partnerField" style="display:none; margin-top:15px;" class="input-group">
                         <label>PARTNER (P2) UID</label>
-                        <input type="number" id="p2UID" placeholder="Enter P2 Game UID">
+                        <input type="number" id="p2UID" placeholder="Enter Partner UID" oninput="calculateDuoBill()">
+                    </div>
+                </div>
+
+                <div class="bill-summary">
+                    <div class="bill-row"><span>Players:</span><span id="billCount">1</span></div>
+                    <div class="bill-row" style="color:var(--text-main); font-weight:800; font-size:15px; margin-top:8px; border-top:1px solid #eee; padding-top:8px;">
+                        <span>Total Pay:</span><span id="billTotal">₹0</span>
                     </div>
                 </div>
 
                 <div class="input-card">
                     <h2 style="font-size:12px; color:var(--danger); font-weight:800;">⚠️ MANDATORY RULES</h2>
                     <ul class="rules-list">
-                        <li><i class="fas fa-exclamation-triangle"></i> Fair Play Only: Use of hacks, scripts, or glitches = Instant Ban.</li>
-                        <li><i class="fas fa-mobile-alt"></i> Mobile Only: Emulator/PC players are not allowed in 2V2.</li>
-                        <li><i class="fas fa-undo"></i> Cancellation: Full refund if the match is canceled by Admin.</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> Fair Play Only: Use of hacks or glitches = Instant Ban.</li>
+                        <li><i class="fas fa-mobile-alt"></i> Mobile Only: No Emulator/PC players.</li>
+                        <li><i class="fas fa-undo"></i> Cancellation: Refund only if match canceled by Admin.</li>
                     </ul>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:0 10px;">
                     <input type="checkbox" id="ruleCheck" style="width:20px; height:20px; accent-color:var(--primary);">
-                    <label for="ruleCheck" style="font-size:12px; font-weight:700; color:var(--text-main);">I agree to the Fair Play policy.</label>
+                    <label for="ruleCheck" style="font-size:12px; font-weight:700; color:var(--text-main);">I agree to the match rules.</label>
                 </div>
 
                 <button class="action-btn" id="payBtn" onclick="processDuoJoin()">PAY & JOIN BATTLE</button>
@@ -136,7 +156,7 @@
 
             <div id="matchDetails" style="display:none;">
                 <div class="input-card" style="text-align: center; border: 2px dashed var(--primary); background: #fffbf0;">
-                    <small style="font-weight:800; color:var(--text-muted); letter-spacing:1px;">REGISTERED TEAM</small>
+                    <small style="font-weight:800; color:var(--text-muted); letter-spacing:1px;">REGISTERED AS</small>
                     <h2 id="displayUIDs" style="font-family:'Orbitron'; margin: 10px 0; color:var(--primary); font-size:18px;">---</h2>
                 </div>
 
@@ -150,9 +170,6 @@
                         <div><small style="display:block; font-size:9px; color:var(--text-muted);">PASSWORD</small><b id="roomPass">WAITING</b></div>
                         <i class="fas fa-copy"></i>
                     </div>
-                    <p style="font-size:10px; color:var(--text-muted); text-align:center; margin-top:15px; line-height:1.5;">
-                        <i class="fas fa-clock"></i> ID & Password will be updated here exactly 15 minutes before the match start time.
-                    </p>
                 </div>
             </div>
         </div>
@@ -180,11 +197,23 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        function copyText(id, label) {
-            const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
-            navigator.clipboard.writeText(val);
-            triggerToast(label + " Copied!");
+        function togglePartnerField() {
+            const isChecked = document.getElementById('addPartner').checked;
+            document.getElementById('partnerField').style.display = isChecked ? 'block' : 'none';
+            calculateDuoBill();
+        }
+
+        function calculateDuoBill() {
+            let count = 1;
+            if(document.getElementById('addPartner').checked) {
+                if(document.getElementById('p2UID').value) count = 2;
+                else count = 2; // Assume 2 if checkbox is on for pricing
+            }
+            const total = activeEntryFee * count;
+            document.getElementById('billCount').innerText = count;
+            document.getElementById('billTotal').innerText = "₹" + total;
+            document.getElementById('payBtn').innerText = `PAY ₹${total} & JOIN BATTLE`;
+            return { count, total };
         }
 
         function updateFilter(type, el) {
@@ -209,11 +238,14 @@
                 if(m.status === 'finished') return;
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
-                const teamsJoined = m.players ? Object.keys(m.players).length : 0;
-                const maxTeams = 2; 
-                const isFull = teamsJoined >= maxTeams;
+                let totalPlayersJoined = 0;
+                if(m.players) {
+                    Object.values(m.players).forEach(p => {
+                        totalPlayersJoined += parseInt(p.playerCount || 1);
+                    });
+                }
+
                 const isLive = m.status === 'live';
-                
                 let isJoined = false;
                 if(m.players) {
                     Object.values(m.players).forEach(p => { if(p.phone === userPhone) isJoined = true; });
@@ -227,13 +259,10 @@
                 let btnClass = 'action-btn';
 
                 if(isJoined) {
-                    btnText = "View ID & Password";
+                    btnText = "VIEW INFO";
                     btnClass = "action-btn joined";
                 } else if(isLive) {
-                    btnText = "MATCH LIVE (Closed)";
-                    btnAttr = "disabled";
-                } else if(isFull) {
-                    btnText = "MATCH FULL";
+                    btnText = "LIVE";
                     btnAttr = "disabled";
                 }
 
@@ -242,12 +271,12 @@
                     <h2 style="font-size:16px; font-weight:800; margin-bottom:12px; width:75%; color:#1e293b;">${m.title}</h2>
                     <div class="timer-box">
                         <i class="fas fa-clock"></i>
-                        <span class="countdown-timer" data-time="${m.time}">Loading...</span>
+                        <span class="countdown-timer" data-time="${m.time}">${m.time}</span>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
-                        <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Teams</small><b>${teamsJoined}/${maxTeams}</b></div>
+                        <div class="stat-card"><small>Entry/P</small><b>₹${m.entry}</b></div>
+                        <div class="stat-card"><small>Joined</small><b>${totalPlayersJoined} Players</b></div>
                     </div>
                     <button class="${btnClass}" ${btnAttr}>${btnText}</button>
                 `;
@@ -255,40 +284,29 @@
             });
         }
 
-        setInterval(() => {
-            document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
-                const diff = target - new Date().getTime();
-                if(diff <= 0) { 
-                    el.innerText = "Match Started"; 
-                    el.style.color = "var(--success)"; 
-                } else {
-                    const h = Math.floor(diff/3600000);
-                    const m = Math.floor((diff%3600000)/60000);
-                    const s = Math.floor((diff%60000)/1000);
-                    el.innerText = `${h}h ${m}m ${s}s Remaining`;
-                }
-            });
-        }, 1000);
-
         function openMatchView(id, fee, title) {
             if(!userPhone) return triggerToast("Please login first!");
             activeMID = id; activeEntryFee = fee; activeTitle = title;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
+            
+            // Reset Form
             document.getElementById('ruleCheck').checked = false;
+            document.getElementById('addPartner').checked = false;
+            document.getElementById('partnerField').style.display = 'none';
+            document.getElementById('p1UID').value = "";
+            document.getElementById('p2UID').value = "";
+            calculateDuoBill();
 
             db.ref(`matches_2v2/${id}`).on('value', snap => {
                 const data = snap.val();
-                if(!data) return;
-                
                 let myData = null;
                 if(data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
                 if(myData) {
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
-                    document.getElementById('displayUIDs').innerText = myData.uid1 + " & " + myData.uid2;
+                    document.getElementById('displayUIDs').innerText = "UID: " + myData.uid1 + (myData.uid2 !== 'N/A' ? " & " + myData.uid2 : "");
                     document.getElementById('roomID').innerText = data.roomId || "WAITING";
                     document.getElementById('roomPass').innerText = data.roomPass || "WAITING";
                 } else {
@@ -300,74 +318,89 @@
 
         async function processDuoJoin() {
             const u1 = document.getElementById('p1UID').value;
-            const u2 = document.getElementById('p2UID').value;
             const agree = document.getElementById('ruleCheck').checked;
+            const isDuo = document.getElementById('addPartner').checked;
+            const u2 = isDuo ? document.getElementById('p2UID').value : 'N/A';
 
-            if(u1.length < 5 || u2.length < 5) return triggerToast("Enter both valid UIDs!");
-            if(!agree) return triggerToast("Agree to Fair Play rules!");
+            if(u1.length < 5) return triggerToast("Enter a valid Leader UID!");
+            if(isDuo && u2.length < 5) return triggerToast("Enter a valid Partner UID!");
+            if(!agree) return triggerToast("Please agree to the match rules!");
 
+            const bill = calculateDuoBill();
             const btn = document.getElementById('payBtn');
-            btn.disabled = true; btn.innerText = "Checking Slots...";
+            btn.disabled = true; btn.innerText = "Processing...";
 
             try {
-                const matchRef = db.ref(`matches_2v2/${activeMID}`);
-                const mSnap = await matchRef.get();
-                const currentPlayers = mSnap.val().players ? Object.keys(mSnap.val().players).length : 0;
-
-                if(currentPlayers >= 2) {
-                    triggerToast("Sorry, Match just got full!");
-                    closeOverlay();
-                    return;
-                }
-
-                btn.innerText = "Verifying Balance...";
                 const userRef = db.ref(`users/${userPhone}`);
                 const uSnap = await userRef.get();
                 const bal = parseFloat(uSnap.val().balance || 0);
 
-                if(bal < activeEntryFee) {
-                    triggerToast("Low Balance! Please recharge.");
-                    btn.disabled = false; btn.innerText = "PAY & JOIN BATTLE";
+                if(bal < bill.total) {
+                    triggerToast("Low Balance!");
+                    btn.disabled = false; calculateDuoBill();
                     return;
                 }
 
-                const finalBal = (bal - activeEntryFee).toFixed(2);
-                await userRef.update({ balance: finalBal });
+                await userRef.update({ balance: (bal - bill.total).toFixed(2) });
 
-                // --- RECORD HISTORY (For Battle Records Page) ---
+                const registrationData = {
+                    phone: userPhone,
+                    playerCount: bill.count,
+                    uid1: u1,
+                    uid2: u2,
+                    timestamp: Date.now()
+                };
+
+                await db.ref(`matches_2v2/${activeMID}/players`).push(registrationData);
+
                 await db.ref(`user_history/${userPhone}`).push({
-                    matchTitle: activeTitle,
-                    entry: activeEntryFee,
-                    mode: "2V2 DUO",
-                    date: new Date().toLocaleDateString(),
-                    time: new Date().toLocaleTimeString(),
-                    status: "joined",
-                    winnerName: "WAITING",
-                    matchId: activeMID
+                    matchTitle: activeTitle, entry: bill.total, mode: "2V2 DUO",
+                    date: new Date().toLocaleDateString(), status: "joined", matchId: activeMID
                 });
 
-                // Add to Match
-                await db.ref(`matches_2v2/${activeMID}/players`).push({
-                    phone: userPhone, uid1: u1, uid2: u2, timestamp: Date.now()
-                });
-
-                const updatedCount = currentPlayers + 1;
-                let teleMsg = `✅ <b>2V2 DUO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 P1 UID: ${u1}\n🎮 P2 UID: ${u2}\n💰 Fee: ₹${activeEntryFee}\n📊 Slots: ${updatedCount}/2`;
+                let teleMsg = `✅ <b>2V2 JOINED</b>\n\n` +
+                              `📱 Phone: ${userPhone}\n` +
+                              `👥 Mode: ${isDuo ? 'DUO' : 'SOLO (in 2v2)'}\n` +
+                              `🎮 UID 1: ${u1}\n` +
+                              (isDuo ? `🎮 UID 2: ${u2}\n` : '') +
+                              `💰 Paid: ₹${bill.total}`;
                 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
 
-                triggerToast("Joined Successfully! All the best.");
+                triggerToast("Joined Successfully!");
             } catch(e) { 
-                console.error(e);
-                triggerToast("System Error! Try again."); 
+                triggerToast("System Error!"); 
                 btn.disabled = false; 
             }
+        }
+
+        function copyText(id, label) {
+            const val = document.getElementById(id).innerText;
+            if(val === "WAITING") return triggerToast("Waiting for ID Pass...");
+            navigator.clipboard.writeText(val);
+            triggerToast(label + " Copied!");
         }
 
         function closeOverlay() {
             document.getElementById('mainOverlay').style.display = 'none';
             if(activeMID) db.ref(`matches_2v2/${activeMID}`).off();
         }
+
+        // Countdown Logic
+        setInterval(() => {
+            document.querySelectorAll('.countdown-timer').forEach(el => {
+                const target = new Date(el.getAttribute('data-time')).getTime();
+                const now = new Date().getTime();
+                const diff = target - now;
+                if(diff <= 0) { el.innerText = "Match Started"; } 
+                else {
+                    const h = Math.floor(diff/3600000);
+                    const m = Math.floor((diff%3600000)/60000);
+                    const s = Math.floor((diff%60000)/1000);
+                    el.innerText = `${h}h ${m}m ${s}s left`;
+                }
+            });
+        }, 1000);
     </script>
 </body>
 </html>
