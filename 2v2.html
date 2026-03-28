@@ -20,12 +20,14 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --success: #10b981;
+            --card-shadow: 0 12px 30px rgba(255, 106, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; }
+        
+        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* Header */
+        /* --- HEADER --- */
         .header {
             background: var(--white); height: 75px; display: flex; align-items: center;
             padding: 0 20px; position: sticky; top: 0; z-index: 1000;
@@ -34,11 +36,11 @@
         .header .back-btn {
             width: 42px; height: 42px; border-radius: 12px; background: #fff1e6;
             display: flex; align-items: center; justify-content: center; color: var(--primary);
-            text-decoration: none; font-size: 18px;
+            text-decoration: none; font-size: 18px; transition: 0.3s;
         }
-        .header h1 { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header h1 { font-family: 'Orbitron'; font-size: 16px; font-weight: 900; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
 
-        /* Filters */
+        /* --- FILTER TABS --- */
         .filter-container {
             display: flex; gap: 12px; padding: 15px 20px; overflow-x: auto;
             background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
@@ -47,60 +49,92 @@
         .filter-btn {
             padding: 10px 22px; border-radius: 50px; background: var(--white);
             font-size: 11px; font-weight: 800; color: var(--text-muted); border: 1px solid #eee;
-            white-space: nowrap; cursor: pointer;
+            white-space: nowrap; cursor: pointer; transition: 0.3s;
         }
-        .filter-btn.active { background: var(--primary-grad); color: white; border: none; }
+        .filter-btn.active {
+            background: var(--primary-grad); color: white; border: none;
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
+        }
 
-        /* Cards */
+        /* --- MATCH CARDS --- */
         .content-area { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+        
         .m-card {
             background: var(--white); border-radius: 28px; padding: 22px; margin-bottom: 25px;
-            box-shadow: 0 12px 30px rgba(255, 106, 0, 0.1); border: 1px solid rgba(255, 106, 0, 0.05);
-            position: relative;
+            box-shadow: var(--card-shadow); border: 1px solid rgba(255, 106, 0, 0.05);
+            position: relative; transition: 0.3s; animation: fadeIn 0.5s ease;
         }
-        .m-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .m-tag {
+            position: absolute; top: 0; right: 0; background: #fff1e6;
+            color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px;
+            border-bottom-left-radius: 20px; text-transform: uppercase;
+        }
         .m-tag.live { background: #ff4b2b; color: white; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 50% { opacity: 0.7; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
         .m-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: #0f172a; width: 70%; }
-        .timer-box { background: #f8fafc; border-radius: 15px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border: 1px dashed #cbd5e1; }
-        .timer-box i { color: var(--primary); }
-        .timer-box span { font-size: 13px; font-weight: 700; color: #475569; }
+        
+        .timer-box {
+            background: #f8fafc; border-radius: 15px; padding: 12px 18px;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+            border: 1px dashed #cbd5e1;
+        }
+        .timer-box i { color: var(--primary); font-size: 16px; }
+        .timer-box span { font-size: 14px; font-weight: 700; color: #475569; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { text-align: center; background: #fffcf9; padding: 10px; border-radius: 15px; }
-        .stat-card small { display: block; font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
-        .stat-card b { font-size: 14px; color: var(--text-main); font-weight: 800; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { text-align: center; background: #fffcf9; padding: 12px; border-radius: 18px; border: 1px solid #fff5eb; }
+        .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-card b { font-size: 15px; color: var(--text-main); font-weight: 800; }
 
         .action-btn {
             width: 100%; padding: 18px; border: none; border-radius: 20px;
             background: var(--primary-grad); color: white; font-weight: 800;
-            font-size: 13px; text-transform: uppercase; cursor: pointer;
+            font-size: 14px; text-transform: uppercase; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.25); transition: 0.3s;
         }
-        .action-btn.joined { background: var(--success); }
+        .action-btn.joined { background: var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25); }
+        .action-btn.full { background: #94a3b8; box-shadow: none; cursor: not-allowed; }
+        .action-btn:active { transform: scale(0.97); }
 
-        /* Overlay */
-        .overlay { position: fixed; inset: 0; background: var(--bg-mix); z-index: 2000; display: none; flex-direction: column; animation: slideIn 0.4s ease; }
+        /* --- OVERLAY SYSTEM --- */
+        .overlay {
+            position: fixed; inset: 0; background: var(--bg-mix); z-index: 2000;
+            display: none; flex-direction: column; animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
         .o-header { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
         .o-body { padding: 25px; flex: 1; overflow-y: auto; }
 
         .input-card { background: var(--white); padding: 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .input-card input { width: 100%; padding: 16px; border: 2px solid #f1f5f9; border-radius: 16px; font-size: 15px; font-weight: 700; outline: none; background: #f8fafc; margin: 10px 0; }
+        .input-card label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .input-card input {
+            width: 100%; padding: 16px; border: 2px solid #f1f5f9; border-radius: 16px;
+            font-size: 16px; font-weight: 700; outline: none; background: #f8fafc; transition: 0.3s; margin-bottom: 15px;
+        }
+        .input-card input:focus { border-color: var(--primary); background: #fff; }
         
-        .rules-wrapper { margin: 20px 0; display: flex; gap: 12px; cursor: pointer; }
-        .rules-wrapper input { width: 18px; height: 18px; accent-color: var(--primary); }
-        .rules-wrapper span { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+        .rules-wrapper { margin: 20px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+        .rules-wrapper input { width: 20px; height: 20px; accent-color: var(--primary); margin-top: 2px; }
+        .rules-wrapper span { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
 
-        .info-box { background: #f1f5f9; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .copy-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; }
+        .info-box { background: #f1f5f9; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border: 1px solid #e2e8f0; }
+        .info-box b { font-family: 'Orbitron'; letter-spacing: 1px; color: var(--text-main); font-size: 15px; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 7px 15px; border-radius: 10px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
-        #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 12px; display: none; z-index: 9999; }
+        #toast {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 14px 28px; border-radius: 50px;
+            font-size: 13px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
 
-    <div id="toast"></div>
+    <div id="toast">Message here</div>
 
     <header class="header">
         <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
@@ -113,30 +147,33 @@
         <div class="filter-btn" onclick="setFilter('live', this)">LIVE</div>
     </div>
 
-    <div class="content-area" id="matchList"></div>
+    <div class="content-area" id="matchList">
+        <p style="text-align:center; margin-top:50px; color:var(--text-muted);">Fetching Duo Battles...</p>
+    </div>
 
     <div class="overlay" id="mainOverlay">
         <div class="o-header">
-            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:20px; color:var(--primary);"></i>
-            <h2 id="oMatchTitle" style="font-size:14px; font-weight:800;">Match Details</h2>
+            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:20px; color:var(--primary); cursor:pointer;"></i>
+            <h2 id="oMatchTitle" style="font-size:15px; font-weight:800; text-transform:uppercase;">Duo Details</h2>
         </div>
+        
         <div class="o-body">
             <div id="joinForm">
                 <div class="input-card">
-                    <small style="font-weight:800; color:var(--text-muted);">PLAYER 1 (YOU) UID</small>
-                    <input type="number" id="p1UID" placeholder="Enter Your UID">
+                    <label>YOUR FREE FIRE UID (P1)</label>
+                    <input type="number" id="p1UID" placeholder="Player 1 UID">
                     
-                    <small style="font-weight:800; color:var(--text-muted);">PLAYER 2 (PARTNER) UID</small>
-                    <input type="number" id="p2UID" placeholder="Enter Partner UID">
+                    <label>PARTNER FREE FIRE UID (P2)</label>
+                    <input type="number" id="p2UID" placeholder="Player 2 UID">
                     
-                    <div style="margin:20px 0; padding:15px; background:#fff8f1; border-radius:15px; display:flex; justify-content:space-between;">
-                        <span style="font-weight:600; font-size:13px;">Total Entry Fee</span>
-                        <b style="color:var(--primary);" id="oFee">₹0</b>
+                    <div style="margin:10px 0 20px 0; padding:18px; background:#fff8f1; border-radius:15px; display:flex; justify-content:space-between; border:1px solid #ffeada;">
+                        <span style="font-weight:600; font-size:14px; color:#9a4a00;">Total Entry Fee</span>
+                        <b style="color:var(--primary); font-size:16px;" id="oFee">₹0</b>
                     </div>
 
                     <label class="rules-wrapper">
                         <input type="checkbox" id="rulesCheck">
-                        <span>Duo rules apply. No teaming with other duos. Ensure both players use registered UIDs only.</span>
+                        <span>I confirm that my duo will not use hacks or team with others. We will record our gameplay as proof.</span>
                     </label>
 
                     <button class="action-btn" id="payBtn" onclick="processJoin()">PAY & JOIN DUO</button>
@@ -144,29 +181,37 @@
             </div>
 
             <div id="matchDetails" style="display:none;">
-                <div class="input-card" style="text-align:center;">
-                    <small style="color:var(--text-muted); font-weight:800;">REGISTERED UIDs</small>
-                    <h2 id="displayUIDs" style="font-family:'Orbitron'; color:var(--text-main); margin:10px 0 20px 0; font-size:18px;">---</h2>
+                <div class="input-card" style="text-align:center; border:2px solid var(--primary);">
+                    <small style="color:var(--text-muted); font-weight:800; display:block; margin-bottom:5px;">TEAM UIDs</small>
+                    <h2 id="displayUIDs" style="font-family:'Orbitron'; color:var(--text-main); margin-bottom:25px; font-size:20px;">---</h2>
                     
                     <div class="info-box">
-                        <span>ROOM ID: <b id="roomID">WAITING</b></span>
+                        <div style="text-align:left;"><small style="display:block; font-size:9px; color:var(--text-muted);">ROOM ID</small><b id="roomID">WAITING</b></div>
                         <button class="copy-btn" onclick="copyValue('roomID')">COPY</button>
                     </div>
                     <div class="info-box">
-                        <span>PASSWORD: <b id="roomPass">WAITING</b></span>
+                        <div style="text-align:left;"><small style="display:block; font-size:9px; color:var(--text-muted);">PASSWORD</small><b id="roomPass">WAITING</b></div>
                         <button class="copy-btn" onclick="copyValue('roomPass')">COPY</button>
                     </div>
+
+                    <p style="margin-top:25px; font-size:12px; color:var(--primary); font-weight:700; line-height:1.5;">
+                        <i class="fas fa-clock"></i> ID & Password will update 15 mins before start.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 1. Firebase Config
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
+        const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
+        const chatId = "7852788120"; 
+
         let currentFilter = 'all';
         let matchDataStore = {};
         let activeMID = null;
@@ -178,6 +223,7 @@
             setTimeout(() => t.style.display = 'none', 3000);
         }
 
+        // 2. Filter Logic
         function setFilter(type, el) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
@@ -185,7 +231,8 @@
             renderAllMatches();
         }
 
-        db.ref('matches_2v2').on('value', snap => {
+        // 3. Listen to Data (matches_2v2 Path)
+        db.ref('matches_2v2').on('value', (snap) => {
             matchDataStore = snap.val() || {};
             renderAllMatches();
         });
@@ -193,35 +240,65 @@
         function renderAllMatches() {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
-            Object.keys(matchDataStore).forEach(mid => {
+            
+            const matchKeys = Object.keys(matchDataStore);
+            if(matchKeys.length === 0) {
+                container.innerHTML = "<p style='text-align:center; padding-top:50px;'>No 2V2 matches found.</p>";
+                return;
+            }
+
+            matchKeys.forEach(mid => {
                 const m = matchDataStore[mid];
+                
+                // --- STRICT 2V2 & FINISHED FILTER ---
+                if(!m.title.toUpperCase().includes("2V2")) return;
                 if(m.status === 'finished') return;
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
-                let joined = false;
-                if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) joined = true; });
+                let teamCount = m.players ? Object.keys(m.players).length : 0;
+                let userHasJoined = false;
+                if(m.players) {
+                    Object.values(m.players).forEach(p => { if(p.phone === userPhone) userHasJoined = true; });
+                }
+
+                // 2V2 Duo: Assuming 24 players (12 teams) limit, adjust if needed
+                let maxTeams = m.maxTeams || 12; 
+                let isFull = teamCount >= maxTeams;
+                let isLive = m.status === 'live';
+
+                let tagClass = isLive ? 'm-tag live' : 'm-tag';
+                let tagText = isLive ? '● LIVE' : 'UPCOMING';
+                
+                let btnText = userHasJoined ? 'VIEW DETAILS' : (isLive ? 'JOIN LIVE' : (isFull ? 'DUO FULL' : 'JOIN MATCH'));
+                let btnClass = userHasJoined ? 'action-btn joined' : (isFull ? 'action-btn full' : 'action-btn');
+                let clickAction = (isFull && !userHasJoined) ? `showToast('Match is full!')` : `handleMatchClick('${mid}', ${m.entry}, '${m.title}')`;
 
                 container.innerHTML += `
                     <div class="m-card">
-                        <div class="m-tag ${m.status==='live'?'live':''}">${m.status==='live'?'● LIVE':'UPCOMING'}</div>
+                        <div class="${tagClass}">${tagText}</div>
                         <h2 class="m-title">${m.title}</h2>
-                        <div class="timer-box"><i class="fas fa-clock"></i> <span class="countdown-timer" data-time="${m.time}">${m.time}</span></div>
+                        <div class="timer-box">
+                            <i class="fas fa-stopwatch"></i>
+                            <span class="countdown-timer" data-time="${m.time}">Calculating...</span>
+                        </div>
                         <div class="stats-grid">
                             <div class="stat-card"><small>Win Prize</small><b>₹${m.prize}</b></div>
                             <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                            <div class="stat-card"><small>Mode</small><b>DUO</b></div>
+                            <div class="stat-card"><small>Teams</small><b>${teamCount}/${maxTeams}</b></div>
                         </div>
-                        <button class="action-btn ${joined?'joined':''}" onclick="handleMatchClick('${mid}', ${m.entry}, '${m.title}')">
-                            ${joined ? 'VIEW DETAILS' : 'JOIN MATCH'}
-                        </button>
+                        <button class="${btnClass}" onclick="${clickAction}">${btnText}</button>
                     </div>`;
             });
         }
 
+        // 4. Timer Logic
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
-                const diff = new Date(el.getAttribute('data-time')).getTime() - new Date().getTime();
-                if(diff <= 0) { el.innerText = "Started"; }
+                const target = new Date(el.getAttribute('data-time')).getTime();
+                const now = new Date().getTime();
+                const diff = target - now;
+                if(isNaN(target)) { el.innerText = "TBD"; }
+                else if(diff <= 0) { el.innerText = "Match Started"; el.style.color = "var(--success)"; }
                 else {
                     const h = Math.floor(diff/3600000);
                     const m = Math.floor((diff%3600000)/60000);
@@ -231,8 +308,11 @@
             });
         }, 1000);
 
+        // 5. Open Match Detail
         function handleMatchClick(id, fee, title) {
-            activeMID = id; activeEntryFee = fee;
+            if(!userPhone) return showToast("Pehle login karein!");
+            activeMID = id;
+            activeEntryFee = fee;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('oFee').innerText = "₹" + fee;
             document.getElementById('mainOverlay').style.display = 'flex';
@@ -240,12 +320,14 @@
             db.ref(`matches_2v2/${id}`).on('value', snap => {
                 const match = snap.val();
                 let myEntry = null;
-                if(match.players) Object.values(match.players).forEach(p => { if(p.phone === userPhone) myEntry = p; });
+                if(match && match.players) {
+                    Object.values(match.players).forEach(p => { if(p.phone === userPhone) myEntry = p; });
+                }
 
                 if(myEntry) {
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
-                    document.getElementById('displayUIDs').innerText = `${myEntry.uid1} & ${myEntry.uid2}`;
+                    document.getElementById('displayUIDs').innerText = `${myEntry.uid1} | ${myEntry.uid2}`;
                     document.getElementById('roomID').innerText = match.roomId || "WAITING";
                     document.getElementById('roomPass').innerText = match.roomPass || "WAITING";
                 } else {
@@ -255,40 +337,64 @@
             });
         }
 
+        // 6. Join Logic
         async function processJoin() {
             const uid1 = document.getElementById('p1UID').value;
             const uid2 = document.getElementById('p2UID').value;
             const checked = document.getElementById('rulesCheck').checked;
-            if(!uid1 || !uid2) return showToast("Dono UIDs bhariye!");
+            const btn = document.getElementById('payBtn');
+
+            if(!uid1 || !uid2 || uid1.length < 5 || uid2.length < 5) return showToast("Dono valid UIDs daalein!");
             if(!checked) return showToast("Rules accept karein!");
 
-            const btn = document.getElementById('payBtn');
             btn.disabled = true; btn.innerText = "Processing...";
 
-            const userRef = db.ref(`users/${userPhone}`);
-            const userSnap = await userRef.get();
-            const balance = parseFloat(userSnap.val().balance || 0);
+            try {
+                const userRef = db.ref(`users/${userPhone}`);
+                const userSnap = await userRef.get();
+                const userData = userSnap.val();
+                const balance = parseFloat(userData.balance || 0);
 
-            if(balance < activeEntryFee) {
-                showToast("Balance kam hai!");
+                if(balance < activeEntryFee) {
+                    showToast("Wallet balance kam hai!");
+                    btn.disabled = false; btn.innerText = "PAY & JOIN DUO";
+                    return;
+                }
+
+                await userRef.update({ balance: (balance - activeEntryFee).toFixed(2) });
+                
+                await userRef.child('matchHistory').push({
+                    matchName: "2V2: " + document.getElementById('oMatchTitle').innerText,
+                    amount: "-" + activeEntryFee,
+                    date: new Date().toLocaleString()
+                });
+
+                await db.ref(`matches_2v2/${activeMID}/players`).push({
+                    phone: userPhone, uid1: uid1, uid2: uid2, name: userData.name || "Duo Team", joinDate: new Date().toISOString()
+                });
+
+                const msg = `👥 <b>NEW 2V2 ENTRY!</b>\n━━━━━━━━━━━━━━━\n🏆 <b>Match:</b> ${document.getElementById('oMatchTitle').innerText}\n👤 <b>Leader:</b> ${userData.name}\n🆔 <b>UID1:</b> ${uid1}\n🆔 <b>UID2:</b> ${uid2}\n💰 <b>Fee:</b> ₹${activeEntryFee}`;
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
+
+                showToast("Duo Joined Successfully! 🔥");
+            } catch (e) {
+                showToast("Error: " + e.message);
                 btn.disabled = false; btn.innerText = "PAY & JOIN DUO";
-                return;
             }
-
-            await userRef.update({ balance: (balance - activeEntryFee).toFixed(2) });
-            await db.ref(`matches_2v2/${activeMID}/players`).push({
-                phone: userPhone, uid1: uid1, uid2: uid2, name: userSnap.val().name
-            });
-            showToast("Duo Joined! 🔥");
         }
 
-        function closeOverlay() { document.getElementById('mainOverlay').style.display = 'none'; }
+        function closeOverlay() {
+            document.getElementById('mainOverlay').style.display = 'none';
+            if(activeMID) db.ref(`matches_2v2/${activeMID}`).off();
+        }
+
         function copyValue(id) {
             const val = document.getElementById(id).innerText;
-            if(val === "WAITING") return;
+            if(val === "WAITING") return showToast("Wait karein...");
             navigator.clipboard.writeText(val);
             showToast("Copied!");
         }
     </script>
 </body>
 </html>
+        
