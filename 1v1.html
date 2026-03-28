@@ -258,7 +258,7 @@
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
             document.getElementById('ruleCheck').checked = false;
-            document.getElementById('p1UID').value = ""; // Reset UID on open
+            document.getElementById('p1UID').value = ""; 
 
             db.ref(`matches_1v1/${id}`).on('value', snap => {
                 const data = snap.val();
@@ -311,6 +311,14 @@
                     phone: userPhone, uid: uid, timestamp: Date.now()
                 });
 
+                // --- Notification Logic Added ---
+                await db.ref(`user_notifications/${userPhone}`).push({
+                    title: "Match Joined!",
+                    message: `Successfully registered for ${activeTitle}. UID: ${uid}`,
+                    type: "match",
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+
                 let teleMsg = `⚔️ <b>1V1 SOLO JOINED</b>\n\n📱 Phone: ${userPhone}\n🎮 UID: ${uid}\n💰 Fee Deducted: ₹${activeEntryFee}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=HTML`);
 
@@ -335,7 +343,8 @@
 
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
+                const targetText = el.getAttribute('data-time');
+                const target = new Date(targetText).getTime();
                 const diff = target - new Date().getTime();
                 if(diff <= 0) { el.innerText = "Match Started"; } 
                 else {
