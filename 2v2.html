@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,444 +23,83 @@
             --success: #10b981;
             --danger: #ef4444;
             --card-shadow: 0 15px 35px rgba(255, 106, 0, 0.12);
-            --inner-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* Base Resets */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Poppins', sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-mix); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; }
 
-        body { 
-            background: var(--bg-mix); 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            overflow-x: hidden; 
-            padding-bottom: 50px;
-        }
-
-        /* --- STICKY HEADER --- */
+        /* HEADER */
         .header {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            height: 75px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.04);
-            gap: 15px;
-            border-bottom: 1px solid rgba(255, 106, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            height: 70px; display: flex; align-items: center; padding: 0 20px;
+            position: sticky; top: 0; z-index: 1000; gap: 15px;
+            border-bottom: 1px solid rgba(255, 106, 0, 0.1);
         }
+        .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; }
+        .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
-        .header .back-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 14px;
-            background: #fff1e6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* FILTER */
+        .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
+        .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
+        .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; }
+        .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
+
+        /* MATCH CARDS */
+        .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .m-card { 
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; 
+            box-shadow: var(--card-shadow); border: 1px solid #fff5ee; position: relative; 
+            animation: fadeIn 0.5s ease;
         }
-
-        .header .back-btn:active { transform: scale(0.9); }
-
-        .header h1 { 
-            font-family: 'Orbitron'; 
-            font-size: 17px; 
-            font-weight: 900; 
-            background: var(--primary-grad); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* --- FILTER SYSTEM --- */
-        .filter-wrapper {
-            position: sticky;
-            top: 75px;
-            z-index: 999;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.03);
-        }
-
-        .filter-container {
-            display: flex;
-            gap: 12px;
-            padding: 0 20px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .filter-container::-webkit-scrollbar { display: none; }
-
-        .filter-btn {
-            padding: 12px 24px;
-            border-radius: 50px;
-            background: var(--white);
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--text-muted);
-            border: 1px solid #eee;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            text-transform: uppercase;
-        }
-
-        .filter-btn.active {
-            background: var(--primary-grad);
-            color: white;
-            border: none;
-            box-shadow: 0 6px 18px rgba(255, 106, 0, 0.35);
-        }
-
-        /* --- MATCH CARDS GRID --- */
-        .content-area { 
-            padding: 20px; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            min-height: 70vh;
-        }
-
-        .m-card {
-            background: var(--white);
-            border-radius: 30px;
-            padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(255, 106, 0, 0.04);
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .m-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 6px; height: 100%;
-            background: var(--primary-grad);
-        }
-
-        .m-tag {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: #fff1e6;
-            color: var(--primary);
-            font-size: 10px;
-            font-weight: 900;
-            padding: 10px 22px;
-            border-bottom-left-radius: 22px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .m-tag.live { 
-            background: var(--danger); 
-            color: white; 
-            animation: pulse-live 1.8s infinite; 
-        }
-
-        @keyframes pulse-live {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
-        .m-title { 
-            font-size: 19px; 
-            font-weight: 800; 
-            margin-bottom: 18px; 
-            color: #0f172a; 
-            width: 75%;
-            line-height: 1.3;
-        }
-
-        .timer-box {
-            background: #f8fafc;
-            border-radius: 18px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 22px;
-            border: 1px dashed #cbd5e1;
-        }
-
-        .timer-box i { color: var(--primary); font-size: 18px; }
-        .timer-box span { font-size: 14px; font-weight: 700; color: #475569; letter-spacing: 0.2px; }
-
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 12px; 
-            margin-bottom: 25px; 
-        }
-
-        .stat-card { 
-            text-align: center; 
-            background: #fffcf9; 
-            padding: 14px 8px; 
-            border-radius: 20px; 
-            border: 1px solid #fff5eb;
-            transition: 0.3s;
-        }
-
-        .stat-card small { 
-            display: block; 
-            font-size: 9px; 
-            color: var(--text-muted); 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            margin-bottom: 6px; 
-            letter-spacing: 0.5px;
-        }
-
-        .stat-card b { 
-            font-size: 15px; 
-            color: var(--text-main); 
-            font-weight: 800; 
-            display: block;
-        }
-
-        /* --- BUTTONS --- */
-        .action-btn {
-            width: 100%;
-            padding: 19px;
-            border: none;
-            border-radius: 22px;
-            background: var(--primary-grad);
-            color: white;
-            font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(255, 106, 0, 0.3);
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-btn::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: rgba(255,255,255,0.15);
-            transform: rotate(45deg);
-            transition: 0.5s;
-            opacity: 0;
-        }
-
-        .action-btn:active { transform: scale(0.96); }
-
-        .action-btn.joined { 
-            background: var(--success); 
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); 
-        }
-
-        .action-btn.full { 
-            background: #94a3b8; 
-            box-shadow: none; 
-            cursor: not-allowed; 
-        }
-
-        /* --- OVERLAY MODAL --- */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-mix);
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-            animation: slideOverlay 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes slideOverlay {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .o-header {
-            background: var(--white);
-            padding: 20px 25px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            border-bottom: 1px solid #f1f5f9;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.02);
-        }
-
-        .o-header h2 { font-size: 15px; font-weight: 800; color: var(--text-main); text-transform: uppercase; }
-
-        .o-body { 
-            padding: 25px; 
-            flex: 1; 
-            overflow-y: auto; 
-            background: linear-gradient(180deg, #fff 0%, #fff7f2 100%);
-        }
-
-        /* --- INPUTS & FORMS --- */
-        .input-card {
-            background: var(--white);
-            padding: 28px;
-            border-radius: 35px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
-            margin-bottom: 25px;
-            border: 1px solid #f8fafc;
-        }
-
-        .input-group { margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .input-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            padding-left: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .m-tag { position: absolute; top: 0; right: 0; background: #fff1e6; color: var(--primary); font-size: 10px; font-weight: 800; padding: 8px 18px; border-bottom-left-radius: 18px; text-transform: uppercase; }
+        .m-tag.live { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        .m-title { font-size: 17px; font-weight: 800; margin-bottom: 15px; color: #1e293b; width: 80%; }
+        
+        .timer-box { background: #f8fafc; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border: 1px dashed #cbd5e1; }
+        .timer-box i { color: var(--primary); }
+        .timer-box span { font-size: 13px; font-weight: 700; color: #475569; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { text-align: center; background: #fffcf9; padding: 10px; border-radius: 15px; border: 1px solid #fff5eb; }
+        .stat-card small { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+        .stat-card b { font-size: 14px; color: var(--text-main); }
+
+        .action-btn { 
+            width: 100%; padding: 16px; border: none; border-radius: 18px; 
+            background: var(--primary-grad); color: white; font-weight: 800; 
+            font-size: 13px; text-transform: uppercase; cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.25);
         }
+        .action-btn.joined { background: var(--success); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); }
+        .action-btn.full { background: #94a3b8; box-shadow: none; }
 
-        .input-group input {
-            width: 100%;
-            padding: 18px 22px;
-            border: 2.5px solid #f1f5f9;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: 700;
-            outline: none;
-            background: #f8fafc;
-            transition: 0.3s;
-            color: var(--text-main);
-        }
+        /* OVERLAY */
+        .overlay { position: fixed; inset: 0; background: white; z-index: 2000; display: none; flex-direction: column; }
+        .o-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #f1f5f9; }
+        .o-header h2 { font-size: 15px; text-transform: uppercase; font-family: 'Orbitron'; }
+        .o-body { padding: 20px; flex: 1; overflow-y: auto; background: #fafafa; }
 
-        .input-group input:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 5px rgba(255, 106, 0, 0.08);
-        }
+        .input-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .input-group input { width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 15px; font-size: 15px; font-weight: 600; outline: none; background: #f8fafc; }
+        .input-group input:focus { border-color: var(--primary); background: white; }
 
-        .fee-banner {
-            background: #fff9f4;
-            padding: 20px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border: 1.5px solid #ffede0;
-        }
+        .fee-banner { background: #fff9f4; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin: 20px 0; border: 1px solid #ffede0; }
+        .fee-banner b { color: var(--primary); font-family: 'Orbitron'; font-size: 18px; }
 
-        .fee-banner span { font-weight: 600; font-size: 14px; color: #9a4a00; }
-        .fee-banner b { font-size: 18px; color: var(--primary); font-family: 'Orbitron'; }
-
-        /* --- MATCH DETAILS (JOINED VIEW) --- */
-        .details-container {
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .uid-display {
-            background: #f1f5f9;
-            padding: 25px;
-            border-radius: 25px;
-            margin-bottom: 25px;
-            border: 2px solid var(--white);
-            box-shadow: var(--inner-shadow);
-        }
-
-        .uid-display small { color: var(--text-muted); font-weight: 800; font-size: 10px; letter-spacing: 1px; }
-        .uid-display h3 { 
-            font-family: 'Orbitron'; 
-            font-size: 22px; 
-            margin-top: 8px; 
-            color: var(--text-main);
-            word-spacing: 15px;
-        }
-
-        .room-info-card {
-            background: var(--white);
-            border-radius: 25px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .room-info-card .label-area { text-align: left; }
-        .room-info-card span { font-size: 9px; color: var(--text-muted); font-weight: 800; display: block; }
-        .room-info-card b { font-size: 16px; font-family: 'Orbitron'; color: var(--text-main); letter-spacing: 1px; }
-
-        .copy-btn {
-            background: var(--primary-grad);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        /* --- TOAST NOTIFICATION --- */
-        #toast {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1e293b;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 9999;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            white-space: nowrap;
-        }
-
+        /* TOAST */
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 12px; z-index: 9999; transition: 0.4s; }
         #toast.show { transform: translateX(-50%) translateY(0); }
-
-        /* No Match Found Style */
-        .empty-state {
-            text-align: center;
-            padding-top: 100px;
-            color: var(--text-muted);
-        }
-        .empty-state i { font-size: 50px; margin-bottom: 20px; opacity: 0.2; }
     </style>
 </head>
 <body>
 
-    <div id="toast"><i class="fas fa-info-circle"></i> <span id="toastMsg"></span></div>
+    <div id="toast"><span id="toastMsg"></span></div>
 
     <header class="header">
         <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
@@ -476,87 +115,58 @@
     </div>
 
     <div class="content-area" id="matchList">
-        <div class="empty-state">
-            <i class="fas fa-gamepad"></i>
-            <p>Loading duo battlegrounds...</p>
         </div>
-    </div>
 
     <div class="overlay" id="mainOverlay">
         <div class="o-header">
-            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="font-size:22px; color:var(--primary); cursor:pointer;"></i>
-            <h2 id="oMatchTitle">Duo Battle Details</h2>
+            <i class="fas fa-arrow-left" onclick="closeOverlay()" style="color:var(--primary); cursor:pointer;"></i>
+            <h2 id="oMatchTitle">Match Details</h2>
         </div>
-        
         <div class="o-body">
             <div id="joinForm">
                 <div class="input-card">
                     <div class="input-group">
-                        <label>Player 1 (Leader) UID</label>
-                        <input type="number" id="p1UID" placeholder="Enter Your UID">
+                        <label>Duo Leader (P1) UID</label>
+                        <input type="number" id="p1UID" placeholder="Enter UID 1">
                     </div>
-                    
                     <div class="input-group">
-                        <label>Player 2 (Partner) UID</label>
-                        <input type="number" id="p2UID" placeholder="Enter Partner UID">
+                        <label>Partner (P2) UID</label>
+                        <input type="number" id="p2UID" placeholder="Enter UID 2">
                     </div>
-                    
                     <div class="fee-banner">
                         <span>Team Entry Fee</span>
                         <b id="oFee">₹0</b>
                     </div>
-
-                    <label class="rules-wrapper" style="display: flex; gap: 12px; margin-bottom: 25px; cursor: pointer;">
-                        <input type="checkbox" id="rulesCheck" style="width: 22px; height: 22px; accent-color: var(--primary);">
-                        <span style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
-                            I confirm that my duo will not use emulators, hacks, or team with other duos. We will use registered UIDs only.
-                        </span>
-                    </label>
-
                     <button class="action-btn" id="payBtn" onclick="processDuoJoin()">PAY & JOIN BATTLE</button>
                 </div>
             </div>
 
-            <div id="matchDetails" style="display:none;" class="details-container">
+            <div id="matchDetails" style="display:none; text-align: center;">
                 <div class="input-card">
-                    <div class="uid-display">
-                        <small>REGISTERED TEAM UIDs</small>
-                        <h3 id="displayUIDs">---</h3>
-                    </div>
-                    
-                    <div class="room-info-card">
-                        <div class="label-area">
-                            <span>ROOM ID</span>
+                    <small style="font-weight:800; color:var(--text-muted);">TEAM REGISTERED UIDS</small>
+                    <h2 id="displayUIDs" style="font-family:'Orbitron'; margin: 10px 0; color:var(--primary);">---</h2>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <small>Room ID</small>
                             <b id="roomID">WAITING</b>
                         </div>
-                        <button class="copy-btn" onclick="copyToClipboard('roomID')">COPY</button>
-                    </div>
-
-                    <div class="room-info-card">
-                        <div class="label-area">
-                            <span>PASSWORD</span>
+                        <div class="stat-card">
+                            <small>Password</small>
                             <b id="roomPass">WAITING</b>
                         </div>
-                        <button class="copy-btn" onclick="copyToClipboard('roomPass')">COPY</button>
                     </div>
-
-                    <p style="margin-top:25px; font-size:12px; color:var(--primary); font-weight:700; line-height:1.5;">
-                        <i class="fas fa-info-circle"></i> Credentials will be updated 10-15 minutes before the match start time.
-                    </p>
+                    <p style="font-size:11px; color:var(--text-muted);">Room details will appear 10 mins before start.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        /* --- FIREBASE CONFIGURATION --- */
-        const firebaseConfig = { 
-            databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" 
-        };
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        /* --- GLOBAL VARIABLES --- */
         const userPhone = localStorage.getItem('userPhone');
         const botToken = "8753077165:AAGI5LgMXNHM5VywsUf-lcd3scNOByTbQ8Q";
         const chatId = "7852788120"; 
@@ -566,7 +176,6 @@
         let activeMID = null;
         let activeEntryFee = 0;
 
-        /* --- UI UTILITIES --- */
         function triggerToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
@@ -575,119 +184,103 @@
         }
 
         function updateFilter(type, el) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
             currentFilter = type;
-            renderMatchGallery();
+            renderMatches();
         }
 
-        /* --- REAL-TIME DATA LISTENER --- */
-        db.ref('matches_2v2').on('value', (snap) => {
+        // --- LOAD DATA ---
+        db.ref('matches_2v2').on('value', snap => {
             matchDataStore = snap.val() || {};
-            renderMatchGallery();
+            renderMatches();
         });
 
-        /* --- CORE RENDER ENGINE --- */
-        function renderMatchGallery() {
+        function renderMatches() {
             const container = document.getElementById('matchList');
             container.innerHTML = "";
-            
-            const matchKeys = Object.keys(matchDataStore);
-            
-            if(matchKeys.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-ghost"></i>
-                        <p>No 2V2 matches scheduled yet.</p>
-                    </div>`;
-                return;
-            }
+            const keys = Object.keys(matchDataStore).reverse();
+            let count = 0;
 
-            matchKeys.forEach(mid => {
-                const m = matchDataStore[mid];
+            keys.forEach(id => {
+                const m = matchDataStore[id];
                 
-                            // --- CATEGORY & STATUS FILTERS ---
+                // Safety check for 2V2 label
                 if(!m.title.toUpperCase().includes("2V2")) return;
                 if(m.status === 'finished') return;
                 if(currentFilter !== 'all' && m.status !== currentFilter) return;
 
-                const teamCount = m.players ? Object.keys(m.players).length : 0;
-                const maxTeams = 2; // 2V2 means 2 Teams (4 Players)
+                count++;
+                const teamsJoined = m.players ? Object.keys(m.players).length : 0;
+                const maxTeams = 2;
+                const isFull = teamsJoined >= maxTeams;
+                const isLive = m.status === 'live';
                 
-                let userJoined = false;
+                let isJoined = false;
                 if(m.players) {
-                    Object.values(m.players).forEach(p => { if(p.phone === userPhone) userJoined = true; });
+                    Object.values(m.players).forEach(p => { if(p.phone === userPhone) isJoined = true; });
                 }
 
-                const isFull = teamCount >= maxTeams;
-                const isLive = m.status === 'live';
-
-                // --- CARD CONSTRUCTION ---
                 const card = document.createElement('div');
                 card.className = 'm-card';
                 card.innerHTML = `
-                    <div class="m-tag ${isLive ? 'live' : ''}">${isLive ? '● Live Now' : 'Upcoming'}</div>
+                    <div class="m-tag ${isLive ? 'live' : ''}">${isLive ? '● Live' : 'Upcoming'}</div>
                     <h2 class="m-title">${m.title}</h2>
                     <div class="timer-box">
-                        <i class="fas fa-hourglass-half"></i>
+                        <i class="fas fa-clock"></i>
                         <span class="countdown-timer" data-time="${m.time}">Loading...</span>
                     </div>
                     <div class="stats-grid">
-                        <div class="stat-card"><small>Winner</small><b>₹${m.prize}</b></div>
+                        <div class="stat-card"><small>Prize</small><b>₹${m.prize}</b></div>
                         <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Slots</small><b>${teamCount}/${maxTeams}</b></div>
+                        <div class="stat-card"><small>Slots</small><b>${teamsJoined}/${maxTeams}</b></div>
                     </div>
-                    <button class="action-btn ${userJoined ? 'joined' : (isFull ? 'full' : '')}" 
-                            onclick="${(isFull && !userJoined) ? `triggerToast('Match is Full!')` : `openMatchView('${mid}', ${m.entry}, '${m.title}')`}">
-                        ${userJoined ? 'View Room Details' : (isFull ? 'Match Full' : 'Join Duo Match')}
+                    <button class="action-btn ${isJoined ? 'joined' : (isFull ? 'full' : '')}" 
+                        onclick="openMatchView('${id}', ${m.entry}, '${m.title}')">
+                        ${isJoined ? 'View Details' : (isFull ? 'Match Full' : 'Join Duo Battle')}
                     </button>
                 `;
                 container.appendChild(card);
             });
+
+            if(count === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:50px; color:#94a3b8;"><i class="fas fa-gamepad" style="font-size:40px; margin-bottom:10px;"></i><p>No 2V2 matches found.</p></div>`;
+            }
         }
 
-        /* --- COUNTDOWN LOGIC --- */
+        // --- TIMER ---
         setInterval(() => {
             document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
-                const now = new Date().getTime();
-                const diff = target - now;
-                
-                if(isNaN(target)) { el.innerText = "Time TBD"; }
-                else if(diff <= 0) { 
-                    el.innerText = "Match Started"; 
-                    el.style.color = "var(--success)"; 
-                } else {
+                const diff = new Date(el.getAttribute('data-time')).getTime() - new Date().getTime();
+                if(diff <= 0) { el.innerText = "Started"; el.style.color = "var(--success)"; }
+                else {
                     const h = Math.floor(diff/3600000);
                     const m = Math.floor((diff%3600000)/60000);
                     const s = Math.floor((diff%60000)/1000);
-                    el.innerText = `${h}h ${m}m ${s}s left`;
+                    el.innerText = `${h}h ${m}m ${s}s`;
                 }
             });
         }, 1000);
 
-        /* --- MODAL CONTROLLER --- */
+        // --- MODAL & JOIN ---
         function openMatchView(id, fee, title) {
             if(!userPhone) { triggerToast("Please login first!"); return; }
-            activeMID = id;
-            activeEntryFee = fee;
+            activeMID = id; activeEntryFee = fee;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('oFee').innerText = "₹" + fee;
             document.getElementById('mainOverlay').style.display = 'flex';
 
             db.ref(`matches_2v2/${id}`).on('value', snap => {
-                const match = snap.val();
-                let playerRecord = null;
-                if(match && match.players) {
-                    Object.values(match.players).forEach(p => { if(p.phone === userPhone) playerRecord = p; });
-                }
+                const data = snap.val();
+                let myData = null;
+                if(data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
-                if(playerRecord) {
+                if(myData) {
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
-                    document.getElementById('displayUIDs').innerText = `${playerRecord.uid1} & ${playerRecord.uid2}`;
-                    document.getElementById('roomID').innerText = match.roomId || "WAITING";
-                    document.getElementById('roomPass').innerText = match.roomPass || "WAITING";
+                    document.getElementById('displayUIDs').innerText = myData.uid1 + " & " + myData.uid2;
+                    document.getElementById('roomID').innerText = data.roomId || "WAITING";
+                    document.getElementById('roomPass').innerText = data.roomPass || "WAITING";
                 } else {
                     document.getElementById('joinForm').style.display = 'block';
                     document.getElementById('matchDetails').style.display = 'none';
@@ -695,89 +288,35 @@
             });
         }
 
-        /* --- JOINING ENGINE --- */
         async function processDuoJoin() {
-            const uid1 = document.getElementById('p1UID').value;
-            const uid2 = document.getElementById('p2UID').value;
-            const isChecked = document.getElementById('rulesCheck').checked;
+            const u1 = document.getElementById('p1UID').value;
+            const u2 = document.getElementById('p2UID').value;
             const btn = document.getElementById('payBtn');
 
-            if(!uid1 || uid1.length < 5 || !uid2 || uid2.length < 5) {
-                triggerToast("Enter valid 5+ digit UIDs!");
-                return;
-            }
-            if(!isChecked) {
-                triggerToast("Please accept duo rules!");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Verifying Funds...";
+            if(u1.length < 5 || u2.length < 5) { triggerToast("Enter both valid UIDs!"); return; }
+            
+            btn.disabled = true; btn.innerText = "Processing...";
 
             try {
                 const userRef = db.ref(`users/${userPhone}`);
-                const userSnap = await userRef.get();
-                const userData = userSnap.val();
-                const currentBalance = parseFloat(userData.balance || 0);
+                const snap = await userRef.get();
+                const bal = parseFloat(snap.val().balance || 0);
 
-                if(currentBalance < activeEntryFee) {
-                    triggerToast("Insufficient Wallet Balance!");
-                    btn.disabled = false;
-                    btn.innerText = "PAY & JOIN BATTLE";
-                    return;
-                }
+                if(bal < activeEntryFee) { triggerToast("Low Balance!"); btn.disabled = false; btn.innerText = "PAY & JOIN"; return; }
 
-                const newBalance = (currentBalance - activeEntryFee).toFixed(2);
-                await userRef.update({ balance: newBalance });
+                await userRef.update({ balance: (bal - activeEntryFee).toFixed(2) });
+                await db.ref(`matches_2v2/${activeMID}/players`).push({ phone: userPhone, uid1: u1, uid2: u2, timestamp: Date.now() });
+
+                // Telegram Alert
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent("🔥 2V2 JOINED\nPhone: "+userPhone+"\nUIDs: "+u1+", "+u2)}&parse_mode=HTML`);
                 
-                await userRef.child('matchHistory').push({
-                    matchName: "2V2 Clash: " + document.getElementById('oMatchTitle').innerText,
-                    amount: "-" + activeEntryFee,
-                    timestamp: new Date().getTime(),
-                    type: "Duo Entry"
-                });
-
-                const matchRef = db.ref(`matches_2v2/${activeMID}`);
-                await matchRef.child('players').push({
-                    phone: userPhone,
-                    uid1: uid1,
-                    uid2: uid2,
-                    playerName: userData.name || "Duo Leader",
-                    timestamp: new Date().getTime()
-                });
-
-                const updatedMatchSnap = await matchRef.get();
-                const finalMatch = updatedMatchSnap.val();
-                const teamCount = Object.keys(finalMatch.players).length;
-                const maxTeams = 2;
-
-                const joinMsg = `🏆 <b>NEW 2V2 DUO JOINED!</b>\n━━━━━━━━━━━━━━\n🎯 Match: ${document.getElementById('oMatchTitle').innerText}\n👤 Name: ${userData.name}\n📞 Phone: ${userPhone}\n🆔 UID 1: ${uid1}\n🆔 UID 2: ${uid2}\n💰 Fee: ₹${activeEntryFee}\n📊 Slot: ${teamCount}/${maxTeams}`;
-                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(joinMsg)}&parse_mode=HTML`);
-
-                if(teamCount >= maxTeams) {
-                    const fullMsg = `🚫 <b>2V2 ARENA FULL!</b>\n━━━━━━━━━━━━━━\n🔥 Match: ${document.getElementById('oMatchTitle').innerText}\n📢 Slot: 2/2 Teams. Room ID/Pass bhejo!`;
-                    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(fullMsg)}&parse_mode=HTML`);
-                }
-
-                triggerToast("Entry Confirmed! 🔥");
-
-            } catch (err) {
-                triggerToast("Error: " + err.message);
-                btn.disabled = false;
-                btn.innerText = "PAY & JOIN BATTLE";
-            }
+                triggerToast("Joined Successfully!");
+            } catch(e) { triggerToast("Error!"); btn.disabled = false; }
         }
 
-        function closeOverlay() {
-            document.getElementById('mainOverlay').style.display = 'none';
+        function closeOverlay() { 
+            document.getElementById('mainOverlay').style.display = 'none'; 
             if(activeMID) db.ref(`matches_2v2/${activeMID}`).off();
-        }
-
-        function copyToClipboard(id) {
-            const val = document.getElementById(id).innerText;
-            if(val === "WAITING") { triggerToast("Not available yet!"); return; }
-            navigator.clipboard.writeText(val);
-            triggerToast("Copied to clipboard!");
         }
     </script>
 </body>
