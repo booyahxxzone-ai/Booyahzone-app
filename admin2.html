@@ -11,78 +11,72 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #00ffcc; --bg: #050810; --card: #0f172a; --accent: #f59e0b; --red: #ff4d4d; --green: #10b981; }
+        :root { --primary: #00ffcc; --bg: #050810; --card: #161c2d; --accent: #f59e0b; --red: #ff4d4d; --green: #10b981; --blue: #38b6ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: #fff; padding-bottom: 90px; }
 
-        /* HEADER */
         .header { padding: 20px; background: var(--card); border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; color: var(--primary); }
 
         .container { padding: 15px; max-width: 800px; margin: auto; }
 
-        /* TABS */
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* USER LIST CARD */
-        .user-row { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #1e293b; }
+        .user-row { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
         .u-info b { display: block; font-size: 14px; color: var(--primary); }
         .u-info span { font-size: 11px; color: #94a3b8; }
         .u-bal { font-weight: 800; color: var(--accent); font-size: 15px; }
 
-        /* ACTION CARDS (Deposit/Withdraw) */
-        .action-card { background: #1e2536; border-radius: 18px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        /* ACTION CARDS */
+        .action-card { background: #1e2536; border-radius: 18px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .ac-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 600; }
-        .ac-body { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; }
+        .ac-body { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.05); }
+        .ac-body b { color: var(--primary); font-weight: 600; }
         .ac-footer { display: flex; gap: 10px; }
 
-        /* INPUTS & BUTTONS */
         input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px; font-size: 13px; }
         .btn { border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s; }
         .btn-pay { background: var(--green); color: #000; flex: 1; }
         .btn-rej { background: var(--red); color: #fff; flex: 1; }
-        .btn-edit { background: #38b6ff; color: #fff; padding: 5px 10px; font-size: 10px; }
+        .btn-edit { background: var(--blue); color: #fff; padding: 5px 10px; font-size: 10px; margin-top: 5px; border-radius: 5px; }
 
-        /* BOTTOM NAV */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; }
         .nav-item { text-align: center; color: #64748b; font-size: 10px; text-decoration: none; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-item.active { color: var(--primary); }
 
-        /* SEARCH BAR */
         .search-box { display: flex; gap: 8px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BZ MASTER <span style="color:white">CONTROL</span></h1>
+        <h1>BZ MASTER <span style="color:white">PRO</span></h1>
         <button onclick="location.href='admin.html'" style="background:var(--primary); padding:6px 15px; border:none; border-radius:8px; font-weight:bold; font-size:12px;">GAMES ➔</button>
     </div>
 
     <div class="container">
         <div id="tab-users" class="tab-content" style="display:block;">
             <div class="search-box">
-                <input type="text" id="userSearch" placeholder="Search by name or phone..." onkeyup="searchUsers()">
+                <input type="text" id="userSearch" placeholder="Search name or phone..." onkeyup="searchUsers()">
             </div>
-            <div id="allUsersList">
-                <p style="text-align:center; color:#64748b;">Loading User Database...</p>
-            </div>
+            <div id="allUsersList"></div>
         </div>
 
         <div id="tab-payments" class="tab-content">
-            <h2 style="font-size:14px; color:var(--primary); margin-bottom:15px; font-family:'Orbitron';">PENDING DEPOSITS</h2>
+            <h2 style="font-size:13px; color:var(--primary); margin-bottom:12px; font-family:'Orbitron';">PENDING DEPOSITS</h2>
             <div id="depositList"></div>
             
-            <h2 style="font-size:14px; color:var(--red); margin:25px 0 15px; font-family:'Orbitron';">PENDING WITHDRAWALS</h2>
+            <h2 style="font-size:13px; color:var(--red); margin:25px 0 12px; font-family:'Orbitron';">PENDING WITHDRAWALS</h2>
             <div id="withdrawList"></div>
         </div>
     </div>
 
     <div id="editModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:5000; padding:20px;">
         <div style="background:var(--card); padding:25px; border-radius:20px; width:100%; max-width:350px; border:1px solid var(--primary);">
-            <h3 id="mUserPhone" style="color:var(--primary); font-size:14px; margin-bottom:15px;">Phone: 00000</h3>
+            <h3 id="mUserPhone" style="color:var(--primary); font-size:14px; margin-bottom:15px;">Phone: ---</h3>
             <label style="font-size:11px; color:#94a3b8;">User Name</label>
             <input type="text" id="mUserName">
             <label style="font-size:11px; color:#94a3b8;">Wallet Balance (₹)</label>
@@ -111,7 +105,7 @@
             el.classList.add('active');
         }
 
-        // --- ALL USERS LOGIC ---
+        // --- FETCH ALL USERS ---
         db.ref('users').on('value', snap => {
             allUsersData = snap.val() || {};
             renderUsers(allUsersData);
@@ -124,17 +118,16 @@
                 const u = users[phone];
                 const banned = u.isBanned ? "BANNED" : "ACTIVE";
                 const banColor = u.isBanned ? "var(--red)" : "var(--green)";
-                
                 list.innerHTML += `
                     <div class="user-row">
                         <div class="u-info">
-                            <b>${u.name || 'Gamer'}</b>
+                            <b>${u.name || 'Unknown'}</b>
                             <span>${phone} | <span style="color:${banColor}">${banned}</span></span>
                         </div>
                         <div style="text-align:right;">
                             <div class="u-bal">₹${u.balance || 0}</div>
-                            <button class="btn btn-edit" onclick="openEdit('${phone}', '${u.name}', ${u.balance})">EDIT</button>
-                            <button class="btn btn-edit" style="background:${u.isBanned ? 'green':'red'}" onclick="toggleBan('${phone}', ${u.isBanned})">${u.isBanned ? 'UNBAN':'BAN'}</button>
+                            <button class="btn-edit" onclick="openEdit('${phone}', '${u.name}', ${u.balance})">EDIT</button>
+                            <button class="btn-edit" style="background:${u.isBanned ? 'var(--green)':'var(--red)'}" onclick="toggleBan('${phone}', ${u.isBanned})">${u.isBanned ? 'UNBAN':'BAN'}</button>
                         </div>
                     </div>`;
             });
@@ -151,13 +144,13 @@
             renderUsers(filtered);
         }
 
-        // --- EDIT USER ---
         function openEdit(phone, name, bal) {
             document.getElementById('mUserPhone').innerText = "Phone: " + phone;
-            document.getElementById('mUserName').value = name;
-            document.getElementById('mUserBal').value = bal;
+            document.getElementById('mUserName').value = name || "";
+            document.getElementById('mUserBal').value = bal || 0;
             document.getElementById('editModal').style.display = 'flex';
         }
+
         async function saveUserEdit() {
             const phone = document.getElementById('mUserPhone').innerText.replace("Phone: ", "");
             const name = document.getElementById('mUserName').value;
@@ -165,24 +158,33 @@
             await db.ref('users/'+phone).update({ name: name, balance: bal });
             closeEdit();
         }
+
         function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
+        
         async function toggleBan(phone, status) {
             await db.ref('users/'+phone).update({ isBanned: !status });
         }
 
-        // --- DEPOSITS & WITHDRAWALS ---
+        // --- DEPOSITS LOGIC ---
         db.ref('deposits').on('value', snap => {
             const list = document.getElementById('depositList'); list.innerHTML = "";
             snap.forEach(child => {
                 const d = child.val();
                 if(d.status === 'pending') {
+                    const phone = d.userPhone || d.phone || "Unknown";
+                    const uName = d.userName || (allUsersData[phone] ? allUsersData[phone].name : "Unknown");
+                    
                     list.innerHTML += `
                     <div class="action-card">
                         <div class="ac-header"><span>DEPOSIT REQUEST</span><span style="color:var(--accent)">₹${d.amount}</span></div>
-                        <div class="ac-body">User: ${d.userPhone}<br>UTR: ${d.utr}</div>
+                        <div class="ac-body">
+                            <b>Name:</b> ${uName}<br>
+                            <b>Phone:</b> ${phone}<br>
+                            <b>UTR:</b> ${d.utr || 'N/A'}
+                        </div>
                         <div class="ac-footer">
-                            <button class="btn btn-pay" onclick="handleDeposit('${child.key}','${d.userPhone}',${d.amount},'approved')">APPROVE</button>
-                            <button class="btn btn-rej" onclick="handleDeposit('${child.key}','${d.userPhone}',0,'rejected')">REJECT</button>
+                            <button class="btn btn-pay" onclick="handleDeposit('${child.key}','${phone}',${d.amount},'approved')">APPROVE</button>
+                            <button class="btn btn-rej" onclick="handleDeposit('${child.key}','${phone}',0,'rejected')">REJECT</button>
                         </div>
                     </div>`;
                 }
@@ -190,7 +192,7 @@
         });
 
         async function handleDeposit(id, phone, amt, status) {
-            if(status === 'approved') {
+            if(status === 'approved' && phone !== "Unknown") {
                 const uRef = db.ref('users/'+phone);
                 const uSnap = await uRef.once('value');
                 if(uSnap.exists()) {
@@ -202,15 +204,23 @@
             alert("Deposit " + status);
         }
 
+        // --- WITHDRAWALS LOGIC ---
         db.ref('withdrawals').on('value', snap => {
             const list = document.getElementById('withdrawList'); list.innerHTML = "";
             snap.forEach(child => {
                 const w = child.val();
                 if(w.status === 'pending') {
+                    const phone = w.userPhone || w.phone || "Unknown";
+                    const uName = w.userName || (allUsersData[phone] ? allUsersData[phone].name : "Unknown");
+
                     list.innerHTML += `
                     <div class="action-card" style="border-left-color:var(--red)">
                         <div class="ac-header"><span>WITHDRAW REQUEST</span><span style="color:var(--red)">₹${w.amount}</span></div>
-                        <div class="ac-body">User: ${w.userPhone}<br>UPI ID: ${w.upiID}</div>
+                        <div class="ac-body">
+                            <b>Name:</b> ${uName}<br>
+                            <b>Phone:</b> ${phone}<br>
+                            <b>UPI ID:</b> ${w.upiID || 'N/A'}
+                        </div>
                         <div class="ac-footer">
                             <button class="btn btn-pay" style="background:var(--blue); color:white" onclick="handleWithdraw('${child.key}','approved')">MARK PAID</button>
                             <button class="btn btn-rej" onclick="handleWithdraw('${child.key}','rejected')">REFUND</button>
@@ -221,13 +231,17 @@
         });
 
         async function handleWithdraw(id, status) {
-            if(status === 'rejected') {
-                const wSnap = await db.ref('withdrawals/'+id).once('value');
-                const w = wSnap.val();
-                const uRef = db.ref('users/'+w.userPhone);
+            const wSnap = await db.ref('withdrawals/'+id).once('value');
+            const w = wSnap.val();
+            const phone = w.userPhone || w.phone || "Unknown";
+
+            if(status === 'rejected' && phone !== "Unknown") {
+                const uRef = db.ref('users/'+phone);
                 const uSnap = await uRef.once('value');
-                let refBal = (Number(uSnap.val().balance) || 0) + Number(w.amount);
-                await uRef.update({ balance: refBal });
+                if(uSnap.exists()) {
+                    let refBal = (Number(uSnap.val().balance) || 0) + Number(w.amount);
+                    await uRef.update({ balance: refBal });
+                }
             }
             await db.ref('withdrawals/'+id).update({ status: status });
             alert("Withdrawal " + status);
