@@ -270,6 +270,16 @@
                 </div>
             </div>
         </div>
+
+        <div class="mode-item" onclick="location.href='br_mode.html'">
+            <div style="display: flex; align-items: center;">
+                <div class="mode-img"><i class="fas fa-map-location-dot"></i></div>
+                <div class="mode-info">
+                    <h3>BATTLE ROYALE</h3>
+                    <span class="tag">Elite 12 Squads</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -315,19 +325,14 @@
         if (!userPhone) {
             window.location.href = "index.html";
         } else {
-            // Real-time Data Sync logic
             database.ref('users/' + userPhone).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Update Name and UID
                     document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
                     document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
-                    
-                    // Currency Formatting
                     const bal = parseFloat(data.balance || 0);
                     document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
                 } else {
-                    // Force Logout if user data is missing
                     localStorage.clear();
                     window.location.href = "index.html";
                 }
