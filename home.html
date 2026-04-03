@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <title>BOOYAH ZONE | ELITE LOBBY</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -201,11 +205,11 @@
     <header class="app-bar">
         <div class="brand">
             <div class="logo-circle">
-                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150'">
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
             </div>
             <h2>BOOYAH ZONE</h2>
         </div>
-        <div class="top-wallet" onclick="location.href='wallet.html'">
+        <div class="top-wallet" onclick="navTo('wallet.html')">
             <i class="fas fa-wallet"></i>
             <span id="userBalance">₹0.00</span>
         </div>
@@ -222,18 +226,18 @@
         </div>
 
         <div class="action-grid">
-            <a href="upcoming.html" class="action-card">
+            <div onclick="navTo('upcoming.html')" class="action-card">
                 <i class="fas fa-calendar-check"></i>
                 <span>Matches</span>
-            </a>
-            <a href="ongoing.html" class="action-card">
+            </div>
+            <div onclick="navTo('ongoing.html')" class="action-card">
                 <i class="fas fa-bolt"></i>
                 <span>Live Now</span>
-            </a>
-            <a href="finish.html" class="action-card">
+            </div>
+            <div onclick="navTo('finish.html')" class="action-card">
                 <i class="fas fa-award"></i>
                 <span>Results</span>
-            </a>
+            </div>
         </div>
 
         <div class="section-header">
@@ -241,7 +245,7 @@
             <div class="live-count">● LIVE NOW</div>
         </div>
 
-        <div class="mode-item" onclick="location.href='1v1.html'">
+        <div class="mode-item" onclick="navTo('1v1.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-gun"></i></div>
                 <div class="mode-info">
@@ -251,7 +255,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="location.href='2v2.html'">
+        <div class="mode-item" onclick="navTo('2v2.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-user-group"></i></div>
                 <div class="mode-info">
@@ -261,7 +265,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="location.href='4v4.html'">
+        <div class="mode-item" onclick="navTo('4v4.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-users-rays"></i></div>
                 <div class="mode-info">
@@ -271,7 +275,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="location.href='br_mode.html'">
+        <div class="mode-item" onclick="navTo('br_mode.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-map-location-dot"></i></div>
                 <div class="mode-info">
@@ -283,33 +287,39 @@
     </div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-link active">
+        <div onclick="navTo('home.html')" class="nav-link active">
             <i class="fas fa-house-chimney-window"></i>
             <span>Lobby</span>
-        </a>
-        <a href="notification.html" class="nav-link">
+        </div>
+        <div onclick="navTo('notification.html')" class="nav-link">
             <i class="fas fa-bell"></i>
             <span>Alerts</span>
-        </a>
-        <a href="profile.html" class="fab-profile">
+        </div>
+        <div onclick="navTo('profile.html')" class="fab-profile">
             <i class="fas fa-user-shield"></i>
-        </a>
-        <a href="history.html" class="nav-link">
+        </div>
+        <div onclick="navTo('history.html')" class="nav-link">
             <i class="fas fa-ranking-star"></i>
             <span>History</span>
         </a>
-        <a href="wallet.html" class="nav-link">
+        <div onclick="navTo('wallet.html')" class="nav-link">
             <i class="fas fa-wallet"></i>
             <span>Wallet</span>
-        </a>
+        </div>
     </nav>
 
     <script>
+        // --- Anti-Browser Escape Logic ---
+        function navTo(url) {
+            window.location.assign(url);
+        }
+
+        // PWA App Lock Script
+        (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone");
+
         // --- Firebase Configuration ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
@@ -327,22 +337,17 @@
         if (!userPhone) {
             window.location.href = "index.html";
         } else {
-            // Real-time Database Listener
             database.ref('users/' + userPhone).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Update UI elements safely
                     document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
                     document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
                     const bal = parseFloat(data.balance || 0);
                     document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
                 } else {
-                    // If user not found, logout
                     localStorage.clear();
                     window.location.href = "index.html";
                 }
-            }, (error) => {
-                console.error("Firebase Sync Error:", error);
             });
         }
     </script>
