@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BZ | ELITE ADMIN SMART</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>BZ ELITE | ULTIMATE ADMIN COMMAND CENTER</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
@@ -12,300 +13,288 @@
 
     <style>
         :root { 
-            --primary: #00ffcc; --bg: #0b0f1a; --card: #161c2d; --text: #ffffff; 
-            --accent: #ff9f43; --red: #ff4d4d; --blue: #38b6ff; --green: #00c853;
+            --neon: #00ffcc; --dark-bg: #05080f; --card-bg: #0f172a; 
+            --gold: #ff9f43; --danger: #ff4d4d; --success: #00c853; --info: #38b6ff;
+            --glass: rgba(255, 255, 255, 0.03);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--dark-bg); color: #fff; padding-bottom: 100px; overflow-x: hidden; }
 
-        /* Header */
+        /* Animated Header */
         .header { 
-            padding: 20px; text-align: center; background: var(--card); 
-            border-bottom: 2px solid var(--primary); display: flex; 
-            justify-content: space-between; align-items: center; 
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            padding: 20px; background: linear-gradient(to bottom, #161c2d, var(--dark-bg));
+            border-bottom: 2px solid var(--neon); text-align: center;
+            position: sticky; top: 0; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        .header h1 { font-family: 'Orbitron'; font-size: 15px; color: var(--primary); letter-spacing: 1px; }
+        .header h1 { font-family: 'Orbitron'; font-size: 18px; color: var(--neon); text-shadow: 0 0 15px var(--neon); }
 
-        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .container { padding: 15px; max-width: 650px; margin: auto; }
 
-        /* Card Design */
+        /* Premium Card Styling */
         .card { 
-            background: var(--card); border-radius: 20px; padding: 22px; 
-            margin-bottom: 20px; border: 1px solid rgba(0,255,204,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--card-bg); border-radius: 24px; padding: 25px; 
+            margin-bottom: 25px; border: 1px solid rgba(0,255,204,0.1);
+            position: relative; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
-        h2 { font-family: 'Orbitron'; font-size: 13px; color: var(--accent); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--neon); }
 
-        /* Inputs */
+        h2 { font-family: 'Orbitron'; font-size: 14px; color: var(--gold); margin-bottom: 20px; letter-spacing: 2px; }
+
+        /* Inputs & Selects */
+        .input-group { margin-bottom: 15px; position: relative; }
         input, select { 
-            background: #1e2536; border: 1px solid #334155; color: #fff; 
-            padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none; transition: 0.3s;
+            background: #1e293b; border: 1px solid #334155; color: #fff; 
+            padding: 15px 15px; border-radius: 12px; width: 100%; font-size: 14px; 
+            outline: none; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,204,0.2); }
+        input:focus { border-color: var(--neon); background: #0f172a; box-shadow: 0 0 20px rgba(0,255,204,0.15); }
 
-        /* Buttons */
+        /* Mega Buttons */
         .btn { 
-            border: none; border-radius: 12px; font-family: 'Orbitron'; 
-            cursor: pointer; font-weight: 900; padding: 15px; transition: 0.3s; 
-            font-size: 11px; text-transform: uppercase;
+            border: none; border-radius: 14px; font-family: 'Orbitron'; 
+            cursor: pointer; font-weight: 900; padding: 16px; transition: 0.3s; 
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
         }
-        .btn-main { background: var(--primary); color: #000; width: 100%; box-shadow: 0 5px 15px rgba(0,255,204,0.2); }
-        .btn-sm { padding: 8px 12px; font-size: 9px; color: #fff; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; }
+        .btn-main { background: linear-gradient(135deg, #00ffcc, #008f7a); color: #000; width: 100%; }
+        .btn-main:active { transform: scale(0.97); }
 
-        /* Filter */
-        .cat-filter { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 15px; scrollbar-width: none; }
-        .cat-btn { 
-            padding: 10px 20px; background: #1e2536; border-radius: 50px; 
-            font-size: 10px; font-weight: 800; white-space: nowrap; border: 1px solid #334155; color: #94a3b8; transition: 0.3s;
+        /* Match Display Row */
+        .match-item {
+            background: #1e293b; border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.05);
+            animation: fadeIn 0.5s ease;
         }
-        .cat-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Match Row */
-        .match-row {
-            background: #1e2536; border-radius: 18px; padding: 18px; margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary);
-            animation: slideIn 0.3s ease-out;
+        .m-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .m-title b { font-size: 18px; color: var(--neon); display: block; }
+        .m-title span { font-size: 12px; color: #94a3b8; font-weight: 600; }
+
+        .m-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-sm { padding: 10px; font-size: 10px; border-radius: 10px; border: none; font-weight: 700; color: #fff; cursor: pointer; }
+
+        /* Navigation Bar */
+        .nav-dock { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; height: 70px; background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around; align-items: center; z-index: 3000;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .nav-btn { color: #64748b; text-align: center; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .nav-btn i { font-size: 24px; display: block; margin-bottom: 4px; }
+        .nav-btn.active { color: var(--neon); transform: translateY(-5px); }
 
-        .match-info b { font-size: 15px; display: block; color: var(--primary); margin-bottom: 4px; }
-        .match-info small { color: #94a3b8; font-size: 11px; display: block; margin-bottom: 8px; }
-        .status-tag { font-size: 9px; padding: 4px 10px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
+        /* Modal Overlays */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
+        .modal-body { background: var(--card-bg); padding: 30px; border-radius: 30px; width: 100%; max-width: 450px; border: 1px solid var(--neon); box-shadow: 0 0 50px rgba(0,255,204,0.2); }
 
-        /* Modals */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; backdrop-filter: blur(10px); }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 420px; border: 1px solid rgba(0,255,204,0.3); box-shadow: 0 0 40px rgba(0,0,0,1); }
-
-        /* Player Cards in Modal */
-        .p-card { background: #1e2536; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #334155; }
-        .p-card p { font-size: 12px; color: #cbd5e1; }
-        .p-card b { color: var(--primary); }
-
-        /* Navigation */
-        .nav-bar { 
-            position: fixed; bottom: 0; width: 100%; height: 80px; 
-            background: var(--card); display: flex; justify-content: space-around; 
-            align-items: center; border-top: 1px solid rgba(0,255,204,0.2); z-index: 1000; 
-        }
-        .nav-item { text-align: center; color: #64748b; font-size: 9px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .nav-item i { font-size: 22px; margin-bottom: 6px; display: block; }
-        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px rgba(0,255,204,0.5); }
+        /* Status Pills */
+        .pill { padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+        .p-live { background: var(--danger); color: #fff; }
+        .p-wait { background: #334155; color: #cbd5e1; }
+        .p-done { background: var(--info); color: #fff; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BZ ADMIN <span style="color:white">ELITE</span></h1>
-        <button class="btn btn-sm" style="background:var(--accent); color:#000;" onclick="location.href='admin2.html'">WALLET ➔</button>
+        <h1>COMMAND <span style="color:white">CENTER</span></h1>
     </div>
 
     <div class="container">
-        <div id="tab-add" class="tab-content">
+        
+        <div id="view-create">
             <div class="card">
-                <h2>CREATE NEW BATTLE</h2>
-                <input type="text" id="mTitle" placeholder="Enter Match Title...">
-                <select id="mMode">
-                    <option value="1V1">1V1 SOLO</option>
-                    <option value="2V2">2V2 DUO</option>
-                    <option value="4V4">4V4 SQUAD</option>
-                </select>
-                <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
-                <input type="number" id="mPrize" placeholder="Win Prize Pool (₹)">
+                <h2><i class="fas fa-plus-circle"></i> DEPLOY NEW BATTLE</h2>
+                <div class="input-group">
+                    <input type="text" id="mTitle" placeholder="Match Campaign Name...">
+                </div>
+                <div class="input-group">
+                    <select id="mMode">
+                        <option value="1V1">SOLO 1V1 (ARENA)</option>
+                        <option value="2V2">DUO 2V2 (SQUAD)</option>
+                        <option value="4V4">FULL 4V4 (SQUAD)</option>
+                        <option value="BR">BATTLE ROYALE (12 SQUADS)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="mEntry" placeholder="Entry (₹)">
+                    <input type="number" id="mPrize" placeholder="Prize (₹)">
+                </div>
                 <input type="datetime-local" id="mTime">
-                <button class="btn btn-main" onclick="publishMatch()">PUBLISH & SEND NOTIF</button>
+                <button class="btn btn-main" onclick="publishBattle()">PUBLISH TO SERVERS</button>
             </div>
         </div>
 
-        <div id="tab-matches" class="tab-content" style="display:none;">
-            <div class="cat-filter">
-                <div class="cat-btn active" onclick="filterBy('all', this)">ALL</div>
-                <div class="cat-btn" onclick="filterBy('matches_1v1', this)">1V1</div>
-                <div class="cat-btn" onclick="filterBy('matches_2v2', this)">2V2</div>
-                <div class="cat-btn" onclick="filterBy('matches_4v4', this)">4V4</div>
+        <div id="view-manage" style="display:none;">
+            <div style="display:flex; gap:10px; overflow-x:auto; margin-bottom:20px; padding-bottom:5px;">
+                <button class="btn-sm" style="background:var(--neon); color:#000;" onclick="loadData('all')">ALL</button>
+                <button class="btn-sm" style="background:#1e293b;" onclick="loadData('matches_br')">BR MODE</button>
+                <button class="btn-sm" style="background:#1e293b;" onclick="loadData('matches_1v1')">1V1</button>
+                <button class="btn-sm" style="background:#1e293b;" onclick="loadData('matches_4v4')">4V4</button>
             </div>
-            <div id="matchListContainer">
-                <p style="text-align:center; padding:20px; color:#64748b;">No battles loaded.</p>
-            </div>
+            <div id="masterList"></div>
+        </div>
+
+    </div>
+
+    <div class="overlay" id="liveModal">
+        <div class="modal-body">
+            <h2 style="color:var(--neon)">BROADCAST ROOM</h2>
+            <input type="text" id="roomId" placeholder="Room ID">
+            <input type="text" id="roomPass" placeholder="Room Password">
+            <button class="btn btn-main" onclick="pushLive()">GO LIVE NOW 🔴</button>
+            <p onclick="closeAllModals()" style="text-align:center; margin-top:20px; color:#64748b; cursor:pointer;">ABORT MISSION</p>
         </div>
     </div>
 
-    <div class="modal" id="controlModal">
-        <div class="modal-box">
-            <h2 id="controlTitle">MATCH ACTION</h2>
-            <div id="liveInputs">
-                <input type="text" id="roomId" placeholder="Enter Room ID">
-                <input type="text" id="roomPass" placeholder="Enter Room Password">
-                <button class="btn btn-main" style="background:var(--red); color:#fff;" onclick="confirmLive()">SET LIVE 🔴</button>
-            </div>
-            <div id="finishInputs" style="display:none;">
-                <input type="text" id="winName" placeholder="Winner Name / Team Name">
-                <button class="btn btn-main" style="background:var(--green); color:#fff;" onclick="confirmFinish()">COMPLETE BATTLE 🏆</button>
-            </div>
-            <button class="btn btn-sm" style="background:transparent; width:100%; margin-top:15px; color:#94a3b8;" onclick="closeModal()">CANCEL</button>
+    <div class="overlay" id="finishModal">
+        <div class="modal-body">
+            <h2 style="color:var(--gold)">DECLARE WINNER</h2>
+            <input type="text" id="winnerName" placeholder="Winner / Squad Name">
+            <button class="btn btn-main" style="background:var(--gold)" onclick="pushFinish()">FINISH BATTLE 🏆</button>
+            <p onclick="closeAllModals()" style="text-align:center; margin-top:20px; color:#64748b; cursor:pointer;">CANCEL</p>
         </div>
     </div>
 
-    <div class="modal" id="playerModal">
-        <div class="modal-box" style="max-height: 80vh; overflow-y: auto;">
-            <h2 id="pTitle">JOINED PLAYERS</h2>
-            <div id="playerList"></div>
-            <button class="btn btn-main" style="margin-top:15px;" onclick="closeModal()">CLOSE PANEL</button>
+    <div class="overlay" id="playerModal">
+        <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+            <h2 id="playerHeading">JOINED ROSTER</h2>
+            <div id="playerRoster"></div>
+            <button class="btn btn-main" style="margin-top:20px;" onclick="closeAllModals()">BACK TO HUB</button>
         </div>
     </div>
 
-    <nav class="nav-bar">
-        <div class="nav-item active" onclick="showTab('tab-add', this)"><i class="fas fa-plus-circle"></i>CREATE</div>
-        <div class="nav-item" onclick="showTab('tab-matches', this)"><i class="fas fa-tasks"></i>MANAGE</div>
-    </nav>
+    <div class="nav-dock">
+        <div class="nav-btn active" onclick="switchTab('view-create', this)"><i class="fas fa-rocket"></i>CREATE</div>
+        <div class="nav-btn" onclick="switchTab('view-manage', this)"><i class="fas fa-shield-halved"></i>MANAGE</div>
+        <div class="nav-btn" onclick="location.href='admin2.html'"><i class="fas fa-wallet"></i>WALLET</div>
+    </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let activeMID = "", activePath = "", activeTitle = "", currentFilter = "all";
+        let curMID = "", curPath = "", curTitle = "";
 
-        // Push Notifications to ALL registered users
-        function sendNotificationToAll(title, msg, type) {
-            db.ref('users').once('value', (snap) => {
-                if (snap.exists()) {
-                    snap.forEach((user) => {
-                        const userPhone = user.key;
-                        db.ref('user_notifications/' + userPhone).push({
-                            title: title,
-                            message: msg,
-                            type: type,
-                            time: new Date().toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })
-                        });
+        // Global Notification System
+        function broadcast(title, body, type) {
+            db.ref('users').once('value', s => {
+                s.forEach(u => {
+                    db.ref('user_notifications/' + u.key).push({
+                        title: title, message: body, type: type, time: new Date().toLocaleString()
                     });
-                }
+                });
             });
         }
 
-        // Tab System
-        function showTab(id, el) {
-            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        // Tab Switcher
+        function switchTab(id, el) {
+            document.getElementById('view-create').style.display = 'none';
+            document.getElementById('view-manage').style.display = 'none';
             document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            if(id === 'tab-matches') loadMatches();
+            if(id === 'view-manage') loadData('all');
         }
 
-        // Publish New Match
-        async function publishMatch() {
-            const title = document.getElementById('mTitle').value;
-            const mode = document.getElementById('mMode').value;
-            const entry = document.getElementById('mEntry').value;
-            const prize = document.getElementById('mPrize').value;
-            const time = document.getElementById('mTime').value;
-            const mid = "M" + Date.now();
-            let path = mode === '1V1' ? 'matches_1v1' : (mode === '2V2' ? 'matches_2v2' : 'matches_4v4');
-
-            if(!title || !entry || !time) return alert("Bhai fields fill kar!");
-
-            const data = { mId: mid, title, mode, entry, prize, time, status: "upcoming" };
+        // Publish
+        async function publishBattle() {
+            const t = document.getElementById('mTitle').value;
+            const m = document.getElementById('mMode').value;
+            const e = document.getElementById('mEntry').value;
+            const p = document.getElementById('mPrize').value;
+            const tm = document.getElementById('mTime').value;
+            const mid = "BZ-" + Date.now();
             
-            try {
-                await db.ref(`${path}/${mid}`).set(data);
-                sendNotificationToAll("New Battle Added! 🎮", `${title} (${mode}) join now at ₹${entry}!`, "match");
-                alert("Match Created & Users Notified!");
-                document.getElementById('mTitle').value = "";
-                showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
-            } catch (e) { alert("Error: " + e.message); }
+            let path = m === 'BR' ? 'matches_br' : (m === '1V1' ? 'matches_1v1' : (m === '2V2' ? 'matches_2v2' : 'matches_4v4'));
+            if(!t || !e) return alert("Bhai details sahi se bhar!");
+
+            await db.ref(`${path}/${mid}`).set({ mId: mid, title: t, mode: m, entry: e, prize: p, time: tm, status: "upcoming" });
+            broadcast("New Battle Deployed!", `${t} join karne ke liye ready ho jao!`, "match");
+            alert("Mission Successful: Match Published!");
+            document.getElementById('mTitle').value = "";
         }
 
-        // Load and Render Matches
-        async function loadMatches() {
-            const container = document.getElementById('matchListContainer');
-            container.innerHTML = "<p style='text-align:center; padding:20px; color:var(--primary);'>Fetching Battles...</p>";
-            
-            const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4'];
-            let html = "";
+        // Fetch Data
+        async function loadData(filter) {
+            const box = document.getElementById('masterList');
+            box.innerHTML = "<p style='text-align:center; color:var(--neon)'>Synchronizing Data...</p>";
+            const paths = filter === 'all' ? ['matches_1v1', 'matches_2v2', 'matches_4v4', 'matches_br'] : [filter];
+            let listHtml = "";
 
-            for(let p of paths) {
-                if(currentFilter !== 'all' && currentFilter !== p) continue;
-                const snap = await db.ref(p).once('value');
+            for(let path of paths) {
+                const snap = await db.ref(path).once('value');
                 snap.forEach(child => {
-                    const m = child.val();
-                    const pCount = m.players ? Object.keys(m.players).length : 0;
-                    html += `
-                        <div class="match-row">
-                            <div class="match-info">
-                                <b>${m.title}</b>
-                                <small>${m.mode} | ${m.time}</small>
-                                <span class="status-tag" style="background:${m.status=='live'?'var(--red)':(m.status=='finished'?'var(--blue)':'#334155')}">
-                                    ${m.status}
-                                </span>
+                    const d = child.val();
+                    const count = d.players ? Object.keys(d.players).length : (d.joinedTeams ? Object.keys(d.joinedTeams).length : 0);
+                    const statusClass = d.status === 'live' ? 'p-live' : (d.status === 'finished' ? 'p-done' : 'p-wait');
+
+                    listHtml += `
+                        <div class="match-item">
+                            <div class="m-header">
+                                <div class="m-title">
+                                    <b>${d.title}</b>
+                                    <span>${d.mode} • Entry: ₹${d.entry} • Prize: ₹${d.prize}</span>
+                                </div>
+                                <div class="pill ${statusClass}">${d.status}</div>
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:6px;">
-                                <button class="btn-sm" style="background:var(--blue)" onclick="viewPlayers('${p}', '${m.mId}', '${m.mode}')">PLAYERS (${pCount})</button>
-                                ${m.status=='upcoming' ? `<button class="btn-sm" style="background:var(--green)" onclick="openControl('${p}', '${m.mId}', 'live', '${m.title}')">GO LIVE</button>` : ''}
-                                ${m.status=='live' ? `<button class="btn-sm" style="background:var(--accent); color:#000" onclick="openControl('${p}', '${m.mId}', 'finish', '${m.title}')">FINISH</button>` : ''}
-                                <button class="btn-sm" style="background:var(--red)" onclick="deleteMatch('${p}', '${m.mId}')"><i class="fas fa-trash"></i></button>
+                            <div class="m-actions">
+                                <button class="btn-sm" style="background:var(--info)" onclick="viewRoster('${path}', '${d.mId}')">ROSTER (${count})</button>
+                                ${d.status === 'upcoming' ? `<button class="btn-sm" style="background:var(--success); color:#000" onclick="openLive('${path}','${d.mId}','${d.title}')">GO LIVE</button>` : ''}
+                                ${d.status === 'live' ? `<button class="btn-sm" style="background:var(--gold); color:#000" onclick="openFinish('${path}','${d.mId}','${d.title}')">FINISH</button>` : ''}
+                                <button class="btn-sm" style="background:var(--danger)" onclick="deleteMatch('${path}','${d.mId}')">DELETE</button>
                             </div>
                         </div>`;
                 });
             }
-            container.innerHTML = html || "<p style='text-align:center; padding:30px; color:#64748b;'>No matches found.</p>";
+            box.innerHTML = listHtml || "<p style='text-align:center; color:#64748b;'>No Active Battles Found.</p>";
         }
 
-        // View Players Logic
-        function viewPlayers(path, mid, mode) {
-            db.ref(`${path}/${mid}/players`).once('value', snap => {
-                const list = document.getElementById('playerList');
-                list.innerHTML = "";
-                if(!snap.exists()) list.innerHTML = "<p style='text-align:center; color:#64748b;'>Zero joinings.</p>";
+        // Roster View
+        function viewRoster(path, mid) {
+            db.ref(`${path}/${mid}`).once('value', s => {
+                const m = s.val();
+                const container = document.getElementById('playerRoster');
+                container.innerHTML = "";
+                const users = m.players || m.joinedTeams || {};
                 
-                snap.forEach(p => {
-                    const v = p.val();
-                    let content = mode === '1V1' ? `<p>Name: <b>${v.name}</b></p><p>UID: <b>${v.uid}</b></p>` : `<p>Leader: <b>${v.leader_name || v.name}</b></p><p>Team UIDs: <b>${v.uid1}, ${v.uid2}...</b></p>`;
-                    list.innerHTML += `<div class="p-card">${content}</div>`;
+                Object.values(users).forEach(u => {
+                    container.innerHTML += `
+                        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-bottom:10px; border:1px solid #334155;">
+                            <b style="color:var(--neon)">${u.name || u.squadName}</b><br>
+                            <span style="font-size:12px; color:#94a3b8;">UID: ${u.uid}</span>
+                            ${u.slot ? `<br><span style="color:var(--gold); font-size:12px;">SLOT ASSIGNED: #${u.slot}</span>` : ''}
+                        </div>`;
                 });
                 document.getElementById('playerModal').style.display = 'flex';
             });
         }
 
-        // Match Actions (Live/Finish)
-        function openControl(path, id, type, title) {
-            activeMID = id; activePath = path; activeTitle = title;
-            document.getElementById('controlModal').style.display = 'flex';
-            document.getElementById('liveInputs').style.display = type === 'live' ? 'block' : 'none';
-            document.getElementById('finishInputs').style.display = type === 'finish' ? 'block' : 'none';
+        // Live/Finish Functions
+        function openLive(p, i, t) { curPath=p; curMID=i; curTitle=t; document.getElementById('liveModal').style.display='flex'; }
+        function openFinish(p, i, t) { curPath=p; curMID=i; curTitle=t; document.getElementById('finishModal').style.display='flex'; }
+
+        async function pushLive() {
+            const r = document.getElementById('roomId').value;
+            const p = document.getElementById('roomPass').value;
+            await db.ref(`${curPath}/${curMID}`).update({ roomId: r, roomPass: p, status: 'live' });
+            broadcast("Match Live! 🔴", `Room Details for ${curTitle} are updated!`, "live");
+            closeAllModals(); loadData('all');
         }
 
-        async function confirmLive() {
-            const rid = document.getElementById('roomId').value;
-            const rps = document.getElementById('roomPass').value;
-            if(!rid || !rps) return alert("Room ID/Pass missing!");
-            
-            await db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
-            sendNotificationToAll("Room Ready! 🔴", `Room Details updated for ${activeTitle}. Join now!`, "live");
-            closeModal(); loadMatches();
+        async function pushFinish() {
+            const w = document.getElementById('winnerName').value;
+            await db.ref(`${curPath}/${curMID}`).update({ status: 'finished', winner_name: w });
+            broadcast("Victory! 🏆", `${w} has conquered ${curTitle}!`, "finish");
+            closeAllModals(); loadData('all');
         }
 
-        async function confirmFinish() {
-            const winner = document.getElementById('winName').value;
-            if(!winner) return alert("Winner name?");
-            
-            await db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner_name: winner });
-            sendNotificationToAll("Winner Winner! 🏆", `${winner} won the ${activeTitle}! Congrats!`, "finish");
-            closeModal(); loadMatches();
-        }
-
-        function deleteMatch(path, mid) {
-            if(confirm("Bhai delete karun? Refund ka dhyan rakhna!")) {
-                db.ref(`${path}/${mid}`).remove(); loadMatches();
-            }
-        }
-
-        function filterBy(cat, el) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active'); currentFilter = cat; loadMatches();
-        }
-
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function deleteMatch(p, i) { if(confirm("Permanently delete this battle?")) { db.ref(`${p}/${i}`).remove(); loadData('all'); } }
+        function closeAllModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); }
     </script>
 </body>
 </html>
