@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -118,6 +118,7 @@
             background: #fff; border-radius: 22px; padding: 18px 10px;
             text-align: center; text-decoration: none; border: var(--border);
             box-shadow: 0 5px 15px rgba(0,0,0,0.02); transition: 0.3s;
+            cursor: pointer;
         }
         .action-card:active { transform: translateY(-5px); border-color: var(--primary); }
         .action-card i { 
@@ -170,7 +171,7 @@
         }
         .nav-link {
             text-decoration: none; color: #666; text-align: center;
-            transition: 0.3s; flex: 1; position: relative;
+            transition: 0.3s; flex: 1; position: relative; cursor: pointer;
         }
         .nav-link.active { color: var(--primary); }
         .nav-link i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -186,7 +187,7 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 26px; margin-top: -50px;
             border: 6px solid #fff; box-shadow: 0 10px 25px rgba(255, 140, 0, 0.4);
-            transition: 0.3s;
+            transition: 0.3s; cursor: pointer;
         }
         .fab-profile:active { transform: scale(0.9) translateY(5px); }
 
@@ -209,7 +210,7 @@
             </div>
             <h2>BOOYAH ZONE</h2>
         </div>
-        <div class="top-wallet" onclick="navTo('wallet.html')">
+        <div class="top-wallet" onclick="goto('wallet.html')">
             <i class="fas fa-wallet"></i>
             <span id="userBalance">₹0.00</span>
         </div>
@@ -226,15 +227,15 @@
         </div>
 
         <div class="action-grid">
-            <div onclick="navTo('upcoming.html')" class="action-card">
+            <div onclick="goto('upcoming.html')" class="action-card">
                 <i class="fas fa-calendar-check"></i>
                 <span>Matches</span>
             </div>
-            <div onclick="navTo('ongoing.html')" class="action-card">
+            <div onclick="goto('ongoing.html')" class="action-card">
                 <i class="fas fa-bolt"></i>
                 <span>Live Now</span>
             </div>
-            <div onclick="navTo('finish.html')" class="action-card">
+            <div onclick="goto('finish.html')" class="action-card">
                 <i class="fas fa-award"></i>
                 <span>Results</span>
             </div>
@@ -245,7 +246,7 @@
             <div class="live-count">● LIVE NOW</div>
         </div>
 
-        <div class="mode-item" onclick="navTo('1v1.html')">
+        <div class="mode-item" onclick="goto('1v1.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-gun"></i></div>
                 <div class="mode-info">
@@ -255,7 +256,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="navTo('2v2.html')">
+        <div class="mode-item" onclick="goto('2v2.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-user-group"></i></div>
                 <div class="mode-info">
@@ -265,7 +266,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="navTo('4v4.html')">
+        <div class="mode-item" onclick="goto('4v4.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-users-rays"></i></div>
                 <div class="mode-info">
@@ -275,7 +276,7 @@
             </div>
         </div>
 
-        <div class="mode-item" onclick="navTo('br_mode.html')">
+        <div class="mode-item" onclick="goto('br.html')">
             <div style="display: flex; align-items: center;">
                 <div class="mode-img"><i class="fas fa-map-location-dot"></i></div>
                 <div class="mode-info">
@@ -287,44 +288,44 @@
     </div>
 
     <nav class="bottom-nav">
-        <div onclick="navTo('home.html')" class="nav-link active">
+        <div onclick="goto('home.html')" class="nav-link active">
             <i class="fas fa-house-chimney-window"></i>
             <span>Lobby</span>
         </div>
-        <div onclick="navTo('notification.html')" class="nav-link">
+        <div onclick="goto('notification.html')" class="nav-link">
             <i class="fas fa-bell"></i>
             <span>Alerts</span>
         </div>
-        <div onclick="navTo('profile.html')" class="fab-profile">
+        <div onclick="goto('profile.html')" class="fab-profile">
             <i class="fas fa-user-shield"></i>
         </div>
-        <div onclick="navTo('history.html')" class="nav-link">
+        <div onclick="goto('history.html')" class="nav-link">
             <i class="fas fa-ranking-star"></i>
             <span>History</span>
-        </a>
-        <div onclick="navTo('wallet.html')" class="nav-link">
+        </div>
+        <div onclick="goto('wallet.html')" class="nav-link">
             <i class="fas fa-wallet"></i>
             <span>Wallet</span>
         </div>
     </nav>
 
     <script>
-        // --- Anti-Browser Escape Logic ---
-        function navTo(url) {
+        // --- Navigation Fix for Webview/Kodular ---
+        function goto(url) {
             window.location.assign(url);
         }
 
-        // PWA App Lock Script
-        (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone");
-
-        // --- Firebase Configuration ---
+        // --- Firebase Config ---
         const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const userPhone = localStorage.getItem('userPhone');
 
-        // Loader Handler
+        // Anti-Escape Script: Keeps navigation inside the App
+        (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone");
+
+        // Page Loader Logic
         window.addEventListener('load', () => {
             const loader = document.getElementById('preloader');
             setTimeout(() => {
@@ -333,7 +334,7 @@
             }, 800);
         });
 
-        // Auth & Data Sync
+        // Security Check & Real-time Sync
         if (!userPhone) {
             window.location.href = "index.html";
         } else {
@@ -348,6 +349,8 @@
                     localStorage.clear();
                     window.location.href = "index.html";
                 }
+            }, (error) => {
+                console.error("Firebase Sync Error:", error);
             });
         }
     </script>
