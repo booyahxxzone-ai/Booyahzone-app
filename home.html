@@ -1,358 +1,341 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <title>BOOYAH ZONE | ELITE LOBBY</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BOOYAH ZONE | ELITE LOBBY</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
-    <style>
-        :root {
-            --primary: #ff8c00;
-            --primary-grad: linear-gradient(135deg, #ff9900 0%, #ff6a00 100%);
-            --bg: #ffffff;
-            --soft-bg: #fffbf5;
-            --card: #ffffff;
-            --text: #1e272e;
-            --shadow: 0 10px 30px rgba(255, 140, 0, 0.1);
-            --border: 1px solid rgba(255, 140, 0, 0.15);
-        }
+    <style>
+        :root {
+            --primary: #ff8c00;
+            --primary-grad: linear-gradient(135deg, #ff9900 0%, #ff6a00 100%);
+            --bg: #ffffff;
+            --soft-bg: #fffbf5;
+            --card: #ffffff;
+            --text: #1e272e;
+            --shadow: 0 10px 30px rgba(255, 140, 0, 0.1);
+            --border: 1px solid rgba(255, 140, 0, 0.15);
+        }
 
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Rajdhani', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Rajdhani', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
 
-        body {
-            background: linear-gradient(180deg, var(--bg) 0%, var(--soft-bg) 100%);
-            color: var(--text);
-            min-height: 100vh;
-            padding-bottom: 110px;
-            overflow-x: hidden;
-        }
+        body {
+            background: linear-gradient(180deg, var(--bg) 0%, var(--soft-bg) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            overflow-x: hidden;
+        }
 
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed; inset: 0; background: #fff;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999; transition: 0.5s;
-        }
-        .loader-spin {
-            width: 50px; height: 50px;
-            border: 5px solid #f3f3f3; border-top: 5px solid var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: #fff;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: 0.5s;
+        }
+        .loader-spin {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3; border-top: 5px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- TOP BAR --- */
-        .app-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            height: 75px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 18px;
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }
+        /* --- TOP BAR --- */
+        .app-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            height: 75px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 18px;
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
 
-        .brand { display: flex; align-items: center; gap: 10px; }
-        .logo-circle {
-            width: 45px; height: 45px;
-            border-radius: 50%; border: 2px solid var(--primary);
-            padding: 2px; background: #fff;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 140, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } }
-        .logo-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .logo-circle {
+            width: 45px; height: 45px;
+            border-radius: 50%; border: 2px solid var(--primary);
+            padding: 2px; background: #fff;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 140, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        .brand h2 {
-            font-family: 'Orbitron'; font-size: 17px; letter-spacing: 0.5px;
-            background: linear-gradient(90deg, #1e272e, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .brand h2 {
+            font-family: 'Orbitron'; font-size: 17px; letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #1e272e, var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
 
-        .top-wallet {
-            background: var(--primary-grad);
-            padding: 8px 15px; border-radius: 14px;
-            color: #fff; display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.25);
-            cursor: pointer; transition: 0.3s;
-        }
-        .top-wallet:active { transform: scale(0.92); }
-        .top-wallet i { font-size: 14px; }
-        .top-wallet span { font-family: 'Orbitron'; font-size: 13px; font-weight: 800; }
+        .top-wallet {
+            background: var(--primary-grad);
+            padding: 8px 15px; border-radius: 14px;
+            color: #fff; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.25);
+            cursor: pointer; transition: 0.3s;
+        }
+        .top-wallet:active { transform: scale(0.92); }
+        .top-wallet i { font-size: 14px; }
+        .top-wallet span { font-family: 'Orbitron'; font-size: 13px; font-weight: 800; }
 
-        /* --- MAIN CONTENT --- */
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        /* --- MAIN CONTENT --- */
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        .welcome-box {
-            background: var(--card); border-radius: 30px; padding: 25px;
-            margin-bottom: 25px; border: var(--border); box-shadow: var(--shadow);
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .user-meta h4 { font-size: 12px; color: #8c8c8c; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .user-meta h1 { font-family: 'Orbitron'; font-size: 24px; color: #1a1a1a; margin-top: 3px; }
-        .user-meta p { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 5px; }
+        .welcome-box {
+            background: var(--card); border-radius: 30px; padding: 25px;
+            margin-bottom: 25px; border: var(--border); box-shadow: var(--shadow);
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .user-meta h4 { font-size: 12px; color: #8c8c8c; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        .user-meta h1 { font-family: 'Orbitron'; font-size: 24px; color: #1a1a1a; margin-top: 3px; }
+        .user-meta p { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 5px; }
 
-        .shield-icon { font-size: 45px; color: var(--primary); opacity: 0.1; }
+        .shield-icon { font-size: 45px; color: var(--primary); opacity: 0.1; }
 
-        /* --- ACTION GRID --- */
-        .action-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 15px; margin-bottom: 30px;
-        }
-        .action-card {
-            background: #fff; border-radius: 22px; padding: 18px 10px;
-            text-align: center; text-decoration: none; border: var(--border);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02); transition: 0.3s;
-            cursor: pointer;
-        }
-        .action-card:active { transform: translateY(-5px); border-color: var(--primary); }
-        .action-card i { 
-            font-size: 24px; margin-bottom: 10px; 
-            background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .action-card span { display: block; font-size: 11px; font-weight: 800; color: #555; text-transform: uppercase; }
+        /* --- ACTION GRID --- */
+        .action-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 15px; margin-bottom: 30px;
+        }
+        .action-card {
+            background: #fff; border-radius: 22px; padding: 18px 10px;
+            text-align: center; text-decoration: none; border: var(--border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02); transition: 0.3s;
+        }
+        .action-card:active { transform: translateY(-5px); border-color: var(--primary); }
+        .action-card i { 
+            font-size: 24px; margin-bottom: 10px; 
+            background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .action-card span { display: block; font-size: 11px; font-weight: 800; color: #555; text-transform: uppercase; }
 
-        /* --- GAME MODES --- */
-        .section-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 18px; padding-left: 5px;
-        }
-        .section-title {
-            font-family: 'Orbitron'; font-size: 16px; font-weight: 900;
-            color: #222; display: flex; align-items: center; gap: 10px;
-        }
-        .section-title span { width: 5px; height: 20px; background: var(--primary); border-radius: 10px; }
+        /* --- GAME MODES --- */
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px; padding-left: 5px;
+        }
+        .section-title {
+            font-family: 'Orbitron'; font-size: 16px; font-weight: 900;
+            color: #222; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title span { width: 5px; height: 20px; background: var(--primary); border-radius: 10px; }
 
-        .mode-item {
-            background: #fff; border-radius: 25px; padding: 20px;
-            margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-            border: var(--border); box-shadow: var(--shadow); transition: 0.4s;
-            position: relative; overflow: hidden; cursor: pointer;
-        }
-        .mode-item:active { transform: scale(0.97); }
-        .mode-item::after {
-            content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-            position: absolute; right: 20px; font-size: 18px; color: #ddd;
-        }
+        .mode-item {
+            background: #fff; border-radius: 25px; padding: 20px;
+            margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
+            border: var(--border); box-shadow: var(--shadow); transition: 0.4s;
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .mode-item:active { transform: scale(0.97); }
+        .mode-item::after {
+            content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; right: 20px; font-size: 18px; color: #ddd;
+        }
 
-        .mode-info h3 { font-family: 'Orbitron'; font-size: 19px; color: #1a1a1a; margin-bottom: 4px; }
-        .mode-info .tag { 
-            font-size: 10px; font-weight: 800; background: #fff5e6; 
-            color: var(--primary); padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
-        }
+        .mode-info h3 { font-family: 'Orbitron'; font-size: 19px; color: #1a1a1a; margin-bottom: 4px; }
+        .mode-info .tag { 
+            font-size: 10px; font-weight: 800; background: #fff5e6; 
+            color: var(--primary); padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+        }
 
-        .mode-img {
-            width: 55px; height: 55px; background: #fafafa;
-            border-radius: 18px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: var(--primary); border: 1px solid #eee; margin-right: 15px;
-        }
+        .mode-img {
+            width: 55px; height: 55px; background: #fafafa;
+            border-radius: 18px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: var(--primary); border: 1px solid #eee; margin-right: 15px;
+        }
 
-        /* --- NAVIGATION --- */
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 20px; right: 20px;
-            height: 75px; background: #1a1a1a; border-radius: 28px;
-            display: flex; align-items: center; justify-content: space-around;
-            padding: 0 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 2000;
-        }
-        .nav-link {
-            text-decoration: none; color: #666; text-align: center;
-            transition: 0.3s; flex: 1; position: relative; cursor: pointer;
-        }
-        .nav-link.active { color: var(--primary); }
-        .nav-link i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-link span { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* --- NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            height: 75px; background: #1a1a1a; border-radius: 28px;
+            display: flex; align-items: center; justify-content: space-around;
+            padding: 0 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 2000;
+        }
+        .nav-link {
+            text-decoration: none; color: #666; text-align: center;
+            transition: 0.3s; flex: 1; position: relative;
+        }
+        .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-link span { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .nav-link.active::before {
-            content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            width: 20px; height: 4px; background: var(--primary); border-radius: 0 0 10px 10px;
-        }
+        .nav-link.active::before {
+            content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 4px; background: var(--primary); border-radius: 0 0 10px 10px;
+        }
 
-        .fab-profile {
-            width: 65px; height: 65px; background: var(--primary-grad);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 26px; margin-top: -50px;
-            border: 6px solid #fff; box-shadow: 0 10px 25px rgba(255, 140, 0, 0.4);
-            transition: 0.3s; cursor: pointer;
-        }
-        .fab-profile:active { transform: scale(0.9) translateY(5px); }
+        .fab-profile {
+            width: 65px; height: 65px; background: var(--primary-grad);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 26px; margin-top: -50px;
+            border: 6px solid #fff; box-shadow: 0 10px 25px rgba(255, 140, 0, 0.4);
+            transition: 0.3s;
+        }
+        .fab-profile:active { transform: scale(0.9) translateY(5px); }
 
-        .live-count {
-            background: #ff0000; color: #fff; font-size: 9px; font-weight: 900;
-            padding: 2px 8px; border-radius: 10px; animation: blink 1.5s infinite;
-        }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .live-count {
+            background: #ff0000; color: #fff; font-size: 9px; font-weight: 900;
+            padding: 2px 8px; border-radius: 10px; animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-    </style>
+    </style>
 </head>
 <body>
 
-    <div id="preloader"><div class="loader-spin"></div></div>
+    <div id="preloader"><div class="loader-spin"></div></div>
 
-    <header class="app-bar">
-        <div class="brand">
-            <div class="logo-circle">
-                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
-            </div>
-            <h2>BOOYAH ZONE</h2>
-        </div>
-        <div class="top-wallet" onclick="goto('wallet.html')">
-            <i class="fas fa-wallet"></i>
-            <span id="userBalance">₹0.00</span>
-        </div>
-    </header>
+    <header class="app-bar">
+        <div class="brand">
+            <div class="logo-circle">
+                <img src="https://i.ibb.co/Rp4VJdQX/1774105059734.png" alt="Logo">
+            </div>
+            <h2>BOOYAH ZONE</h2>
+        </div>
+        <div class="top-wallet" onclick="location.href='wallet.html'">
+            <i class="fas fa-wallet"></i>
+            <span id="userBalance">₹0.00</span>
+        </div>
+    </header>
 
-    <div class="container">
-        <div class="welcome-box">
-            <div class="user-meta">
-                <h4>Welcome back,</h4>
-                <h1 id="userName">PLAYER</h1>
-                <p id="userUid">UID: 000000</p>
-            </div>
-            <div class="shield-icon"><i class="fas fa-shield-halved"></i></div>
-        </div>
+    <div class="container">
+        <div class="welcome-box">
+            <div class="user-meta">
+                <h4>Welcome back,</h4>
+                <h1 id="userName">PLAYER</h1>
+                <p id="userUid">UID: 000000</p>
+            </div>
+            <div class="shield-icon"><i class="fas fa-shield-halved"></i></div>
+        </div>
 
-        <div class="action-grid">
-            <div onclick="goto('upcoming.html')" class="action-card">
-                <i class="fas fa-calendar-check"></i>
-                <span>Matches</span>
-            </div>
-            <div onclick="goto('ongoing.html')" class="action-card">
-                <i class="fas fa-bolt"></i>
-                <span>Live Now</span>
-            </div>
-            <div onclick="goto('finish.html')" class="action-card">
-                <i class="fas fa-award"></i>
-                <span>Results</span>
-            </div>
-        </div>
+        <div class="action-grid">
+            <a href="upcoming.html" class="action-card">
+                <i class="fas fa-calendar-check"></i>
+                <span>Matches</span>
+            </a>
+            <a href="ongoing.html" class="action-card">
+                <i class="fas fa-bolt"></i>
+                <span>Live Now</span>
+            </a>
+            <a href="finish.html" class="action-card">
+                <i class="fas fa-award"></i>
+                <span>Results</span>
+            </a>
+        </div>
 
-        <div class="section-header">
-            <div class="section-title"><span></span> SELECT MODE</div>
-            <div class="live-count">● LIVE NOW</div>
-        </div>
+        <div class="section-header">
+            <div class="section-title"><span></span> SELECT MODE</div>
+            <div class="live-count">● LIVE NOW</div>
+        </div>
 
-        <div class="mode-item" onclick="goto('1v1.html')">
-            <div style="display: flex; align-items: center;">
-                <div class="mode-img"><i class="fas fa-gun"></i></div>
-                <div class="mode-info">
-                    <h3>SOLO 1V1</h3>
-                    <span class="tag">Duel Master Mode</span>
-                </div>
-            </div>
-        </div>
+        <div class="mode-item" onclick="location.href='1v1.html'">
+            <div style="display: flex; align-items: center;">
+                <div class="mode-img"><i class="fas fa-gun"></i></div>
+                <div class="mode-info">
+                    <h3>SOLO 1V1</h3>
+                    <span class="tag">Duel Master Mode</span>
+                </div>
+            </div>
+        </div>
 
-        <div class="mode-item" onclick="goto('2v2.html')">
-            <div style="display: flex; align-items: center;">
-                <div class="mode-img"><i class="fas fa-user-group"></i></div>
-                <div class="mode-info">
-                    <h3>DUO 2V2</h3>
-                    <span class="tag">Partner Survival</span>
-                </div>
-            </div>
-        </div>
+        <div class="mode-item" onclick="location.href='2v2.html'">
+            <div style="display: flex; align-items: center;">
+                <div class="mode-img"><i class="fas fa-user-group"></i></div>
+                <div class="mode-info">
+                    <h3>DUO 2V2</h3>
+                    <span class="tag">Partner Survival</span>
+                </div>
+            </div>
+        </div>
 
-        <div class="mode-item" onclick="goto('4v4.html')">
-            <div style="display: flex; align-items: center;">
-                <div class="mode-img"><i class="fas fa-users-rays"></i></div>
-                <div class="mode-info">
-                    <h3>SQUAD 4V4</h3>
-                    <span class="tag">Clash Squad Battle</span>
-                </div>
-            </div>
-        </div>
+        <div class="mode-item" onclick="location.href='4v4.html'">
+            <div style="display: flex; align-items: center;">
+                <div class="mode-img"><i class="fas fa-users-rays"></i></div>
+                <div class="mode-info">
+                    <h3>SQUAD 4V4</h3>
+                    <span class="tag">Clash Squad Battle</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="mode-item" onclick="goto('br.html')">
-            <div style="display: flex; align-items: center;">
-                <div class="mode-img"><i class="fas fa-map-location-dot"></i></div>
-                <div class="mode-info">
-                    <h3>BATTLE ROYALE</h3>
-                    <span class="tag">Elite 12 Squads</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-link active">
+            <i class="fas fa-house-chimney-window"></i>
+            <span>Lobby</span>
+        </a>
+        <a href="notification.html" class="nav-link">
+            <i class="fas fa-bell"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="fab-profile">
+            <i class="fas fa-user-shield"></i>
+        </a>
+        <a href="history.html" class="nav-link">
+            <i class="fas fa-ranking-star"></i>
+            <span>History</span>
+        </a>
+        <a href="wallet.html" class="nav-link">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+    </nav>
 
-    <nav class="bottom-nav">
-        <div onclick="goto('home.html')" class="nav-link active">
-            <i class="fas fa-house-chimney-window"></i>
-            <span>Lobby</span>
-        </div>
-        <div onclick="goto('notification.html')" class="nav-link">
-            <i class="fas fa-bell"></i>
-            <span>Alerts</span>
-        </div>
-        <div onclick="goto('profile.html')" class="fab-profile">
-            <i class="fas fa-user-shield"></i>
-        </div>
-        <div onclick="goto('history.html')" class="nav-link">
-            <i class="fas fa-ranking-star"></i>
-            <span>History</span>
-        </div>
-        <div onclick="goto('wallet.html')" class="nav-link">
-            <i class="fas fa-wallet"></i>
-            <span>Wallet</span>
-        </div>
-    </nav>
+    <script>
+        // --- Firebase Config ---
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-    <script>
-        // --- Navigation Fix for Webview/Kodular ---
-        function goto(url) {
-            window.location.assign(url);
-        }
+        const userPhone = localStorage.getItem('userPhone');
 
-        // --- Firebase Config ---
-        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // Page Loader Logic
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('preloader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 800);
+        });
 
-        const userPhone = localStorage.getItem('userPhone');
-
-        // Anti-Escape Script: Keeps navigation inside the App
-        (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone");
-
-        // Page Loader Logic
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('preloader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }, 800);
-        });
-
-        // Security Check & Real-time Sync
-        if (!userPhone) {
-            window.location.href = "index.html";
-        } else {
-            database.ref('users/' + userPhone).on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
-                    document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
-                    const bal = parseFloat(data.balance || 0);
-                    document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
-                } else {
-                    localStorage.clear();
-                    window.location.href = "index.html";
-                }
-            }, (error) => {
-                console.error("Firebase Sync Error:", error);
-            });
-        }
-    </script>
+        // Security Check & Real-time Sync
+        if (!userPhone) {
+            window.location.href = "index.html";
+        } else {
+            // Real-time Data Sync logic
+            database.ref('users/' + userPhone).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Update Name and UID
+                    document.getElementById('userName').innerText = (data.name || "PLAYER").toUpperCase();
+                    document.getElementById('userUid').innerText = "UID: " + (data.uid || "000000");
+                    
+                    // Currency Formatting
+                    const bal = parseFloat(data.balance || 0);
+                    document.getElementById('userBalance').innerText = "₹" + bal.toFixed(2);
+                } else {
+                    // Force Logout if user data is missing
+                    localStorage.clear();
+                    window.location.href = "index.html";
+                }
+            }, (error) => {
+                console.error("Firebase Sync Error:", error);
+            });
+        }
+    </script>
 </body>
 </html>
+ 
