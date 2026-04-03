@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,7 @@
             position: sticky; top: 0; z-index: 1000; gap: 15px;
             border-bottom: 1px solid rgba(255, 106, 0, 0.1);
         }
-        .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; border: none; }
+        .back-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff1e6; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; border: none; cursor: pointer; }
         .header h1 { font-family: 'Orbitron'; font-size: 16px; background: var(--primary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
 
         .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 15px 0; }
@@ -77,6 +77,7 @@
     <div class="filter-wrapper">
         <div class="filter-container">
             <div class="filter-btn active" onclick="filterMatches('all', this)">All Battles</div>
+            <div class="filter-btn" onclick="filterMatches('br', this)">BR Squad</div>
             <div class="filter-btn" onclick="filterMatches('1v1', this)">1V1 Solo</div>
             <div class="filter-btn" onclick="filterMatches('2v2', this)">2V2 Duo</div>
             <div class="filter-btn" onclick="filterMatches('4v4', this)">4V4 Squad</div>
@@ -96,7 +97,8 @@
         let currentFilter = 'all';
 
         function loadMatches() {
-            const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4'];
+            // Added matches_br to the path array
+            const paths = ['matches_1v1', 'matches_2v2', 'matches_4v4', 'matches_br'];
             let loaded = 0;
             matchStore = [];
 
@@ -105,17 +107,20 @@
                     const type = path.replace('matches_', '');
                     const data = snap.val();
                     
+                    // Remove old data of this type to prevent duplicates
                     matchStore = matchStore.filter(m => m.type !== type);
                     
                     if(data) {
                         Object.keys(data).forEach(id => {
+                            // Only show matches that are not finished or live
                             if(data[id].status !== 'finished' && data[id].status !== 'live') {
                                 matchStore.push({ ...data[id], id, type });
                             }
                         });
                     }
                     loaded++;
-                    if(loaded >= 3) renderUI();
+                    // Wait for all 4 paths to respond
+                    if(loaded >= 4) renderUI();
                 });
             });
         }
@@ -130,7 +135,8 @@
         function startGridTimer(targetDate, elementId) {
             const update = () => {
                 const now = new Date().getTime();
-                const diff = new Date(targetDate).getTime() - now;
+                const target = new Date(targetDate).getTime();
+                const diff = target - now;
                 const el = document.getElementById(elementId);
 
                 if(!el) return;
@@ -155,6 +161,8 @@
             list.innerHTML = "";
 
             const filtered = matchStore.filter(m => currentFilter === 'all' || m.type === currentFilter);
+            
+            // Sort by time (Soonest first)
             filtered.sort((a,b) => new Date(a.time) - new Date(b.time));
 
             if(filtered.length === 0) {
@@ -164,22 +172,29 @@
 
             filtered.forEach(m => {
                 const joined = m.players ? Object.keys(m.players).length : 0;
-                let max = (m.type === '4v4') ? 25 : 2; 
+                
+                // Define max slots per type
+                let max = 2; // Default for 1v1
+                if(m.type === '4v4') max = 25;
+                if(m.type === 'br') max = 12; // 12 Teams for Battle Royale
+                if(m.type === '2v2') max = 2;
                 
                 const isFull = joined >= max;
                 const percent = (joined/max) * 100;
                 const gridTimerId = `grid_timer_${m.id}`;
-                const targetPage = m.type === '1v1' ? '1v1.html' : (m.type === '2v2' ? '2v2.html' : '4v4.html');
+                
+                // Route to the correct joining page
+                const targetPage = `${m.type}.html`;
 
                 const card = document.createElement('div');
                 card.className = 'm-card';
                 card.innerHTML = `
-                    <div class="m-type-tag">${m.type}</div>
+                    <div class="m-type-tag">${m.type === 'br' ? 'BR Squad' : m.type}</div>
                     
                     <div class="m-title">${m.title}</div>
                     
                     <div class="slot-info">
-                        <span>${m.type === '4v4' ? 'Teams Registered' : 'Players Registered'}</span>
+                        <span>${(m.type === '4v4' || m.type === 'br') ? 'Teams Registered' : 'Players Registered'}</span>
                         <span>${joined} / ${max}</span>
                     </div>
                     <div class="progress-bar">
