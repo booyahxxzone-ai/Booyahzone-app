@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BR Squad Battle | BOOYAH ZONE</title>
+    <title>BR Battle Royale | BOOYAH ZONE</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -38,7 +38,7 @@
 
         .filter-wrapper { position: sticky; top: 70px; z-index: 999; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 12px 0; }
         .filter-container { display: flex; gap: 10px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
-        .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; }
+        .filter-btn { padding: 10px 20px; border-radius: 50px; background: white; font-size: 11px; font-weight: 700; color: var(--text-muted); border: 1px solid #eee; white-space: nowrap; transition: 0.3s; cursor: pointer; }
         .filter-btn.active { background: var(--primary-grad); color: white; border: none; box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3); }
 
         .content-area { padding: 20px; max-width: 500px; margin: 0 auto; }
@@ -85,14 +85,15 @@
 
     <header class="header">
         <a href="home.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
-        <h1>Battle Royale Squad</h1>
+        <h1>BR Battle Royale</h1>
     </header>
 
     <div class="filter-wrapper">
         <div class="filter-container">
-            <div class="filter-btn active" onclick="updateFilter('all', this)">All Matches</div>
-            <div class="filter-btn" onclick="updateFilter('upcoming', this)">Upcoming</div>
-            <div class="filter-btn" onclick="updateFilter('live', this)">Live</div>
+            <div class="filter-btn active" onclick="updateFilter('all', this)">All BR</div>
+            <div class="filter-btn" onclick="updateFilter('solo', this)">Solo (1v48)</div>
+            <div class="filter-btn" onclick="updateFilter('duo', this)">Duo (24 Teams)</div>
+            <div class="filter-btn" onclick="updateFilter('squad', this)">Squad (12 Teams)</div>
         </div>
     </div>
 
@@ -106,13 +107,15 @@
         <div class="o-body">
             
             <div id="joinForm">
-                <div class="input-card">
+                <div class="input-card" id="teamInputCard">
                     <div class="input-group">
-                        <label>SQUAD NAME</label>
+                        <label id="nameLabel">TEAM NAME</label>
                         <input type="text" id="brSquadName" placeholder="Enter Team Name">
                     </div>
-                    <div class="input-group" style="margin-top:15px;">
-                        <label>LEADER GAME UID</label>
+                </div>
+                <div class="input-card">
+                    <div class="input-group">
+                        <label>YOUR GAME UID</label>
                         <input type="number" id="brLeaderUID" placeholder="Enter UID">
                     </div>
                 </div>
@@ -124,15 +127,15 @@
 
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:0 10px;">
                     <input type="checkbox" id="ruleCheck" style="width:20px; height:20px; accent-color:var(--primary);">
-                    <label for="ruleCheck" style="font-size:12px; font-weight:700;">I agree to all tournament rules.</label>
+                    <label for="ruleCheck" style="font-size:12px; font-weight:700;">I agree to tournament rules.</label>
                 </div>
 
-                <button class="action-btn" id="payBtn" onclick="processBRJoin()">PAY & JOIN SQUAD</button>
+                <button class="action-btn" id="payBtn" onclick="processBRJoin()">PAY & JOIN NOW</button>
             </div>
 
             <div id="matchDetails" style="display:none;">
                 <div class="input-card" style="text-align: center;">
-                    <small style="font-weight:800; color:var(--text-muted);">SQUAD REGISTERED</small>
+                    <small style="font-weight:800; color:var(--text-muted);">REGISTRATION SUCCESSFUL</small>
                     <h2 id="displaySquad" style="font-family:'Orbitron'; color:var(--primary); margin:10px 0;">---</h2>
                 </div>
                 
@@ -144,7 +147,7 @@
                     </div>
                     
                     <a href="#" id="waShare" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i> SHARE WITH TEAM
+                        <i class="fab fa-whatsapp"></i> SHARE WITH FRIENDS
                     </a>
                 </div>
             </div>
@@ -164,6 +167,7 @@
         let activeMID = null;
         let activeEntryFee = 0;
         let activeTitle = "";
+        let activeType = "";
         let currentFilter = 'all';
 
         function triggerToast(msg) {
@@ -180,7 +184,6 @@
             renderMatches();
         }
 
-        // --- Fetch BR Matches from matches_br node ---
         db.ref('matches_br').on('value', snap => {
             matchDataStore = snap.val() || {};
             renderMatches();
@@ -194,17 +197,25 @@
             keys.forEach(id => {
                 const m = matchDataStore[id];
                 if(m.status === 'finished') return;
-                if(currentFilter !== 'all' && m.status !== currentFilter) return;
+                
+                // Filter by type: solo, duo, squad
+                if(currentFilter !== 'all' && m.mode !== currentFilter) return;
 
-                const teamCount = m.players ? Object.keys(m.players).length : 0;
-                const progress = (teamCount / 12) * 100;
+                const registered = m.players ? Object.keys(m.players).length : 0;
+                
+                // Dynamic Max Slots
+                let maxSlots = 12; // Default Squad
+                if(m.mode === 'solo') maxSlots = 48;
+                if(m.mode === 'duo') maxSlots = 24;
+
+                const progress = (registered / maxSlots) * 100;
                 let isJoined = false;
                 if(m.players) Object.values(m.players).forEach(p => { if(p.phone === userPhone) isJoined = true; });
 
                 const card = document.createElement('div');
                 card.className = 'm-card';
                 card.innerHTML = `
-                    <div class="m-tag ${m.status==='live'?'live':''}">${m.status==='live'?'● Live':'Upcoming'}</div>
+                    <div class="m-tag ${m.status==='live'?'live':''}">${m.mode} | ${m.status==='live'?'● Live':'Upcoming'}</div>
                     <h2 style="font-size:16px; font-weight:800; margin-bottom:12px; color:#1e293b;">${m.title}</h2>
                     <div class="timer-box">
                         <i class="fas fa-clock"></i>
@@ -213,25 +224,34 @@
                     <div class="stats-grid">
                         <div class="stat-card"><small>Prize</small><b class="prize-text">₹${m.prize}</b></div>
                         <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>Teams</small><b>${teamCount}/12</b></div>
+                        <div class="stat-card"><small>${m.mode === 'solo' ? 'Players' : 'Teams'}</small><b>${registered}/${maxSlots}</b></div>
                     </div>
                     <div class="slot-bar"><div class="slot-fill" style="width:${progress}%"></div></div>
                     <button class="action-btn ${isJoined?'joined':''}" ${m.status==='live'&&!isJoined?'disabled':''} 
-                        onclick="openMatchView('${id}', ${m.entry}, '${m.title}')">
-                        ${isJoined ? 'VIEW INFO' : (m.status==='live'?'LIVE':'JOIN SQUAD')}
+                        onclick="openMatchView('${id}', ${m.entry}, '${m.title}', '${m.mode}')">
+                        ${isJoined ? 'VIEW INFO' : (m.status==='live'?'LIVE':'JOIN MATCH')}
                     </button>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function openMatchView(id, fee, title) {
+        function openMatchView(id, fee, title, mode) {
             if(!userPhone) return triggerToast("Login first!");
-            activeMID = id; activeEntryFee = fee; activeTitle = title;
+            activeMID = id; activeEntryFee = fee; activeTitle = title; activeType = mode;
+            
             document.getElementById('billEntry').innerText = "₹" + fee;
             document.getElementById('billTotal').innerText = "₹" + fee;
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
+
+            // Hide/Show Squad Name for Solo
+            if(mode === 'solo') {
+                document.getElementById('teamInputCard').style.display = 'none';
+            } else {
+                document.getElementById('teamInputCard').style.display = 'block';
+                document.getElementById('nameLabel').innerText = (mode === 'duo') ? 'DUO NAME' : 'SQUAD NAME';
+            }
 
             db.ref(`matches_br/${id}`).on('value', snap => {
                 const data = snap.val();
@@ -241,12 +261,12 @@
                 if(myData) {
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
-                    document.getElementById('displaySquad').innerText = myData.squad;
+                    document.getElementById('displaySquad').innerText = (activeType === 'solo') ? 'SOLO JOINED' : myData.squad;
                     const rID = data.roomId || "WAITING";
                     const rPass = data.roomPass || "WAITING";
                     document.getElementById('roomStatus').innerText = `ID: ${rID} | PASS: ${rPass}`;
                     
-                    const waMsg = `*BOOYAH ZONE - BR SQUAD INFO*\n\nMatch: ${title}\nSquad: ${myData.squad}\nRoom ID: ${rID}\nPass: ${rPass}`;
+                    const waMsg = `*BOOYAH ZONE - BR INFO*\n\nMatch: ${title}\nRoom ID: ${rID}\nPass: ${rPass}`;
                     document.getElementById('waShare').href = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
                 } else {
                     document.getElementById('joinForm').style.display = 'block';
@@ -256,11 +276,11 @@
         }
 
         async function processBRJoin() {
-            const squad = document.getElementById('brSquadName').value;
+            const squad = document.getElementById('brSquadName').value || "SOLO PLAYER";
             const uid = document.getElementById('brLeaderUID').value;
             const agree = document.getElementById('ruleCheck').checked;
 
-            if(!squad || uid.length < 5) return triggerToast("Fill all details!");
+            if((activeType !== 'solo' && !squad) || uid.length < 5) return triggerToast("Fill all details!");
             if(!agree) return triggerToast("Agree to rules!");
 
             const btn = document.getElementById('payBtn');
@@ -278,9 +298,9 @@
                 }
 
                 await uRef.update({ balance: (bal - activeEntryFee).toFixed(2) });
-                await db.ref(`matches_br/${activeMID}/players`).push({ phone: userPhone, squad: squad, uid: uid });
+                await db.ref(`matches_br/${activeMID}/players`).push({ phone: userPhone, squad: squad, uid: uid, type: activeType });
                 
-                let teleMsg = `🏆 *BR SQUAD JOINED*\n\nMatch: ${activeTitle}\nSquad: ${squad}\nLeader UID: ${uid}\nFee: ₹${activeEntryFee}`;
+                let teleMsg = `🏆 *BR JOINED*\n\nMatch: ${activeTitle}\nMode: ${activeType}\nTeam/Name: ${squad}\nUID: ${uid}\nFee: ₹${activeEntryFee}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=Markdown`);
 
                 triggerToast("Joined Successfully!");
