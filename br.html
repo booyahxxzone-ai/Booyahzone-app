@@ -73,6 +73,13 @@
         .input-group label { font-size: 11px; font-weight: 800; color: var(--text-main); text-transform: uppercase; display: block; margin-bottom: 8px; }
         .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: #f8fafc; font-weight: 600; }
 
+        /* Rules Style */
+        .rules-box { background: #fff1f1; padding: 15px; border-radius: 15px; border: 1px solid #ffe4e4; margin-bottom: 15px; max-height: 120px; overflow-y: auto; }
+        .rules-box h3 { font-size: 12px; color: #b91c1c; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .rules-box ul { list-style: none; }
+        .rules-box li { font-size: 10.5px; color: #7f1d1d; margin-bottom: 5px; font-weight: 500; display: flex; gap: 5px; }
+        .rules-box li::before { content: "•"; color: #ef4444; font-weight: 900; }
+
         .whatsapp-btn { background: #25d366; color: white; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; margin-top: 15px; }
 
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 12px; z-index: 9999; transition: 0.4s; }
@@ -120,14 +127,25 @@
                     </div>
                 </div>
 
-                <div class="input-card" style="border-left: 4px solid var(--primary);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:13px;"><span>Entry Fee</span><span id="billEntry">₹0</span></div>
-                    <div style="display:flex; justify-content:space-between; font-weight:800; border-top:1px solid #eee; padding-top:10px;"><span>Total Payable</span><span id="billTotal">₹0</span></div>
+                <div class="rules-box">
+                    <h3><i class="fas fa-gavel"></i> TOURNAMENT RULES</h3>
+                    <ul>
+                        <li>No Hack/Cheating - Instant Ban without refund.</li>
+                        <li>Room ID/Pass will be shared 10 mins before start.</li>
+                        <li>Do not share Room ID with non-registered players.</li>
+                        <li>Make sure to join with the same Name/UID provided.</li>
+                        <li>Minimum 30 players required to start full prize pool match.</li>
+                    </ul>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:0 10px;">
                     <input type="checkbox" id="ruleCheck" style="width:20px; height:20px; accent-color:var(--primary);">
-                    <label for="ruleCheck" style="font-size:12px; font-weight:700;">I agree to tournament rules.</label>
+                    <label for="ruleCheck" style="font-size:12px; font-weight:700;">I read and agree to all rules.</label>
+                </div>
+
+                <div class="input-card" style="border-left: 4px solid var(--primary);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:13px;"><span>Entry Fee</span><span id="billEntry">₹0</span></div>
+                    <div style="display:flex; justify-content:space-between; font-weight:800; border-top:1px solid #eee; padding-top:10px;"><span>Total Payable</span><span id="billTotal">₹0</span></div>
                 </div>
 
                 <button class="action-btn" id="payBtn" onclick="processBRJoin()">PAY & JOIN NOW</button>
@@ -135,19 +153,22 @@
 
             <div id="matchDetails" style="display:none;">
                 <div class="input-card" style="text-align: center;">
+                    <div style="width:50px; height:50px; background:#f0fdf4; color:#16a34a; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:24px;"><i class="fas fa-check-circle"></i></div>
                     <small style="font-weight:800; color:var(--text-muted);">REGISTRATION SUCCESSFUL</small>
                     <h2 id="displaySquad" style="font-family:'Orbitron'; color:var(--primary); margin:10px 0;">---</h2>
                 </div>
                 
                 <div class="input-card">
-                    <h2 style="font-size:12px; margin-bottom:15px;">ROOM ACCESS</h2>
-                    <div style="background:#f1f5f9; padding:15px; border-radius:15px; margin-bottom:10px;">
-                        <small style="font-size:9px;">ROOM ID / PASS</small>
-                        <h2 id="roomStatus" style="font-size:16px;">WAITING FOR ADMIN</h2>
+                    <h2 style="font-size:12px; margin-bottom:15px; color:var(--text-muted);">ROOM ACCESS DETAILS</h2>
+                    <div style="background:#f1f5f9; padding:18px; border-radius:15px; margin-bottom:15px; border: 2px dashed #cbd5e1; text-align:center;">
+                        <small style="font-size:10px; color:var(--primary); font-weight:800; text-transform:uppercase; letter-spacing:1px;">Room ID & Password</small>
+                        <h2 id="roomStatus" style="font-size:18px; margin-top:5px; color:#1e293b; letter-spacing:1px;">WAITING...</h2>
                     </div>
                     
+                    <p style="font-size:10px; text-align:center; color:var(--text-muted); margin-bottom:15px;">Invite your teammates by sharing these details!</p>
+
                     <a href="#" id="waShare" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i> SHARE WITH FRIENDS
+                        <i class="fab fa-whatsapp"></i> SHARE ON WHATSAPP
                     </a>
                 </div>
             </div>
@@ -180,7 +201,7 @@
         function updateFilter(type, el) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            currentFilter = type; // SOLO, DUO, SQUAD or all
+            currentFilter = type; 
             renderMatches();
         }
 
@@ -197,13 +218,9 @@
             keys.forEach(id => {
                 const m = matchDataStore[id];
                 if(m.status === 'finished') return;
-                
-                // Case-sensitive check to match Admin choice
                 if(currentFilter !== 'all' && m.mode !== currentFilter) return;
 
                 const registered = m.players ? Object.keys(m.players).length : 0;
-                
-                // Fixed Slot Logic
                 let maxSlots = 12; 
                 if(m.mode === 'SOLO') maxSlots = 48;
                 if(m.mode === 'DUO') maxSlots = 24;
@@ -235,7 +252,7 @@
                 `;
                 container.appendChild(card);
             });
-            updateTimers(); // Immediate update
+            updateTimers();
         }
 
         function openMatchView(id, fee, title, mode) {
@@ -264,11 +281,14 @@
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
                     document.getElementById('displaySquad').innerText = (activeType === 'SOLO') ? 'SOLO JOINED' : myData.squad;
+                    
                     const rID = data.roomId || "WAITING";
                     const rPass = data.roomPass || "WAITING";
                     document.getElementById('roomStatus').innerText = `ID: ${rID} | PASS: ${rPass}`;
                     
-                    const waMsg = `*BOOYAH ZONE - BR INFO*\n\nMatch: ${title}\nRoom ID: ${rID}\nPass: ${rPass}`;
+                    // NEW ATTRACTIVE MESSAGE
+                    const appLink = "https://booyahxxzone-ai.github.io/Booyahzone/";
+                    const waMsg = `🔥 *BOOYAH ZONE - MATCH ACCESS* 🔥\n\n🏆 *Match:* ${title}\n🎮 *Mode:* ${activeType}\n\n📍 *Room ID:* ${rID}\n🔑 *Password:* ${rPass}\n\n⚠️ *Note:* Don't share with others!\n\n📲 *Download App:* ${appLink}\n_Play more, Earn more!_`;
                     document.getElementById('waShare').href = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
                 } else {
                     document.getElementById('joinForm').style.display = 'block';
@@ -329,7 +349,6 @@
                 }
             });
         }
-
         setInterval(updateTimers, 1000);
     </script>
 </body>
