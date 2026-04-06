@@ -91,9 +91,9 @@
     <div class="filter-wrapper">
         <div class="filter-container">
             <div class="filter-btn active" onclick="updateFilter('all', this)">All BR</div>
-            <div class="filter-btn" onclick="updateFilter('solo', this)">Solo (1v48)</div>
-            <div class="filter-btn" onclick="updateFilter('duo', this)">Duo (24 Teams)</div>
-            <div class="filter-btn" onclick="updateFilter('squad', this)">Squad (12 Teams)</div>
+            <div class="filter-btn" onclick="updateFilter('SOLO', this)">Solo (1v48)</div>
+            <div class="filter-btn" onclick="updateFilter('DUO', this)">Duo (24 Teams)</div>
+            <div class="filter-btn" onclick="updateFilter('SQUAD', this)">Squad (12 Teams)</div>
         </div>
     </div>
 
@@ -180,7 +180,7 @@
         function updateFilter(type, el) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            currentFilter = type;
+            currentFilter = type; // SOLO, DUO, SQUAD or all
             renderMatches();
         }
 
@@ -198,15 +198,16 @@
                 const m = matchDataStore[id];
                 if(m.status === 'finished') return;
                 
-                // Filter by type: solo, duo, squad
+                // Case-sensitive check to match Admin choice
                 if(currentFilter !== 'all' && m.mode !== currentFilter) return;
 
                 const registered = m.players ? Object.keys(m.players).length : 0;
                 
-                // Dynamic Max Slots
-                let maxSlots = 12; // Default Squad
-                if(m.mode === 'solo') maxSlots = 48;
-                if(m.mode === 'duo') maxSlots = 24;
+                // Fixed Slot Logic
+                let maxSlots = 12; 
+                if(m.mode === 'SOLO') maxSlots = 48;
+                if(m.mode === 'DUO') maxSlots = 24;
+                if(m.mode === 'SQUAD') maxSlots = 12;
 
                 const progress = (registered / maxSlots) * 100;
                 let isJoined = false;
@@ -219,12 +220,12 @@
                     <h2 style="font-size:16px; font-weight:800; margin-bottom:12px; color:#1e293b;">${m.title}</h2>
                     <div class="timer-box">
                         <i class="fas fa-clock"></i>
-                        <span class="countdown-timer" data-time="${m.time}">${m.time}</span>
+                        <span class="countdown-timer" data-time="${m.time}">Calculating...</span>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card"><small>Prize</small><b class="prize-text">₹${m.prize}</b></div>
                         <div class="stat-card"><small>Entry</small><b>₹${m.entry}</b></div>
-                        <div class="stat-card"><small>${m.mode === 'solo' ? 'Players' : 'Teams'}</small><b>${registered}/${maxSlots}</b></div>
+                        <div class="stat-card"><small>${m.mode === 'SOLO' ? 'Players' : 'Teams'}</small><b>${registered}/${maxSlots}</b></div>
                     </div>
                     <div class="slot-bar"><div class="slot-fill" style="width:${progress}%"></div></div>
                     <button class="action-btn ${isJoined?'joined':''}" ${m.status==='live'&&!isJoined?'disabled':''} 
@@ -234,6 +235,7 @@
                 `;
                 container.appendChild(card);
             });
+            updateTimers(); // Immediate update
         }
 
         function openMatchView(id, fee, title, mode) {
@@ -245,23 +247,23 @@
             document.getElementById('oMatchTitle').innerText = title;
             document.getElementById('mainOverlay').style.display = 'flex';
 
-            // Hide/Show Squad Name for Solo
-            if(mode === 'solo') {
+            if(mode === 'SOLO') {
                 document.getElementById('teamInputCard').style.display = 'none';
             } else {
                 document.getElementById('teamInputCard').style.display = 'block';
-                document.getElementById('nameLabel').innerText = (mode === 'duo') ? 'DUO NAME' : 'SQUAD NAME';
+                document.getElementById('nameLabel').innerText = (mode === 'DUO') ? 'DUO TEAM NAME' : 'SQUAD TEAM NAME';
             }
 
             db.ref(`matches_br/${id}`).on('value', snap => {
                 const data = snap.val();
+                if(!data) return;
                 let myData = null;
-                if(data && data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
+                if(data.players) Object.values(data.players).forEach(p => { if(p.phone === userPhone) myData = p; });
 
                 if(myData) {
                     document.getElementById('joinForm').style.display = 'none';
                     document.getElementById('matchDetails').style.display = 'block';
-                    document.getElementById('displaySquad').innerText = (activeType === 'solo') ? 'SOLO JOINED' : myData.squad;
+                    document.getElementById('displaySquad').innerText = (activeType === 'SOLO') ? 'SOLO JOINED' : myData.squad;
                     const rID = data.roomId || "WAITING";
                     const rPass = data.roomPass || "WAITING";
                     document.getElementById('roomStatus').innerText = `ID: ${rID} | PASS: ${rPass}`;
@@ -280,7 +282,8 @@
             const uid = document.getElementById('brLeaderUID').value;
             const agree = document.getElementById('ruleCheck').checked;
 
-            if((activeType !== 'solo' && !squad) || uid.length < 5) return triggerToast("Fill all details!");
+            if(activeType !== 'SOLO' && squad.length < 3) return triggerToast("Enter Team Name!");
+            if(uid.length < 5) return triggerToast("Enter valid UID!");
             if(!agree) return triggerToast("Agree to rules!");
 
             const btn = document.getElementById('payBtn');
@@ -293,12 +296,12 @@
 
                 if(bal < activeEntryFee) {
                     triggerToast("Insufficient Balance!");
-                    btn.disabled = false; btn.innerText = "PAY & JOIN";
+                    btn.disabled = false; btn.innerText = "PAY & JOIN NOW";
                     return;
                 }
 
                 await uRef.update({ balance: (bal - activeEntryFee).toFixed(2) });
-                await db.ref(`matches_br/${activeMID}/players`).push({ phone: userPhone, squad: squad, uid: uid, type: activeType });
+                await db.ref(`matches_br/${activeMID}/players`).push({ phone: userPhone, squad: squad, uid: uid, mode: activeType });
                 
                 let teleMsg = `🏆 *BR JOINED*\n\nMatch: ${activeTitle}\nMode: ${activeType}\nTeam/Name: ${squad}\nUID: ${uid}\nFee: ₹${activeEntryFee}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(teleMsg)}&parse_mode=Markdown`);
@@ -309,19 +312,25 @@
 
         function closeOverlay() { document.getElementById('mainOverlay').style.display = 'none'; if(activeMID) db.ref(`matches_br/${activeMID}`).off(); }
 
-        setInterval(() => {
+        function updateTimers() {
             document.querySelectorAll('.countdown-timer').forEach(el => {
-                const target = new Date(el.getAttribute('data-time')).getTime();
-                const diff = target - Date.now();
-                if(diff <= 0) el.innerText = "Match Started";
-                else {
-                    const h = Math.floor(diff/3600000);
-                    const m = Math.floor((diff%3600000)/60000);
-                    const s = Math.floor((diff%60000)/1000);
+                const timeAttr = el.getAttribute('data-time');
+                const target = new Date(timeAttr).getTime();
+                const now = new Date().getTime();
+                const diff = target - now;
+
+                if(diff <= 0) {
+                    el.innerText = "Match Started";
+                } else {
+                    const h = Math.floor(diff / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
                     el.innerText = `${h}h ${m}m ${s}s Remaining`;
                 }
             });
-        }, 1000);
+        }
+
+        setInterval(updateTimers, 1000);
     </script>
 </body>
 </html>
