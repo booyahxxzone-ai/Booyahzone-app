@@ -45,7 +45,6 @@
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        /* Professional History Card */
         .history-card {
             background: #fff; border-radius: 24px; padding: 20px; margin-bottom: 18px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.04); border: 1px solid rgba(255, 106, 0, 0.1);
@@ -53,7 +52,6 @@
             animation: fadeIn 0.5s ease forwards; opacity: 0;
         }
         
-        /* Winner Card Special Styling */
         .history-card.winner-card {
             border: 2px solid #ffd700;
             background: linear-gradient(to bottom, #ffffff, #fffdf0);
@@ -80,7 +78,6 @@
         .price-tag small { display: block; font-size: 9px; font-weight: 800; color: var(--text-muted); margin-bottom: 3px; }
         .price-tag b { font-family: 'Orbitron'; font-size: 18px; color: var(--text-main); }
 
-        /* Professional Winner Badge */
         .champion-badge {
             position: absolute; top: -12px; right: 20px; background: var(--win-grad);
             color: #fff; font-family: 'Orbitron'; font-size: 10px; padding: 6px 15px;
@@ -114,7 +111,7 @@
 
         const userPhone = localStorage.getItem('userPhone');
 
-        function fetchHistory() {
+        async function fetchHistory() {
             const list = document.getElementById('history-list');
 
             if(!userPhone) {
@@ -122,56 +119,90 @@
                 return;
             }
 
-            db.ref('user_history/' + userPhone).on('value', (snap) => {
-                list.innerHTML = "";
+            let allHistory = [];
 
-                if(snap.exists()) {
-                    let items = [];
-                    snap.forEach(child => {
-                        let data = child.val();
-                        items.push(data);
-                    });
+            // 1. Fetch Classic History (from user_history folder)
+            const classicSnap = await db.ref('user_history/' + userPhone).once('value');
+            if(classicSnap.exists()){
+                classicSnap.forEach(child => {
+                    allHistory.push({...child.val(), timestamp: child.key});
+                });
+            }
 
-                    items.reverse().forEach(data => {
-                        const isWin = data.status === "WINNER" || data.result === "WINNER";
-                        const isFinished = data.status === "finished" || data.status === "WINNER";
+            // 2. Fetch BR History (from matches_br folder)
+            const brSnap = await db.ref('matches_br').once('value');
+            if(brSnap.exists()){
+                brSnap.forEach(match => {
+                    const matchData = match.val();
+                    if(matchData.players) {
+                        Object.values(matchData.players).forEach(p => {
+                            if(p.phone === userPhone) {
+                                allHistory.push({
+                                    matchTitle: matchData.title,
+                                    mode: matchData.mode,
+                                    status: matchData.status,
+                                    entry: matchData.entry,
+                                    date: matchData.time,
+                                    isBR: true,
+                                    winner_name: matchData.winner_name,
+                                    timestamp: match.key
+                                });
+                            }
+                        });
+                    }
+                });
+            }
 
-                        const card = document.createElement('div');
-                        // Winner hone par card ki class change hogi
-                        card.className = `history-card ${isWin ? 'winner-card' : ''}`;
-                        
-                        card.innerHTML = `
-                            ${isWin ? '<div class="champion-badge"><i class="fas fa-crown"></i> CHAMPION</div>' : ''}
-                            <div class="card-top">
-                                <span class="match-badge">${data.mode || 'SOLO'} BATTLE</span>
-                                <span class="status-pill ${isFinished ? 'status-completed' : 'status-joined'}">
-                                    ${isFinished ? 'Completed' : 'Joined'}
-                                </span>
-                            </div>
-                            <div class="match-info">
-                                <div class="match-details">
-                                    <h4>${data.matchTitle || data.title || 'Battle Match'}</h4>
-                                    <div class="match-meta">
-                                        <i class="far fa-calendar-alt"></i> ${data.date || '---'}
-                                    </div>
+            // Sorting by timestamp (latest first)
+            allHistory.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+
+            renderUI(allHistory);
+        }
+
+        function renderUI(items) {
+            const list = document.getElementById('history-list');
+            list.innerHTML = "";
+
+            if(items.length > 0) {
+                items.forEach(data => {
+                    // Check if user won
+                    const isWin = (data.status === "WINNER" || data.result === "WINNER" || (data.winner_name && data.squad === data.winner_name));
+                    const isFinished = data.status === "finished" || isWin;
+
+                    const card = document.createElement('div');
+                    card.className = `history-card ${isWin ? 'winner-card' : ''}`;
+                    
+                    card.innerHTML = `
+                        ${isWin ? '<div class="champion-badge"><i class="fas fa-crown"></i> CHAMPION</div>' : ''}
+                        <div class="card-top">
+                            <span class="match-badge">${data.isBR ? 'BR ' : ''}${data.mode || 'SOLO'} BATTLE</span>
+                            <span class="status-pill ${isFinished ? 'status-completed' : 'status-joined'}">
+                                ${isFinished ? 'Completed' : 'Joined'}
+                            </span>
+                        </div>
+                        <div class="match-info">
+                            <div class="match-details">
+                                <h4>${data.matchTitle || data.title || 'Battle Match'}</h4>
+                                <div class="match-meta">
+                                    <i class="far fa-calendar-alt"></i> ${data.date || '---'}
                                 </div>
-                                <div class="price-tag">
-                                    <small>ENTRY PAID</small>
-                                    <b>₹${data.amountDeducted || data.entry || '0'}</b>
-                                </div>
                             </div>
-                        `;
-                        list.appendChild(card);
-                    });
-                } else {
-                    list.innerHTML = `
-                        <div class="empty-box">
-                            <i class="fas fa-ghost"></i>
-                            <h3 style="font-family:'Orbitron'; font-size:14px;">NO RECORDS</h3>
-                            <p>Abhi tak koi match nahi khela gaya hai.</p>
-                        </div>`;
-                }
-            });
+                            <div class="price-tag">
+                                <small>ENTRY PAID</small>
+                                <b>₹${data.amountDeducted || data.entry || '0'}</b>
+                            </div>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            } else {
+                list.innerHTML = `
+                    <div class="empty-box">
+                        <i class="fas fa-ghost"></i>
+                        <h3 style="font-family:'Orbitron'; font-size:14px;">NO RECORDS</h3>
+                        <p>Abhi tak koi match nahi khela gaya hai.</p>
+                    </div>`;
+            }
         }
 
         fetchHistory();
