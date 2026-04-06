@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
 
-        /* Header */
         .header { 
             padding: 20px; text-align: center; background: var(--card); 
             border-bottom: 2px solid var(--primary); display: flex; 
@@ -30,7 +29,6 @@
 
         .container { padding: 15px; max-width: 600px; margin: auto; }
 
-        /* Card Design */
         .card { 
             background: var(--card); border-radius: 20px; padding: 22px; 
             margin-bottom: 20px; border: 1px solid rgba(0,255,204,0.1);
@@ -38,14 +36,12 @@
         }
         h2 { font-family: 'Orbitron'; font-size: 13px; color: var(--accent); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Inputs */
         input, select { 
             background: #1e2536; border: 1px solid #334155; color: #fff; 
             padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none; transition: 0.3s;
         }
         input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,255,204,0.2); }
 
-        /* Buttons */
         .btn { 
             border: none; border-radius: 12px; font-family: 'Orbitron'; 
             cursor: pointer; font-weight: 900; padding: 15px; transition: 0.3s; 
@@ -54,7 +50,6 @@
         .btn-main { background: var(--primary); color: #000; width: 100%; box-shadow: 0 5px 15px rgba(0,255,204,0.2); }
         .btn-sm { padding: 8px 12px; font-size: 9px; color: #fff; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; }
 
-        /* Filter */
         .cat-filter { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 15px; scrollbar-width: none; }
         .cat-btn { 
             padding: 10px 20px; background: #1e2536; border-radius: 50px; 
@@ -62,7 +57,6 @@
         }
         .cat-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        /* Match Row */
         .match-row {
             background: #1e2536; border-radius: 18px; padding: 18px; margin-bottom: 15px;
             display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary);
@@ -74,16 +68,13 @@
         .match-info small { color: #94a3b8; font-size: 11px; display: block; margin-bottom: 8px; }
         .status-tag { font-size: 9px; padding: 4px 10px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
 
-        /* Modals */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; backdrop-filter: blur(10px); }
         .modal-box { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 420px; border: 1px solid rgba(0,255,204,0.3); box-shadow: 0 0 40px rgba(0,0,0,1); }
 
-        /* Player Cards in Modal */
         .p-card { background: #1e2536; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #334155; }
         .p-card p { font-size: 12px; color: #cbd5e1; }
         .p-card b { color: var(--primary); }
 
-        /* Navigation */
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 80px; 
             background: var(--card); display: flex; justify-content: space-around; 
@@ -110,7 +101,9 @@
                     <option value="1V1">1V1 SOLO</option>
                     <option value="2V2">2V2 DUO</option>
                     <option value="4V4">4V4 SQUAD</option>
-                    <option value="BR">BATTLE ROYALE (BR)</option>
+                    <option value="BR_SOLO">BR MODE (SOLO)</option>
+                    <option value="BR_DUO">BR MODE (DUO)</option>
+                    <option value="BR_SQUAD">BR MODE (SQUAD)</option>
                 </select>
                 <input type="number" id="mEntry" placeholder="Entry Fee (₹)">
                 <input type="number" id="mPrize" placeholder="Win Prize Pool (₹)">
@@ -169,16 +162,13 @@
 
         let activeMID = "", activePath = "", activeTitle = "", currentFilter = "all";
 
-        // Push Notifications to ALL registered users
         function sendNotificationToAll(title, msg, type) {
             db.ref('users').once('value', (snap) => {
                 if (snap.exists()) {
                     snap.forEach((user) => {
                         const userPhone = user.key;
                         db.ref('user_notifications/' + userPhone).push({
-                            title: title,
-                            message: msg,
-                            type: type,
+                            title: title, message: msg, type: type,
                             time: new Date().toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })
                         });
                     });
@@ -186,7 +176,6 @@
             });
         }
 
-        // Tab System
         function showTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -195,35 +184,38 @@
             if(id === 'tab-matches') loadMatches();
         }
 
-        // Publish New Match
         async function publishMatch() {
             const title = document.getElementById('mTitle').value;
-            const mode = document.getElementById('mMode').value;
+            const modeVal = document.getElementById('mMode').value;
             const entry = document.getElementById('mEntry').value;
             const prize = document.getElementById('mPrize').value;
             const time = document.getElementById('mTime').value;
             const mid = "M" + Date.now();
             
             let path = "";
-            if(mode === '1V1') path = 'matches_1v1';
-            else if(mode === '2V2') path = 'matches_2v2';
-            else if(mode === '4V4') path = 'matches_4v4';
-            else if(mode === 'BR') path = 'matches_br';
+            let finalMode = modeVal;
+
+            if(modeVal === '1V1') path = 'matches_1v1';
+            else if(modeVal === '2V2') path = 'matches_2v2';
+            else if(modeVal === '4V4') path = 'matches_4v4';
+            else if(modeVal.includes('BR_')) {
+                path = 'matches_br';
+                finalMode = modeVal.replace('BR_', ''); // Saves as SOLO, DUO, or SQUAD
+            }
 
             if(!title || !entry || !time) return alert("Bhai fields fill kar!");
 
-            const data = { mId: mid, title, mode, entry, prize, time, status: "upcoming" };
+            const data = { mId: mid, title: title, mode: finalMode, entry: entry, prize: prize, time: time, status: "upcoming" };
             
             try {
                 await db.ref(`${path}/${mid}`).set(data);
-                sendNotificationToAll("New Battle Added! 🎮", `${title} (${mode}) join now at ₹${entry}!`, "match");
-                alert("Match Created & Users Notified!");
+                sendNotificationToAll("New Battle Added! 🎮", `${title} (${finalMode}) join now at ₹${entry}!`, "match");
+                alert("Match Created!");
                 document.getElementById('mTitle').value = "";
                 showTab('tab-matches', document.querySelectorAll('.nav-item')[1]);
             } catch (e) { alert("Error: " + e.message); }
         }
 
-        // Load and Render Matches
         async function loadMatches() {
             const container = document.getElementById('matchListContainer');
             container.innerHTML = "<p style='text-align:center; padding:20px; color:var(--primary);'>Fetching Battles...</p>";
@@ -237,11 +229,13 @@
                 snap.forEach(child => {
                     const m = child.val();
                     const pCount = m.players ? Object.keys(m.players).length : 0;
+                    const displayMode = (p === 'matches_br') ? "BR " + m.mode : m.mode;
+
                     html += `
                         <div class="match-row">
                             <div class="match-info">
                                 <b>${m.title}</b>
-                                <small>${m.mode} | ${m.time}</small>
+                                <small>${displayMode} | ${m.time}</small>
                                 <span class="status-tag" style="background:${m.status=='live'?'var(--red)':(m.status=='finished'?'var(--blue)':'#334155')}">
                                     ${m.status}
                                 </span>
@@ -258,7 +252,6 @@
             container.innerHTML = html || "<p style='text-align:center; padding:30px; color:#64748b;'>No matches found.</p>";
         }
 
-        // View Players Logic
         function viewPlayers(path, mid, mode) {
             db.ref(`${path}/${mid}/players`).once('value', snap => {
                 const list = document.getElementById('playerList');
@@ -267,19 +260,16 @@
                 
                 snap.forEach(p => {
                     const v = p.val();
-                    let content = "";
-                    if(mode === '1V1') {
-                        content = `<p>Name: <b>${v.name}</b></p><p>UID: <b>${v.uid}</b></p>`;
-                    } else {
-                        content = `<p>Leader: <b>${v.leader_name || v.name}</b></p><p>Team Details: <b>${v.uid1 || v.uid}...</b></p>`;
-                    }
+                    let content = (path === 'matches_br') 
+                        ? `<p>Squad/Solo: <b>${v.squad || v.name}</b></p><p>Leader UID: <b>${v.uid}</b></p>`
+                        : (mode === '1V1' ? `<p>Name: <b>${v.name}</b></p><p>UID: <b>${v.uid}</b></p>` : `<p>Leader: <b>${v.leader_name || v.name}</b></p><p>Team UID: <b>${v.uid1 || v.uid}</b></p>`);
+                    
                     list.innerHTML += `<div class="p-card">${content}</div>`;
                 });
                 document.getElementById('playerModal').style.display = 'flex';
             });
         }
 
-        // Match Actions (Live/Finish)
         function openControl(path, id, type, title) {
             activeMID = id; activePath = path; activeTitle = title;
             document.getElementById('controlModal').style.display = 'flex';
@@ -291,7 +281,6 @@
             const rid = document.getElementById('roomId').value;
             const rps = document.getElementById('roomPass').value;
             if(!rid || !rps) return alert("Room ID/Pass missing!");
-            
             await db.ref(`${activePath}/${activeMID}`).update({ roomId: rid, roomPass: rps, status: 'live' });
             sendNotificationToAll("Room Ready! 🔴", `Room Details updated for ${activeTitle}. Join now!`, "live");
             closeModal(); loadMatches();
@@ -300,16 +289,13 @@
         async function confirmFinish() {
             const winner = document.getElementById('winName').value;
             if(!winner) return alert("Winner name?");
-            
             await db.ref(`${activePath}/${activeMID}`).update({ status: 'finished', winner_name: winner });
             sendNotificationToAll("Winner Winner! 🏆", `${winner} won the ${activeTitle}! Congrats!`, "finish");
             closeModal(); loadMatches();
         }
 
         function deleteMatch(path, mid) {
-            if(confirm("Bhai delete karun? Refund ka dhyan rakhna!")) {
-                db.ref(`${path}/${mid}`).remove(); loadMatches();
-            }
+            if(confirm("Bhai delete karun?")) { db.ref(`${path}/${mid}`).remove(); loadMatches(); }
         }
 
         function filterBy(cat, el) {
@@ -320,5 +306,4 @@
         function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     </script>
 </body>
-    </html>
-    
+</html>
